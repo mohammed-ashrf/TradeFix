@@ -1,0 +1,38 @@
+<!-- <div fxLayout="row" fxLayoutAlign="center center" class="login-dev">
+  <mat-card fxFlex="25">
+      <mat-toolbar>Login Page</mat-toolbar>
+      <form #loginForm="ngForm" (ngSubmit)="onSubmit()" fxLayoutAlign="stretch" fxLayout="column" class="login-form">
+          <mat-form-field>
+              <input matInput [(ngModel)]="user.username" name="username"
+              #username="ngModel" placeholder="email or Username" required>
+              <mat-error *ngIf="username.errors?.['required']">Username is required</mat-error>
+          </mat-form-field>
+
+          <mat-form-field>
+              <input matInput placeholder="Password" type="password"
+              [(ngModel)]="user.password" name="password"
+              #password="ngModel" required>
+              <mat-error *ngIf="password.errors?.['required']">Password is required</mat-error>
+          </mat-form-field>
+          <mat-dialog-actions fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="30px">
+              <button mat-raised-button type="submit" [disabled]="loginForm.form.invalid">Login</button>
+              <button mat-raised-button routerLink="/register">register</button>
+          </mat-dialog-actions>
+      </form>
+  </mat-card>
+</div> -->
+<div class="container">
+    <h2 class="slide-in">Login</h2>
+    <form (ngSubmit)="submit()" #loginForm="ngForm">
+        <div class="form-group">
+            <input type="text" placeholder="Email" id="email" name="email" [(ngModel)]="email" required>
+        </div>
+        <div class="form-group">
+            <input type="password" placeholder="Password" id="password" name="password" [(ngModel)]="password" required>
+        </div>
+        <div class="button-group">
+            <button class="btn btn-primary Pulse slide-in" type="submit" [disabled]="loginForm.invalid">Login</button>
+            <button mat-button class="register slide-in" routerLink="/register">register</button>
+        </div>
+    </form>
+</div>

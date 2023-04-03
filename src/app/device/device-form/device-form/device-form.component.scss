@@ -1,0 +1,224 @@
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+h2 {
+    font-size: 24px;
+    color: #333;
+    margin: 0 auto;
+}
+
+button {
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: #fff;
+    border-radius: 4px;
+    border: none;
+}
+
+button:hover {
+    background-color: #0062cc;
+}
+
+.deviceForm {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+input[type="text"],
+input[type="number"],
+textarea {
+    display: block;
+    width: 100%;
+    padding: 8px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    margin-top: 5px;
+}
+
+mat-select {
+    width: 100%;
+    margin-top: 5px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+mat-option {
+    font-size: 16px;
+}
+
+.btn {
+    display: inline-block;
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: #fff;
+    border-radius: 4px;
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    font-size: 16px;
+}
+
+.btn:hover {
+    background-color: #0062cc;
+}
+@media print {
+    .object {
+      font-size: 20px;
+      color: red;
+      /* Add any other styles that you want to apply */
+    }
+}
+
+// ----------------------------------------------------------------------
+  
+.container {
+    animation: fade-in 0.5s ease-in-out;
+  }
+  
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    animation: slide-down 0.5s ease-in-out;
+  }
+  
+  @keyframes slide-down {
+    from {
+      transform: translateY(-20px);
+    }
+    to {
+      transform: translateY(0);
+    }
+  }
+  
+  .header button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .header button:hover {
+    background-color: #0062cc;
+  }
+  
+  .deviceForm {
+    max-width: 800px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    animation: slide-up 0.5s ease-in-out;
+  }
+  
+  @keyframes slide-up {
+    from {
+      transform: translateY(20px);
+    }
+    to {
+      transform: translateY(0);
+    }
+  }
+  
+  .form-group {
+    margin-bottom: 20px;
+    animation: fade-in 0.5s ease-in-out;
+  }
+  
+  label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    animation: fade-in 0.5s ease-in-out;
+  }
+  
+  input[type="text"],
+  textarea,
+  mat-select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    font-size: 16px;
+    line-height: 1.5;
+    transition: border-color 0.3s;
+    animation: fade-in 0.5s ease-in-out;
+  }
+  
+  input[type="text"]:focus,
+  textarea:focus,
+  mat-select:focus {
+    border-color: #007bff;
+    outline: none;
+  }
+  
+  button[type="submit"] {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    animation: slide-up 0.5s ease-in-out;
+  }
+  
+  button[type="submit"]:hover {
+    background-color: #0062cc;
+  }
+  
+  .app-print-layout {
+    display: none;
+    animation: fade-in 0.5s ease-in-out;
+  }
+  
+  button[ngxPrint] {
+    background-color: #007bff;
+    width: 100%;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 20px;
+    animation: slide-up 0.5s ease-in-out;
+  }
+  
+  button[ngxPrint]:hover {
+    background-color: #0062cc;
+    width: 100%;
+  }
