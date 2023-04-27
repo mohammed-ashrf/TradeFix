@@ -45,21 +45,7 @@ export class DeviceService {
   deleteDevice(id: string): Observable<any> {
     return this.http.delete(`${this.apiUrl}/devices/${id}`);
   }
-
-  // downloadReceipt(id: string) {
-  //   const headers = new HttpHeaders().set('Access-Control-Allow-Origin', '*');
-  //   this.http.get(`${this.apiUrl}/generate-receipt/${id}`, {headers, responseType: 'blob' }).subscribe((data) => {
-  //     const fileURL = URL.createObjectURL(data);
-  //     window.open(fileURL);
-  //   });
-  // }
-  // downloadReceipt(id: string) {
-  //   const headers = new HttpHeaders().set('Access-Control-Allow-Origin', '*');
-  //   this.http.get(`${this.apiUrl}/generate-receipt/${id}`, { headers, responseType: 'blob' }).subscribe((data) => {
-  //     const fileURL = URL.createObjectURL(data);
-  //     window.open(fileURL);
-  //   });
-  // }
+  
   downloadReceipt() {
     const headers = new HttpHeaders().set('Access-Control-Allow-Origin', '*');
     this.http.get(`${this.apiUrl}/generate-receipt/`, { headers, responseType: 'blob' }).subscribe((data) => {

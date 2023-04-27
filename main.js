@@ -9,7 +9,7 @@ function createWindow() {
     height: 600,
     backgroundColor:'#ffffff',
     icon: url.format({
-      pathname: path.join(__dirname, `dist/assets/logo.png`),
+      pathname: path.join(__dirname, `dist/repair-app-new/assets/icons/png/repairing.png`),
       protocol: "file:",
       slashes: true
     }),

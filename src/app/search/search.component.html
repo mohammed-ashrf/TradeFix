@@ -1,7 +1,7 @@
 <div class="Bar">
   <button mat-button (click)="goBack()" class="back">back</button>
   <div class="searchBar">
-    <input type="text" [(ngModel)]="searchTerm" placeholder="Search..." (keyup.enter)="search()">
+    <input type="text" [(ngModel)]="searchTerm" placeholder="Search..." (keyup.enter)="search()" (keyup)="search()">
     <button (click)="search()">Search</button>
   </div>
 </div>
@@ -33,8 +33,8 @@
         <td>{{ device.recievingDate }}</td> 
         <td>
           <a mat-button [routerLink]="['/devices', device._id, 'edit']">Edit</a>
-          <a mat-button (click)="onDelete(device._id)">Delete</a>
         </td>
       </tr>
     </tbody>
 </table>
+

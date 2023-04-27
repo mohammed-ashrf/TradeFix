@@ -1,34 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { DeviceService } from '../device/device.service';
 import { Location } from '@angular/common';
-import { trigger, transition, style, animate } from '@angular/animations';
 
 @Component({
-  selector: 'app-search',
-  templateUrl: './search.component.html',
-  styleUrls: ['./search.component.scss'],
-  animations: [
-    trigger('fadeInOut', [
-      transition(':enter', [
-        style({ opacity: 0 }),
-        animate('300ms ease-in-out', style({ opacity: 1 }))
-      ]),
-      transition(':leave', [
-        animate('300ms ease-in-out', style({ opacity: 0 }))
-      ])
-    ]),
-    trigger('scaleInOut', [
-      transition(':enter', [
-        style({ transform: 'scale(0)' }),
-        animate('300ms ease-in-out', style({ transform: 'scale(1)' }))
-      ]),
-      transition(':leave', [
-        animate('300ms ease-in-out', style({ transform: 'scale(0)' }))
-      ])
-    ])
-  ]
+  selector: 'app-admin-search',
+  templateUrl: './admin-search.component.html',
+  styleUrls: ['./admin-search.component.scss']
 })
-export class SearchComponent implements OnInit {
+export class AdminSearchComponent implements OnInit {
   searchTerm!: any;
   searchResults!: any[];
   devices!:any[];
@@ -43,6 +22,14 @@ export class SearchComponent implements OnInit {
       this.devices = devices;
       console.log(devices);
     });
+  }
+
+  onDelete(id: string): void {
+    if (confirm('Are you sure you want to delete this device?')) {
+      this.deviceService.delete(id).subscribe(() => {
+        this.devices = this.devices.filter((device) => device._id !== id);
+      });
+    }
   }
 
   goBack(): void {
@@ -79,5 +66,4 @@ export class SearchComponent implements OnInit {
     this.searchResult = this.searchDevice(this.devices, this.searchTerm);
     console.log(this.searchResult);
   }
-  
 }

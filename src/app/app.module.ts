@@ -19,6 +19,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSliderModule } from '@angular/material/slider';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTableModule } from '@angular/material/table';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './auth/login/login/login.component';
@@ -30,6 +32,8 @@ import { RepairFormComponent } from './repair/repair-form/repair-form.component'
 import { NgxPrintModule } from 'ngx-print';
 import { SearchComponent } from './search/search.component';
 import { PrintLayoutComponent } from './print-layout/print-layout.component';
+import { AdminPageComponent } from './admin-page/admin-page.component';
+import { AdminSearchComponent } from './admin-search/admin-search.component';
 
 
 @NgModule({
@@ -42,7 +46,9 @@ import { PrintLayoutComponent } from './print-layout/print-layout.component';
     RepairListComponent,
     RepairFormComponent,
     SearchComponent,
-    PrintLayoutComponent
+    PrintLayoutComponent,
+    AdminPageComponent,
+    AdminSearchComponent
   ],
   imports: [
     BrowserModule,
@@ -67,7 +73,9 @@ import { PrintLayoutComponent } from './print-layout/print-layout.component';
     MatSlideToggleModule,
     MatProgressSpinnerModule,
     MatSliderModule,
-    NgxPrintModule
+    NgxPrintModule,
+    MatIconModule,
+    MatTableModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

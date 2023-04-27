@@ -1,13 +1,21 @@
-<h2>Register</h2>
-<form (ngSubmit)="submit()" #registerForm="ngForm" class="slide-in">
-  <div class="form-group">
-    <input type="text" placeholder="Username" id="username" name="username" [(ngModel)]="username" required>
+<div>
+  <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="10px" class="header">
+    <button (click)="goBack()" id="backButton" class="btn btn-primary">back</button>
+    <h2>Register</h2>
   </div>
-  <div class="form-group">
-    <input type="email" placeholder="Email" id="email" name="email" [(ngModel)]="email" required>
-  </div>
-  <div class="form-group">
-    <input type="password" placeholder="Password" id="password" name="password" [(ngModel)]="password" required>
-  </div>
-  <button class="btn btn-primary" type="submit" [disabled]="registerForm.invalid">Register</button>
-</form>
+  <form (ngSubmit)="submit()" #registerForm="ngForm" class="slide-in">
+    <div class="form-group">
+      <input type="text" placeholder="Username" id="username" name="username" [(ngModel)]="username" required>
+    </div>
+    <div class="form-group">
+      <input type="email" placeholder="Email" id="email" name="email" [(ngModel)]="email" required>
+    </div>
+    <div class="form-group">
+      <input type="password" placeholder="Password" id="password" name="password" [(ngModel)]="password" required>
+    </div>
+    <div class="form-group">
+      <input type="password" placeholder="confirm Password" id="password" name="password" [(ngModel)]="confirmPassword" required>
+    </div>
+    <button class="btn btn-primary" type="submit" [disabled]="registerForm.invalid">Register</button>
+  </form>
+</div>

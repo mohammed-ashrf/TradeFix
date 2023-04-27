@@ -9,6 +9,8 @@ import { RepairListComponent } from './repair/repair-list/repair-list/repair-lis
 import { RepairFormComponent } from './repair/repair-form/repair-form.component';
 import { SearchComponent } from './search/search.component';
 import { PrintLayoutComponent } from './print-layout/print-layout.component';
+import { AdminPageComponent } from './admin-page/admin-page.component';
+import { AdminSearchComponent } from './admin-search/admin-search.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -20,8 +22,9 @@ const routes: Routes = [
   { path: 'repairs', component: RepairListComponent },
   { path: 'repairs/new', component: RepairFormComponent },
   { path: 'search', component: SearchComponent},
-  { path: 'print',  component: PrintLayoutComponent}
-
+  { path: 'print',  component: PrintLayoutComponent},
+  { path: 'admin', component: AdminPageComponent },
+  { path: 'adminSearch', component: AdminSearchComponent },
 
 ];
 

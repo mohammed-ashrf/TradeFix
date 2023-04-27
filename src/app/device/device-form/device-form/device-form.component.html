@@ -6,53 +6,44 @@
   <form (ngSubmit)="submit()" #deviceForm="ngForm" class="deviceForm" id="form">
     <div fxLayout="row" fxLayoutAlign="space-between center" dir="rtl">
       <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
-        <!-- <label for="clientName">Name:</label> -->
         <input type="text" id="clientName" placeholder="اسم العميل" name="clientName" [(ngModel)]="receive.clientName" required>
       </div>
       <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
-        <!-- <label for="telnum">telnum:</label> -->
         <input type="text" id="telnum" placeholder="رقم التليفون" name="telnum" [(ngModel)]="receive.telnum" required>
       </div>
     </div>
     <div class="form-group" fxLayout="row" fxLayoutAlign="center center" dir="rtl">
-      <!-- <label for="deviceType" fxFlex>device Type:</label> -->
-      <mat-select placeholder="النوع" id="deviceType" name="deviceType" [(ngModel)]="receive.deviceType" required>
-          <mat-option class="option" *ngFor="let dtype of deviceType" [value]="dtype">{{ dtype}}</mat-option>
-      </mat-select>
+      <input type="text" id="deviceType" placeholder="نوع الجهاز" name="deviceType" [(ngModel)]="receive.deviceType" required>
     </div>
     <div class="form-group" fxLayout="row" fxLayoutAlign="center center" dir="rtl">
-      <!-- <label for="clientSelection">client selection:</label> -->
       <mat-select placeholder="نوع العميل" id="clientSelection" name="clientSelection" [(ngModel)]="receive.clientSelection" required>
           <mat-option class="option" *ngFor="let ctype of clientSelection" [value]="ctype" selected>{{ ctype }}</mat-option>
       </mat-select>
     </div>
     <div class="form-group" fxLayout="row" fxLayoutAlign="center center" dir="rtl">
-      <!-- <label for="section">section:</label> -->
-      <mat-select placeholder="القسم" id="section" name="section" [(ngModel)]="receive.section" required>
+      <mat-select placeholder="القسم" id="section" name="section" [(ngModel)]="receive.section" (selectionChange)="determinFees()" required>
           <mat-option class="option" *ngFor="let sec of section" [value]="sec">{{ sec }}</mat-option>
       </mat-select>
     </div>
     <div class="form-group" fxLayout="row" fxLayoutAlign="center center" dir="rtl">
-      <!-- <label for="complain">complain:</label> -->
       <textarea matInput placeholder="الشكوي" id="complain" name="complain" cols="30" rows="10" [(ngModel)]="receive.complain" required></textarea>
     </div>
     <div class="form-group" fxLayout="row" fxLayoutAlign="center center" dir="rtl">
-      <!-- <label for="notes">notes:</label> -->
       <textarea matInput  placeholder="الملاحظات" id="notes" name="notes" cols="30" rows="10" [(ngModel)]="receive.notes"></textarea>
     </div>
     <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="10px" dir="rtl">
       <div class="form-group" fxLayout="row" fxLayoutAlign="center center" *ngIf="isNew">
-        <!-- <label for="receivingDate">تاريخ الإستلام:</label> -->
         <input type="text" id="receivingDate" name="receivingDate" [(ngModel)]="receive.receivingDate" placeholder={{date}} value={{date}} disabled>
       </div>
       <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
-        <!-- <label for="fees">fees:</label> -->
         <input type="number" id="fees" name="fees" [(ngModel)]="receive.fees" required>
       </div>
     </div>
     <button class="btn btn-primary" type="submit" [disabled]="deviceForm.invalid">Save</button>
   </form>
 
-  <app-print-layout [clientName]="receive.clientName" [telnum]="receive.telnum" [deviceType]="receive.deviceType" [section]="receive.section" [_id]="recieptId" [receivingDate]="date"></app-print-layout>
-  <button ngxPrint printSectionId="print-section" printTitle="إيصال الإستلام" target="_blank">Print Receipt</button>
+  <app-print-layout [clientName]="receive.clientName" [telnum]="receive.telnum" [deviceType]="receive.deviceType" [section]="receive.section" [_id]="recieptId" [receivingDate]="date" [complain]="receive.complain" [fees]="receive.fees"></app-print-layout>
+  <button ngxPrint printSectionId="print-section" printTitle="إيصال الإستلام" [printStyle]="{p : {'line-height': '75%', 'font-weight': 'bold', 'font-size' : '11px'}, svg :{'width':'100px','height':'100px'}, span :{'padding-top': '7px'}, h3: {'padding' : '3px'}}" target="_blank">Print Receipt</button>
+
+  <button ngxPrint printSectionId="barcode">إطبع الباركود</button>
 </div>

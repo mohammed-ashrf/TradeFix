@@ -21,4 +21,6 @@ export class PrintLayoutComponent {
   receivingDate!: string;
   @Input()
   _id!: string;
+  @Input()
+  fees!: number;
 }

@@ -15,4 +15,4 @@ export interface Receive {
 
 export const ClientSelection = ['User','Dealer'];
 export const DeviceType = ['dell','acer','Asus','Mac','Lenovo','LG','Panasonic','samsong','Toshiba','Razer'];
-export const section = ['laptop','cs3','hdd','soft','MB','VGA']
+export const section = ['soft','laptop','cs3','MB','hdd','VGA']

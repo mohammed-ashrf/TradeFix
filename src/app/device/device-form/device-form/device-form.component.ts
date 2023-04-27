@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Receive,ClientSelection,DeviceType,section } from 'src/app/shared/recieve';
 import { DeviceService } from '../../device.service';
 import { Location } from '@angular/common';
+import * as JsBarcode from "jsbarcode";
 
 @Component({
   selector: 'app-device-form',
@@ -10,6 +11,7 @@ import { Location } from '@angular/common';
   styleUrls: ['./device-form.component.scss'],
 })
 export class DeviceFormComponent implements OnInit {
+
   receive: Receive = {
     clientName: '',
     telnum: '',
@@ -25,9 +27,11 @@ export class DeviceFormComponent implements OnInit {
   };
   isNew = true;
 
+  barcodeData = "12345";
+  barcodeImage!: string;
   prtContent:any;
-  // WinPrint:any;
-
+  value = 'https://www.youtube.com/';
+    
   edited:boolean = false;
   recieptId:any;
   date:any;
@@ -64,6 +68,20 @@ export class DeviceFormComponent implements OnInit {
     return `${year}-${month}-${day}`;
   }
 
+  determinFees() {
+    if (this.receive.section == "laptop" || this.receive.section == "MB") {
+      this.receive.fees = 75;
+    }else if (this.receive.section == "soft"){
+      this.receive.fees = 25;
+    }else if (this.receive.section == "cs3"){
+      this.receive.fees = 50;
+    }else if (this.receive.section == "VGA"){
+      this.receive.fees = 40;
+    }else if (this.receive.section == "hdd") {
+      this.receive.fees = 75;
+    }
+  }
+
   submit(): void {
     if (this.isNew) {
       this.receive.receivingDate = this.getDate();
@@ -72,7 +90,7 @@ export class DeviceFormComponent implements OnInit {
         this.edited = true;
         this.recieptId = data._id;
         window.alert(`Success saving device ${data._id}. You can print now.`);
-        // this.router.navigate(['/devices']);
+        navigator.clipboard.writeText(data._id);
       });
       console.log(this.receive._id);
     } else {

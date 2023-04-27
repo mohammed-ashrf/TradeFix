@@ -13,9 +13,7 @@
     "electron-build": "ng build --base-href ./ && electron .",
     "electron": "electron .",
     "package-mac": "electron-packager . — overwrite — platform=darwin — arch=x64 — icon=assets/icons/mac/icon.icns — prune=true — out=release-builds",
-
     "package-win": "electron-packager . Al-Ahram-setup — overwrite — asar=true — platform=win32 — arch=ia32 — icon=assets/icons/win/repairing.ico — prune=true — out=release-builds — version-string.CompanyName=CE — version-string.FileDescription=CE — version-string.ProductName=\"Al-Ahram\"",
-
     "package-linux": "electron-packager . Al-Ahram-setup — overwrite — asar=true — platform=linux — arch=x64 — icon=assets/icons/png/repairing.png — prune=true — out=release-builds"
   },
   "private": true,
@@ -30,8 +28,10 @@
     "@angular/platform-browser": "^15.2.0",
     "@angular/platform-browser-dynamic": "^15.2.0",
     "@angular/router": "^15.2.0",
+    "@techiediaries/ngx-qrcode": "^9.1.0",
     "bson": "^5.1.0",
     "hammerjs": "^2.0.8",
+    "jsbarcode": "^3.11.5",
     "ngx-print": "^1.3.1",
     "pdfkit": "^0.13.0",
     "qrcode": "^1.5.1",

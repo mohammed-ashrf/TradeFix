@@ -1,0 +1,41 @@
+<div class="Bar">
+    <button mat-button (click)="goBack()" class="back">back</button>
+    <div class="searchBar">
+      <input type="text" [(ngModel)]="searchTerm" placeholder="Search..." (keyup.enter)="search()" (keyup)="search()">
+      <button (click)="search()">Search</button>
+    </div>
+  </div>
+  
+  <table class="table" *ngIf="isSearched">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Section</th>
+          <th>Name</th>
+          <th>clientSelection</th>
+          <th>deviceType</th>
+          <th>complain</th>
+          <th>notes</th>
+          <th>finished</th>
+          <th>recievingDate</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let device of searchResult">
+          <td>{{ device._id }}</td>
+          <td>{{ device.section }}</td>
+          <td>{{ device.clientName }}</td>
+          <td>{{ device.clientSelection }}</td>
+          <td>{{ device.deviceType }}</td>
+          <td>{{ device.complain }}</td>
+          <td>{{ device.notes }}</td>   
+          <td>{{ device.finished }}</td>
+          <td>{{ device.recievingDate }}</td> 
+          <td>
+            <a mat-button [routerLink]="['/devices', device._id, 'edit']">Edit</a>
+            <a mat-button (click)="onDelete(device._id)">Delete</a>
+          </td>
+        </tr>
+      </tbody>
+  </table>
+  
