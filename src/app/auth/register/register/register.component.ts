@@ -38,7 +38,7 @@ export class RegisterComponent implements OnInit {
       },
       (error) => {
         console.error(error);
-        window.alert(`try again ${error}`);
+        window.alert(`try again: ${JSON.stringify(error)}`);
       }
     );
     }

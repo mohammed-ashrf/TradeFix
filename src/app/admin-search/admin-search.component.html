@@ -6,36 +6,37 @@
     </div>
   </div>
   
-  <table class="table" *ngIf="isSearched">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Section</th>
-          <th>Name</th>
-          <th>clientSelection</th>
-          <th>deviceType</th>
-          <th>complain</th>
-          <th>notes</th>
-          <th>finished</th>
-          <th>recievingDate</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let device of searchResult">
-          <td>{{ device._id }}</td>
-          <td>{{ device.section }}</td>
-          <td>{{ device.clientName }}</td>
-          <td>{{ device.clientSelection }}</td>
-          <td>{{ device.deviceType }}</td>
-          <td>{{ device.complain }}</td>
-          <td>{{ device.notes }}</td>   
-          <td>{{ device.finished }}</td>
-          <td>{{ device.recievingDate }}</td> 
-          <td>
-            <a mat-button [routerLink]="['/devices', device._id, 'edit']">Edit</a>
-            <a mat-button (click)="onDelete(device._id)">Delete</a>
-          </td>
-        </tr>
-      </tbody>
-  </table>
+  <table class="table" *ngIf="isSearched" dir="rtl">
+    <thead dir="rtl">
+      <tr dir="rtl">
+        <th dir="rtl">الكود</th>
+        <th dir="rtl">القسم</th>
+        <th dir="rtl">اﻷسم</th>
+        <th dir="rtl">رقم التليفون</th>
+        <th dir="rtl">نوع الجهاز</th>
+        <th dir="rtl">الشكوي</th>
+        <th dir="rtl">الملاحظات</th>
+        <th dir="rtl">نوع العميل</th>
+        <th dir="rtl">تاريخ الإستلام</th>
+      </tr>
+    </thead>
+    <tbody dir="rtl">
+      <tr *ngFor="let device of searchResult" dir="rtl">
+        <td dir="rtl">{{ device._id }}</td>
+        <td dir="rtl">{{ device.section }}</td>
+        <td dir="rtl">{{ device.clientName }}</td>
+        <td dir="rtl">{{ device.telnum }}</td>
+        <td dir="rtl">{{ device.deviceType }}</td>
+        <td dir="rtl">{{ device.complain }}</td>
+        <td dir="rtl">{{ device.notes }}</td>   
+        <td dir="rtl">{{ device.clientSelection }}</td>
+        <td dir="rtl">{{ device.receivingDate }}</td> 
+        <td>
+          <a mat-button [routerLink]="['/devices', device._id, 'edit']">تعديل</a>
+          <a mat-button (click)="onDelete(device._id)">حذف</a>
+        </td>
+      </tr>
+    </tbody>
+</table>
+
   

@@ -26,7 +26,7 @@ export class LoginComponent implements OnInit {
         },
         (error) => {
           console.error(error);
-          window.alert(`username or password is wrong ${error}`);
+          window.alert(`username or password is wrong ${JSON.stringify(error)}`);
         }
       );
     }

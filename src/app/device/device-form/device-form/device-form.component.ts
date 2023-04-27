@@ -82,21 +82,41 @@ export class DeviceFormComponent implements OnInit {
     }
   }
 
+  copyToClipboard() {
+    navigator.clipboard.writeText(this.recieptId).then(() => {
+      console.log("Receipt ID copied to clipboard");
+    }, (error) => {
+      console.error("Failed to copy receipt ID to clipboard:", error);
+    });
+  }
   submit(): void {
     if (this.isNew) {
       this.receive.receivingDate = this.getDate();
-      this.deviceService.create(this.receive).subscribe((data) => {
-        console.log(data._id);
-        this.edited = true;
-        this.recieptId = data._id;
-        window.alert(`Success saving device ${data._id}. You can print now.`);
-        navigator.clipboard.writeText(data._id);
-      });
+      this.deviceService.create(this.receive).subscribe(
+        (data) => {
+          console.log(data._id);
+          this.edited = true;
+          this.recieptId = data._id;
+          window.alert(`Success saving device ${data._id}. You can print now.`);
+          navigator.clipboard.writeText(data._id);
+          this.copyToClipboard();
+        },
+        (error) => {
+          console.error('Error creating device:', error);
+          window.alert('Error creating device. Please try again later.');
+        }
+      );
       console.log(this.receive._id);
     } else {
-      this.deviceService.update(this.receive._id, this.receive).subscribe(() => {
-        this.router.navigate(['/devices']);
-      });
+      this.deviceService.update(this.receive._id, this.receive).subscribe(
+        () => {
+          this.router.navigate(['/devices']);
+        },
+        (error) => {
+          console.error('Error updating device:', JSON.stringify(error));
+          window.alert(`Error updating device: ${JSON.stringify(error)}. Please try again later.`);
+        }
+      );
     }
   }
 }
