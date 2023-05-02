@@ -51,6 +51,7 @@ export class SearchComponent implements OnInit {
   searchDevice(devices: any[], userInput: any) {
     try {
       if (typeof userInput !== 'string') {
+        window.alert('User input must be a string');
         throw new Error('User input must be a string');
       }
       userInput = userInput.toLowerCase();
@@ -69,15 +70,18 @@ export class SearchComponent implements OnInit {
         return false;
       });
     } catch (error) {
-      window.alert('no device found');
       console.error(error);
       return [];
     }
   }
 
+  testInput(str: string) {
+    return /[A-Za-z0-9\s\S]+/.test(str);
+  }
+
   search() {
-    this.searchResult = this.searchDevice(this.devices, this.searchTerm);
-    console.log(this.searchResult);
+      this.searchResult = this.searchDevice(this.devices, this.searchTerm);
+      console.log(this.searchResult);
   }
   
 }

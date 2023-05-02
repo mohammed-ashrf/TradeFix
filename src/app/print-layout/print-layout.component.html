@@ -207,20 +207,6 @@
     </div>
 </div>
 
-<!-- <div id="barcode" ngxPrintStyles>
-    <p>{{clientName}}</p>
-    <p>{{_id}}</p>
-    <p>{{receivingDate}}</p>
-    <p>{{section}}</p>
-    <style>
-        @media print {
-          body {
-            width: 4cm;
-            height: 2.5cm;
-          }
-        }
-      </style>
-</div> -->
 <div id="barcode" ngxPrintStyles>
     <div style="text-align: center;">
         <p style="margin: 0; font-size: 14px; font-weight: bold;">{{clientName}}</p>
@@ -229,7 +215,7 @@
         <p style="margin: 0; font-size: 12px;">{{_id}}</p>
     </div>
     <div style="text-align: center;">
-        <p style="margin: 0; font-size: 12px;">{{receivingDate}}   {{section}}</p>
+        <p style="margin: 0; font-size: 12px;">{{receivingDate}}     {{section}}</p>
     </div>
     <style>
         @media print {
@@ -242,7 +228,6 @@
             flex-direction: column;
             justify-content: space-between;
             border: 1px solid black;
-            padding: 5px;
             width: 4cm;
             height: 2.5cm;
         }

@@ -24,22 +24,6 @@ p {
     flex: 1;
 }
 
-.toolbar {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 60px;
-    display: flex;
-    align-items: center;
-    background-color: #1976d2;
-    color: white;
-    font-weight: 600;
-}
-
-.toolbar img {
-    margin: 0 16px;
-}
 
 .content {
     display: flex;
@@ -226,40 +210,6 @@ svg#clouds {
     visibility: hidden;
     }
 }
-/* table style */
-.div-table {
-    width: max-content;
-    margin: auto;
-}
-table{
-    width: max-content;
-    height: max-content;
-}
-table, th, td {
-    border-collapse: collapse;
-}
-th, td {
-    border-style: solid;
-}
-th {
-    text-align: right;
-}
-/* tr:nth-child(even) {
-    background-color: rgba(150, 212, 212, 0.4);
-}
-  
-th:nth-child(even),td:nth-child(even) {
-    background-color: rgba(150, 212, 212, 0.4);
-} */
-
-tr {
-    border-bottom: 1px solid #ddd;
-}
-
-tr:hover {
-    background-color: #D6EEEE;
-    cursor: pointer;
-}
 
 // ----------------------------------------------------------
 .centered {
@@ -288,91 +238,139 @@ a {
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-  }
+}
 
-  .data-column {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 50px;
-    width: calc(100% / 4);
-    margin-bottom: 10px;
+.data-column {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50px;
+  width: calc(100% / 4);
+  margin-bottom: 10px;
+}
+.deviceCard {
+  margin: 0 10px;
+  border: 3px solid #1976d2;
+  border-radius: 25px;
+  background-color: #000000e5;
+  animation: cardEnterAnimation 500ms forwards;
+}
+.deviceCard p{
+  color: #fff;
+}
+.editButton {
+  margin-top: 10px;
+  background-color: #fff;
+  color: #000; 
+  border: none; 
+  border-radius: 15px;
+  padding: 8px 16px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.editButton:hover {
+  background-color: #2196f3;
+}
+
+.deletButton {
+  margin-top: 10px;
+  background-color: #fff;
+  color: #000; 
+  border: none; 
+  border-radius: 15px;
+  padding: 8px 16px;
+  font-size: 14px;
+  cursor: pointer;
+}
+.deletButton:hover {
+  background-color: #2196f3;
+}
+
+@keyframes cardEnterAnimation {
+  from {
+    opacity: 0;
+    transform: translateY(50px);
   }
-  .deviceCard {
-    margin: 0 10px;
-    border: 3px solid #1976d2;
-    border-radius: 25px;
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes cardLeaveAnimation {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+}
+@media screen and (max-width: 400px) {
+  .header-column {
+    font-size: 14px;
+    width: calc(100% / 2);
+  }
+  .data-column {
+    font-size: 14px;
+    width: calc(100% / 2);
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .header-column {
+    font-size: 14px;
+    width: calc(100% / 3);
+  }
+  .data-column {
+    font-size: 14px;
+    width: calc(100% / 2);
+  }
+}
+@media screen and (max-width: 800px) {
+  svg#rocket {
+    width: 80px;
+    height: 80px;
+    position: absolute;
+    left: -50px;
+    top: -24px;
+    border-radius: 100px;
+    border: 3px solid #fff;
     background-color: #000000e5;
   }
-  .deviceCard p{
-    color: #fff;
-  }
-  .editButton {
-    margin-top: 10px;
-    background-color: #fff;
-    color: #fff; 
-    border: none; 
-    border-radius: 15px;
-    padding: 8px 16px;
+}
+
+@media screen and (min-width: 601px) and (max-width: 900px) {
+  .header-column {
     font-size: 14px;
-    cursor: pointer;
+    width: calc(100% / 6);
   }
+  .data-column {
+    font-size: 14px;
+    width: calc(100% / 3);
+  }
+}
 
-  .editButton:hover {
-    background-color: #2196f3;
+@media screen and (min-width: 901px) and (max-width: 1200px) {
+  .header-column {
+    font-size: 16px;
+    width: calc(100% / 8);
   }
+  .data-column {
+    font-size: 16px;
+    width: calc(100% / 5);
+  }
+}
 
-  @media screen and (max-width: 400px) {
-    .header-column {
-      font-size: 14px;
-      width: calc(100% / 2);
-    }
-    .data-column {
-      font-size: 14px;
-      width: calc(100% / 2);
-    }
+@media screen and (min-width: 1201px) {
+  .header-column {
+    font-size: 16px;
+    width: calc(100% / 9);
   }
-
-  @media screen and (max-width: 600px) {
-    .header-column {
-      font-size: 14px;
-      width: calc(100% / 3);
-    }
-    .data-column {
-      font-size: 14px;
-      width: calc(100% / 2);
-    }
+  .data-column {
+    font-size: 16px;
+    width: calc(100% / 5);
   }
-
-  @media screen and (min-width: 601px) and (max-width: 900px) {
-    .header-column {
-      font-size: 14px;
-      width: calc(100% / 6);
-    }
-    .data-column {
-      font-size: 14px;
-      width: calc(100% / 3);
-    }
-  }
-
-  @media screen and (min-width: 901px) and (max-width: 1200px) {
-    .header-column {
-      font-size: 16px;
-      width: calc(100% / 8);
-    }
-    .data-column {
-      font-size: 16px;
-      width: calc(100% / 5);
-    }
-  }
-
-  @media screen and (min-width: 1201px) {
-    .header-column {
-      font-size: 16px;
-      width: calc(100% / 9);
-    }
-    .data-column {
-      font-size: 16px;
-      width: calc(100% / 5);
-    }
-  }
+}

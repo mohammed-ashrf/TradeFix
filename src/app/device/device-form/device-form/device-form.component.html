@@ -32,7 +32,7 @@
       <textarea matInput  placeholder="الملاحظات" id="notes" name="notes" cols="30" rows="10" [(ngModel)]="receive.notes"></textarea>
     </div>
     <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="10px" dir="rtl">
-      <div class="form-group" fxLayout="row" fxLayoutAlign="center center" *ngIf="isNew">
+      <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
         <input type="text" id="receivingDate" name="receivingDate" [(ngModel)]="receive.receivingDate" placeholder={{date}} value={{date}} disabled>
       </div>
       <div class="form-group" fxLayout="row" fxLayoutAlign="center center">

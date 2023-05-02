@@ -1,141 +1,146 @@
 .container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-  
-    h2 {
-      font-size: 24px;
-      color: #333;
-      text-align: center;
-    }
-  
-    form {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      width: 50%;
-      animation: fadeIn 1s ease-in-out;
-  
-      .form-group {
-        margin-bottom: 20px;
-  
-        label {
-          display: block;
-          margin-bottom: 5px;
-          font-weight: bold;
-        }
-  
-        input[type="text"],
-        input[type="email"],
-        input[type="password"] {
-          display: block;
-          width: 100%;
-          padding: 10px;
-          border: 1px solid #ccc;
-          border-radius: 4px;
-          font-size: 16px;
-  
-          &:focus {
-            outline: none;
-            border-color: #007bff;
-          }
-        }
-      }
-  
-      .button-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 100%;
-  
-        button[type="submit"] {
-          margin-top: 20px;
-          padding: 10px 20px;
-          background-color: #007bff;
-          color: #fff;
-          border: none;
-          border-radius: 4px;
-          font-size: 16px;
-          cursor: pointer;
-  
-          &:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-          }
-        }
-  
-        button.mat-button {
-          margin-left: 20px;
-        }
-        button.register  {
-            margin-left: 20px;
-        }
-  
-        button[type="submit"]:hover {
-          background-color: #0062cc;
-        }
-      }
-    }
+  width: 100%;
+  max-width: 350px;
+  height: auto;
+  margin: auto;
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 10px;
+}
+
+.slide-in {
+  text-align: center;
+  animation: slide-in 0.5s ease-out;
+}
+
+@keyframes slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.form-group {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+.form-group input:hover {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.btn-toggle-password {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  outline: none;
+  padding: 0;
+}
+
+.btn-toggle-password svg {
+  display: block;
+  width: 24px;
+  height: 24px;
+}
+
+.btn-toggle-password:hover svg {
+  color: #007bff;
+}
+
+@media (max-width: 480px) {
+  .form-group input {
+    font-size: 14px;
   }
   
-/* Animation for login form */
-@keyframes fadeIn {
-    0% {
-        opacity: 0;
-        transform: translateY(-20px);
-    }
-    100% {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* Slide-in animation for login form */
-.slide-in {
-    animation: slideIn 1s ease-in-out;
-}
-
-@keyframes slideIn {
-    0% {
-        opacity: 0;
-        transform: translateX(-100%);
-    }
-    100% {
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
+  .btn-toggle-password {
+    right: 5px;
+  }
   
-/* Pulse animation for submit button */
+  .btn-toggle-password svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.button-group {
+  text-align: center;
+}
+
+.btn {
+  display: inline-block;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background: linear-gradient(to bottom, #007bff, #0066cc);
+  font-size: 18px;
+  background-color: #007bff;
+  color: #fff;
+}
+
 .Pulse {
-    animation: pulse 2s ease-in-out infinite;
+  animation: pulse 1s ease-out infinite;
 }
 
 @keyframes pulse {
-    0% {
-        transform: scale(1);
-    }
-    50% {
-        transform: scale(1.2);
-    }
-    100% {
-        transform: scale(1);
-    }
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
-/* Rotate animation for logo */
-.Rotate {
-    animation: spin 2s linear infinite;
+form.ng-invalid input.ng-invalid {
+  border-color: #007bff;
 }
 
-@keyframes spin {
-    0% {
-        transform: rotate(0deg);
-    }
-    100% {
-        transform: rotate(360deg);
-    }
+form.ng-valid input.ng-valid {
+  border-color: #007bff;
+}
+
+.message {
+  margin-top: 20px;
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 16px;
+  text-align: center;
+}
+
+.message p {
+  margin: 0;
+}
+
+.message p:first-of-type {
+  color: green;
+}
+
+.message p:last-of-type {
+  color: red;
 }

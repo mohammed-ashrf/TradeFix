@@ -171,9 +171,6 @@
   
       <span>الصفحة الرئسية</span>
   
-      <svg id="rocket-smoke" xmlns="http://www.w3.org/2000/svg" width="516.119" height="1083.632" viewBox="0 0 516.119 1083.632">
-      <path id="Path_40" data-name="Path 40" d="M644.6,141S143.02,215.537,147.049,870.207s342.774,201.755,342.774,201.755S404.659,847.213,388.815,762.2c-27.116-145.51-11.551-384.124,271.9-609.1C671.15,139.365,644.6,141,644.6,141Z" transform="translate(-147.025 -140.939)" fill="#f5f5f5"/>
-      </svg>
   
   </div>
   
@@ -207,8 +204,8 @@
 </div>
 <h2 class="centered">Device List</h2>
 
-<div class="cards-container" fxLayout="column" fxLayoutGap="20px" [@fadeInOut]>
-  <mat-card class="deviceCard" *ngFor="let device of devices" [@scaleInOut]>
+<div class="cards-container" fxLayout="column" fxLayoutGap="20px" >
+  <mat-card class="deviceCard" *ngFor="let device of devices">
     <mat-card-content fxLayout="column" fxLayoutGap="10px">
       <div fxLayout="column" fxLayoutAlign="center">
         <div class="data-row">
@@ -243,7 +240,7 @@
           </div>
         </div>
       </div>
-      <button class="editButton" mat-button [routerLink]="['/devices', device._id, 'edit']" [@scaleInOut]>Edit</button>
+      <button class="editButton" mat-button [routerLink]="['/devices', device._id, 'edit']">Edit</button>
     </mat-card-content>
   </mat-card>
 </div>

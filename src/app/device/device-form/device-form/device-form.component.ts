@@ -27,10 +27,6 @@ export class DeviceFormComponent implements OnInit {
   };
   isNew = true;
 
-  barcodeData = "12345";
-  barcodeImage!: string;
-  prtContent:any;
-  value = 'https://www.youtube.com/';
     
   edited:boolean = false;
   recieptId:any;
@@ -52,6 +48,8 @@ export class DeviceFormComponent implements OnInit {
       this.isNew = false;
       this.deviceService.getOne(id).subscribe((device) => {
         this.receive = device;
+        this.recieptId = device._id;
+        this.date = device.receivingDate;
       });
     }
     this.date = this.getDate();

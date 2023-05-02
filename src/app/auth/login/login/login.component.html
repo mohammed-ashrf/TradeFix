@@ -2,13 +2,31 @@
     <h2 class="slide-in">Login</h2>
     <form (ngSubmit)="submit()" #loginForm="ngForm">
         <div class="form-group">
-            <input type="text" placeholder="Email" id="email" name="email" [(ngModel)]="email" required>
+            <input autofocus type="text" placeholder="Email" id="email" name="email" [(ngModel)]="email" required>
         </div>
         <div class="form-group">
-            <input type="password" placeholder="Password" id="password" name="password" [(ngModel)]="password" required>
+            <input type="{{ showPassword ? 'text' : 'password' }}" placeholder="Password" id="password" name="password" [(ngModel)]="password" required>
+            <button type="button" (click)="toggleShowPassword()" class="btn-toggle-password">
+                <svg viewBox="0 0 200 200" width="16" height="16" *ngIf="showPassword">
+                    <circle cx="100" cy="100" r="90" fill="#fff" stroke="#000" stroke-width="5" />
+                    <circle cx="100" cy="100" r="60" fill="#fff" stroke="#000" stroke-width="5" />
+                    <circle cx="100" cy="100" r="30" fill="#000" />
+                    <circle cx="100" cy="100" r="10" fill="#fff" />
+                  </svg>
+                <svg viewBox="0 0 200 200" width="16" height="16" *ngIf="!showPassword">
+                    <circle cx="100" cy="100" r="90" fill="#fff" stroke="#000" stroke-width="5" />
+                    <circle cx="100" cy="100" r="60" fill="#fff" stroke="#000" stroke-width="5" />
+                    <circle cx="100" cy="100" r="30" fill="#000" />
+                    <path d="M 80 130 Q 100 110 120 130" stroke="#000" stroke-width="10" fill="none" />
+                    <path d="M 80 70 Q 100 90 120 70" stroke="#000" stroke-width="10" fill="none" />
+                </svg>
+            </button>
         </div>
         <div class="button-group">
             <button class="btn btn-primary Pulse slide-in" type="submit" [disabled]="loginForm.invalid">Login</button>
         </div>
     </form>
+    <div class="message" *ngIf="loginAttempted">
+        <p *ngIf="loginNotSuccessfull"> Invalid Email or Password</p>
+    </div>
 </div>
