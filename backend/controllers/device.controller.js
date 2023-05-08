@@ -10,7 +10,6 @@ exports.getDevices = async function (req, res) {
   }
 };
 
-
 exports.getDeviceById = async function (req, res) {
   try {
     const device = await Device.findById(req.params.id);
@@ -46,13 +45,13 @@ exports.deleteDeviceById = async function (req, res) {
 
 exports.createDevice = async function (req, res) {
   try {
-    const { clientName, telnum,deviceType,section,clientSelection,complain,notes,fees,finished, receivingDate } = req.body;
+    const { clientName, telnum,deviceType,section,clientSelection,complain,notes,fees,finished, receivingDate, repaired, paidAdmissionFees, delivered, returned } = req.body;
 
     if (!clientName) {
       return res.status(400).json({ message: 'Name is required required' });
     }
     
-    const device = new Device({ clientName, telnum,deviceType,section,clientSelection,complain,notes,fees,finished,receivingDate });
+    const device = new Device({ clientName, telnum,deviceType,section,clientSelection,complain,notes,fees,finished,receivingDate, repaired, paidAdmissionFees, delivered, returned});
     const savedDevice = await device.save();
     res.status(201).json(savedDevice);
   } catch (error) {

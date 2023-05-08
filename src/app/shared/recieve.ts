@@ -1,4 +1,3 @@
-// import { ObjectId } from 'bson';
 export interface Receive {
   clientName: string;
   telnum: string;
@@ -9,8 +8,25 @@ export interface Receive {
   notes: string;
   fees: number;
   finished: boolean;
+  repaired: boolean;
+  paidAdmissionFees: boolean;
+  delivered: boolean;
+  returned: boolean;
   receivingDate: string;
   _id: '';
+}
+
+export interface Query {
+    repaired: boolean,
+    paidAdmissionFees: boolean,
+    delivered: boolean,
+    returned: boolean,
+    inProgress: boolean,
+    newDevices: boolean,
+    today: boolean,
+    thisMonth: boolean,
+    thisYear: boolean,
+    specificYear: string,
 }
 
 export const ClientSelection = ['User','Dealer'];

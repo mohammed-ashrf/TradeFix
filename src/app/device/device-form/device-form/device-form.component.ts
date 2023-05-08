@@ -22,6 +22,10 @@ export class DeviceFormComponent implements OnInit {
     notes: '',
     fees: 0,
     finished: false,
+    repaired: false,
+    paidAdmissionFees: false,
+    delivered: false,
+    returned: false,
     receivingDate: '',
     _id: '',
   };
@@ -48,7 +52,7 @@ export class DeviceFormComponent implements OnInit {
       this.isNew = false;
       this.deviceService.getOne(id).subscribe((device) => {
         this.receive = device;
-        this.recieptId = device._id;
+        this.recieptId = device._id.slice(-12);
         this.date = device.receivingDate;
       });
     }
@@ -94,7 +98,7 @@ export class DeviceFormComponent implements OnInit {
         (data) => {
           console.log(data._id);
           this.edited = true;
-          this.recieptId = data._id;
+          this.recieptId = data._id.slice(-12);
           window.alert(`Success saving device ${data._id}. You can print now.`);
           navigator.clipboard.writeText(data._id);
           this.copyToClipboard();

@@ -111,6 +111,43 @@ svg.material-icons:not(:last-child) {
     font-size: larger;
 }
 
+.filtterQuerry {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.query {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+label {
+  font-weight: bold;
+}
+
+input[type="checkbox"] {
+  margin-right: 0.5rem;
+}
+
+#filterButton {
+  padding: 0.5rem 1rem;
+  background-color: #000000e5;
+  color: #fff;
+  border: 3px solid #1976d2;
+  border-radius: 1.5rem;
+  cursor: pointer;
+}
+
+#filterButton:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 17px rgba(0, 0, 0, 0.35);
+}
+
 svg#rocket {
     width: 80px;
     height: 80px;
@@ -225,35 +262,43 @@ a {
   border-radius: 4px;
   text-decoration: none;
 }
+
 .data-row {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
 }
 
 .data-column {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 50px;
-  width: calc(100% / 4);
+  min-height: 50px;
   margin-bottom: 10px;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-all;
 }
+
 .deviceCard {
   margin: 0 10px;
   border: 3px solid #1976d2;
   border-radius: 25px;
   background-color: #000000e5;
   animation: cardEnterAnimation 500ms forwards;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
 }
-.deviceCard p{
+
+.deviceCard p {
   color: #fff;
 }
+
 .editButton {
   margin-top: 10px;
   background-color: #fff;
-  color: #000; 
+  color: #000;
   border: none;
   border-radius: 15px;
   padding: 8px 16px;
@@ -287,28 +332,26 @@ a {
   }
 }
 
-
 @media screen and (max-width: 400px) {
   .header-column {
     font-size: 14px;
-    width: calc(100% / 2);
   }
   .data-column {
     font-size: 14px;
-    width: calc(100% / 2);
+    flex-basis: 100%;
   }
 }
 
 @media screen and (max-width: 600px) {
   .header-column {
     font-size: 14px;
-    width: calc(100% / 3);
   }
   .data-column {
     font-size: 14px;
-    width: calc(100% / 2);
+    flex-basis: 50%;
   }
 }
+
 @media screen and (max-width: 800px) {
   svg#rocket {
     width: 80px;
@@ -325,32 +368,29 @@ a {
 @media screen and (min-width: 601px) and (max-width: 900px) {
   .header-column {
     font-size: 14px;
-    width: calc(100% / 6);
   }
   .data-column {
     font-size: 14px;
-    width: calc(100% / 3);
+    flex-basis: 50%;
   }
 }
 
 @media screen and (min-width: 901px) and (max-width: 1200px) {
   .header-column {
     font-size: 16px;
-    width: calc(100% / 8);
   }
   .data-column {
     font-size: 16px;
-    width: calc(100% / 5);
+    flex-basis: 33.33%;
   }
 }
 
 @media screen and (min-width: 1201px) {
   .header-column {
     font-size: 16px;
-    width: calc(100% / 9);
   }
   .data-column {
     font-size: 16px;
-    width: calc(100% / 5);
+    flex-basis: 25%;
   }
 }

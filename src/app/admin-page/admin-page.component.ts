@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Receive } from 'src/app/shared/recieve';
+import { Receive,Query } from 'src/app/shared/recieve';
 import { DeviceService } from '../device/device.service';
 
 @Component({
@@ -10,15 +10,47 @@ import { DeviceService } from '../device/device.service';
 })
 export class AdminPageComponent implements OnInit {
   devices: Receive[] = [];
+  allDevices: Receive[] = [];
   DevicesCount!:number;
-
+  query:Query = {
+    repaired : false,
+    paidAdmissionFees : false,
+    delivered : false,
+    returned : false,
+    inProgress : true,
+    newDevices: false,
+    today: false,
+    thisMonth: false,
+    thisYear: true,
+    specificYear: '',
+  }
   constructor(private deviceService: DeviceService, private router: Router) {}
 
   ngOnInit(): void {
     this.deviceService.getAll().subscribe((devices) => {
-      this.devices = devices;
+      this.devices = devices.reverse();
+      this.allDevices = this.devices;
+      this.filterDevices();
       this.DevicesCount = devices.length;
     });
+  }
+
+  filterDevices() {
+    this.devices = this.allDevices;
+    const filterCriteria = {
+      repaired: this.query.repaired,
+      paidAdmissionFees: this.query.paidAdmissionFees,
+      delivered: this.query.delivered,
+      returned: this.query.returned,
+      inProgress: this.query.inProgress,
+      newDevices: this.query.newDevices,
+      today: this.query.today,
+      thisMonth: this.query.thisMonth,
+      thisYear: this.query.thisYear,
+      specificYear: this.query.specificYear,
+    };
+    const devices = this.deviceService.filterDevices(this.allDevices, filterCriteria);
+    this.devices = devices;
   }
 
   onDelete(id: string): void {

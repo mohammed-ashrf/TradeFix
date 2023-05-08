@@ -1,46 +1,39 @@
 import { Component, OnInit } from '@angular/core';
 import { DeviceService } from '../device/device.service';
 import { Location } from '@angular/common';
-import { trigger, transition, style, animate } from '@angular/animations';
+import { Receive } from '../shared/recieve';
 
 @Component({
   selector: 'app-search',
   templateUrl: './search.component.html',
   styleUrls: ['./search.component.scss'],
-  animations: [
-    trigger('fadeInOut', [
-      transition(':enter', [
-        style({ opacity: 0 }),
-        animate('300ms ease-in-out', style({ opacity: 1 }))
-      ]),
-      transition(':leave', [
-        animate('300ms ease-in-out', style({ opacity: 0 }))
-      ])
-    ]),
-    trigger('scaleInOut', [
-      transition(':enter', [
-        style({ transform: 'scale(0)' }),
-        animate('300ms ease-in-out', style({ transform: 'scale(1)' }))
-      ]),
-      transition(':leave', [
-        animate('300ms ease-in-out', style({ transform: 'scale(0)' }))
-      ])
-    ])
-  ]
 })
 export class SearchComponent implements OnInit {
   searchTerm!: any;
   searchResults!: any[];
-  devices!:any[];
+  devices :Receive[] = [];
   isSearched:boolean = false;
   searchResult!:any[];
-
+  allDevices: Receive[] = [];
+  query = {
+    repaired : false,
+    paidAdmissionFees : false,
+    delivered : false,
+    returned : false,
+    inProgress : false,
+    newDevices: false,
+    today: false,
+    thisMonth: false,
+    thisYear: false,
+    specificYear: '',
+  }
   constructor(private deviceService: DeviceService,
     private location: Location) { }
 
   ngOnInit() {
     this.deviceService.getAll().subscribe((devices) => {
-      this.devices = devices;
+      this.devices = devices.reverse();
+      this.allDevices = this.devices;
       console.log(devices);
     });
   }
@@ -84,4 +77,23 @@ export class SearchComponent implements OnInit {
       console.log(this.searchResult);
   }
   
+
+  filterDevices() {
+    this.devices = this.allDevices;
+    const filterCriteria = {
+      repaired: this.query.repaired,
+      paidAdmissionFees: this.query.paidAdmissionFees,
+      delivered: this.query.delivered,
+      returned: this.query.returned,
+      inProgress: this.query.inProgress,
+      newDevices: this.query.newDevices,
+      today: this.query.today,
+      thisMonth: this.query.thisMonth,
+      thisYear: this.query.thisYear,
+      specificYear: this.query.specificYear,
+    };
+    const devices = this.deviceService.filterDevices(this.allDevices, filterCriteria);
+    this.devices = devices;
+    this.searchResult = devices;
+  }
 }

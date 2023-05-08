@@ -178,7 +178,7 @@
         <div fxLayout="row" fxLayoutAlign="space-between center" dir="rtl">
             <p dir="rtl">اسم العميل: {{ clientName }}</p>
             <p>رسوم الفحص: {{ fees }}</p>
-            <p dir="rtl">كود الجهاز : {{_id}}</p>
+            <p dir="rtl">كود الجهاز : {{_id }}</p>
         </div>
         <div fxLayout="row" fxLayoutAlign="space-between center" dir="rtl">
             <p dir="rtl">تاريخ الاستلام : {{ receivingDate }}</p>
@@ -219,18 +219,18 @@
     </div>
     <style>
         @media print {
-        body {
-            width: 4cm;
-            height: 2.5cm;
-        }
-        #barcode {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            border: 1px solid black;
-            width: 4cm;
-            height: 2.5cm;
-        }
+            body {
+                width: 4cm;
+                height: 2.5cm;
+            }
+            #barcode {
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                border: 1px solid black;
+                width: 4cm;
+                height: 2.5cm;
+            }
         }
     </style>
 </div>

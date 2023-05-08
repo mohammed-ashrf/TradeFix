@@ -3,10 +3,10 @@
   justify-content: center;
   align-items: center;
   background-color: #f2f2f2;
-  height: 50px; /* Added to give the Bar section a fixed height */
-  position: fixed; /* Added to fix the Bar section to the top of the screen */
-  top: 0; /* Added to position the Bar section at the top of the screen */
-  width: 100%; /* Added to make the Bar section fill the entire width of the screen */
+  height: 150px; 
+  position: fixed; 
+  top: 0;
+  width: 100%;
 
   .back {
     border: none;
@@ -18,9 +18,63 @@
     margin-right: 10px;
     margin-left: 10px;
   }
+  .filtterQuerry {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    // margin-top: 3.5rem;
+  }
+  
+  .query {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  label {
+    color: #000000e5;
+  }
+  
+  input[type="checkbox"] {
+    margin-right: 0.5rem;
+  }
+  
+  #filterButton {
+    padding: 0.5rem 1rem;
+    background-color: #000000e5;
+    color: #fff;
+    border: 3px solid #1976d2;
+    border-radius: 1.5rem;
+    cursor: pointer;
+  }
+  
+  #filterButton:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 17px rgba(0, 0, 0, 0.35);
+  }
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  #specificYear {
+    border: none;
+    font-size: 16px;
+    border-radius: 4px;
+    padding: 5px;
+    &:focus {
+      outline: none;
+    }
+  }
 
   .searchBar {
     display: flex;
+    max-width: 400px;
+    margin: auto;
     align-items: center;
     background-color: white;
     border-radius: 4px;
@@ -51,27 +105,58 @@
 }
 .table {
   width: 100%;
+  max-width: 100%;
   border-collapse: collapse;
-  margin-top: 50px;
+  margin-top: 9.4rem;
+}
 
-  th {
-    background-color: #f2f2f2;
-    text-align: right;
-    padding: 10px;
+th {
+  background-color: #f2f2f2;
+  text-align: right;
+  padding: 10px;
+}
+
+td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+a {
+  color: blue;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: none;
+}
+
+@media (max-width: 767px) {
+  /* adjust the table style for small screens */
+  .table {
+    margin-top: 3rem;
+    font-size: 12px;
   }
 
+  th,
   td {
-    border: 1px solid #ddd;
-    padding: 10px;
-  }
-
-  a {
-    color: blue;
-    text-decoration: none;
-
-    &:hover {
-      text-decoration: none;
-    }
+    padding: 5px;
   }
 }
 
+@media (min-width: 768px) {
+  /* adjust the table style for medium screens */
+  td {
+    max-width: 300px; /* set a maximum width for the table cells */
+    height: 50px; /* set the cell height for medium screens */
+  }
+}
+
+@media (min-width: 992px) {
+  /* adjust the table style for large screens */
+  td {
+    max-width: 400px; /* set a maximum width for the table cells */
+    height: 80px; /* set the cell height for large screens */
+  }
+}

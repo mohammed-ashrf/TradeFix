@@ -11,6 +11,10 @@ const deviceSchema = new mongoose.Schema({
   fees: { type: Number, required: true },
   finished: { type: Boolean, required: false },
   receivingDate: { type: String, required: true },
+  repaired: { type: Boolean, required: false },
+  paidAdmissionFees: { type: Boolean, required: false },
+  delivered: { type: Boolean, required: false },
+  returned: { type: Boolean, required: false },
 });
 
 module.exports = mongoose.model('Device', deviceSchema);

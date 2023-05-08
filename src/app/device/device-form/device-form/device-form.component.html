@@ -13,7 +13,7 @@
       </div>
     </div>
     <div class="form-group" fxLayout="row" fxLayoutAlign="center center" dir="rtl">
-      <input type="text" id="deviceType" placeholder="نوع الجهاز" name="deviceType" [(ngModel)]="receive.deviceType" required>
+      <input type="text" id="deviceType" placeholder="نوع الجهاز" name="deviceType" [(ngModel)]="receive.deviceType" required autocomplete="on">
     </div>
     <div class="form-group" fxLayout="row" fxLayoutAlign="center center" dir="rtl">
       <mat-select placeholder="نوع العميل" id="clientSelection" name="clientSelection" [(ngModel)]="receive.clientSelection" required>
@@ -37,6 +37,24 @@
       </div>
       <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
         <input type="number" id="fees" name="fees" [(ngModel)]="receive.fees" required>
+      </div>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="10px" dir="rtl">
+      <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
+        <input type="checkbox" name="repaired" id="repaired" [(ngModel)]="receive.repaired">
+        <label for="repaired"> تم الإصلاح </label><br>
+      </div>
+      <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
+        <input type="checkbox" name="paidAdmissionFees" id="paidAdmissionFees" [(ngModel)]="receive.paidAdmissionFees">
+        <label for="paidAdmissionFees"> تم دفع الرسوم </label><br>
+      </div>
+      <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
+        <input type="checkbox" name="delivered" id="delivered" [(ngModel)]="receive.delivered">
+        <label for="delivered"> تم التسليم </label><br>
+      </div>
+      <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
+        <input type="checkbox" name="returned" id="returned" [(ngModel)]="receive.returned">
+        <label for="returned"> مرتجع </label><br>
       </div>
     </div>
     <button class="btn btn-primary" type="submit" [disabled]="deviceForm.invalid">Save</button>
