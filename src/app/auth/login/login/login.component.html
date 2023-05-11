@@ -2,10 +2,10 @@
     <h2 class="slide-in">Login</h2>
     <form (ngSubmit)="submit()" #loginForm="ngForm">
         <div class="form-group">
-            <input autofocus type="text" placeholder="Email" id="email" name="email" [(ngModel)]="email" required>
+            <input autofocus type="text" lang="ar" dir="auto" placeholder="Email" id="email" name="email" [(ngModel)]="email" required>
         </div>
         <div class="form-group">
-            <input type="{{ showPassword ? 'text' : 'password' }}" placeholder="Password" id="password" name="password" [(ngModel)]="password" required>
+            <input type="{{ showPassword ? 'text' : 'password' }}" lang="ar" dir="auto" placeholder="Password" id="password" name="password" [(ngModel)]="password" required>
             <button type="button" (click)="toggleShowPassword()" class="btn-toggle-password">
                 <svg viewBox="0 0 200 200" width="16" height="16" *ngIf="showPassword">
                     <circle cx="100" cy="100" r="90" fill="#fff" stroke="#000" stroke-width="5" />

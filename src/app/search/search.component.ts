@@ -44,7 +44,7 @@ export class SearchComponent implements OnInit {
   searchDevice(devices: any[], userInput: any) {
     try {
       if (typeof userInput !== 'string') {
-        window.alert('User input must be a string');
+        console.log('User input must be a string');
         throw new Error('User input must be a string');
       }
       userInput = userInput.toLowerCase();
