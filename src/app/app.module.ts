@@ -34,6 +34,7 @@ import { SearchComponent } from './search/search.component';
 import { PrintLayoutComponent } from './print-layout/print-layout.component';
 import { AdminPageComponent } from './admin-page/admin-page.component';
 import { AdminSearchComponent } from './admin-search/admin-search.component';
+import { UserDashboardComponent } from './user-dashboard/user-dashboard.component';
 
 
 @NgModule({
@@ -48,7 +49,8 @@ import { AdminSearchComponent } from './admin-search/admin-search.component';
     SearchComponent,
     PrintLayoutComponent,
     AdminPageComponent,
-    AdminSearchComponent
+    AdminSearchComponent,
+    UserDashboardComponent,
   ],
   imports: [
     BrowserModule,

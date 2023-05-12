@@ -26,6 +26,7 @@ export class AdminSearchComponent implements OnInit {
     thisMonth: false,
     thisYear: false,
     specificYear: '',
+    engineer: '',
   }
 
   constructor(private deviceService: DeviceService,
@@ -95,6 +96,7 @@ export class AdminSearchComponent implements OnInit {
       thisMonth: this.query.thisMonth,
       thisYear: this.query.thisYear,
       specificYear: this.query.specificYear,
+      engineer: this.query.engineer,
     };
     const devices = this.deviceService.filterDevices(this.allDevices, filterCriteria);
     this.devices = devices;

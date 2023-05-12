@@ -6,14 +6,14 @@
   <form (ngSubmit)="submit()" #deviceForm="ngForm" class="deviceForm" id="form">
     <div fxLayout="row" fxLayoutAlign="space-between center" dir="rtl">
       <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
-        <input type="text" lang="ar" dir="auto" id="clientName" placeholder="اسم العميل" name="clientName" [(ngModel)]="receive.clientName" required>
+        <input type="text" id="clientName" placeholder="اسم العميل" name="clientName" [(ngModel)]="receive.clientName" required>
       </div>
       <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
-        <input type="text" lang="ar" dir="auto" id="telnum" placeholder="رقم التليفون" name="telnum" [(ngModel)]="receive.telnum" required>
+        <input type="text" id="telnum" placeholder="رقم التليفون" name="telnum" [(ngModel)]="receive.telnum" required>
       </div>
     </div>
     <div class="form-group" fxLayout="row" fxLayoutAlign="center center" dir="rtl">
-      <input type="text" lang="ar" dir="auto" id="deviceType" placeholder="نوع الجهاز" name="deviceType" [(ngModel)]="receive.deviceType" required autocomplete="on">
+      <input type="text" id="deviceType" placeholder="نوع الجهاز" name="deviceType" [(ngModel)]="receive.deviceType" required autocomplete="on">
     </div>
     <div class="form-group" fxLayout="row" fxLayoutAlign="center center" dir="rtl">
       <mat-select placeholder="نوع العميل" id="clientSelection" name="clientSelection" [(ngModel)]="receive.clientSelection" required>
@@ -26,22 +26,27 @@
       </mat-select>
     </div>
     <div class="form-group" fxLayout="row" fxLayoutAlign="center center" dir="rtl">
+      <mat-select placeholder="الفني" id="eng" name="eng" [(ngModel)]="receive.engineer" required>
+          <mat-option class="option" *ngFor="let eng of users" [value]="eng.username">{{ eng.username }}</mat-option>
+      </mat-select>
+    </div>
+    <div class="form-group" fxLayout="row" fxLayoutAlign="center center" dir="rtl">
       <textarea matInput placeholder="الشكوي" lang="ar" dir="auto" id="complain" name="complain" cols="30" rows="10" [(ngModel)]="receive.complain" required></textarea>
     </div>
     <div class="form-group" fxLayout="row" fxLayoutAlign="center center" dir="rtl">
-      <textarea matInput lang="ar" dir="auto" placeholder="الملاحظات" id="notes" name="notes" cols="30" rows="10" [(ngModel)]="receive.notes"></textarea>
+      <textarea matInput placeholder="الملاحظات" id="notes" name="notes" cols="30" rows="10" [(ngModel)]="receive.notes"></textarea>
     </div>
     <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="10px" dir="rtl">
       <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
-        <input type="text" lang="ar" dir="auto" id="receivingDate" name="receivingDate" [(ngModel)]="receive.receivingDate" placeholder={{date}} value={{date}} disabled>
+        <input type="text" id="receivingDate" name="receivingDate" [(ngModel)]="receive.receivingDate" placeholder={{date}} value={{date}} disabled>
       </div>
       <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
-        <input type="number" lang="ar" dir="auto" id="fees" name="fees" [(ngModel)]="receive.fees" required>
+        <input type="number" id="fees" name="fees" [(ngModel)]="receive.fees" required>
       </div>
     </div>
     <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="10px" dir="rtl">
       <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
-        <input type="checkbox" lang="ar" dir="auto" name="repaired" id="repaired" [(ngModel)]="receive.repaired">
+        <input type="checkbox" name="repaired" id="repaired" [(ngModel)]="receive.repaired">
         <label for="repaired"> تم الإصلاح </label><br>
       </div>
       <div class="form-group" fxLayout="row" fxLayoutAlign="center center">

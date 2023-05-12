@@ -3,8 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Receive,ClientSelection,DeviceType,section } from 'src/app/shared/recieve';
 import { DeviceService } from '../../device.service';
 import { Location } from '@angular/common';
-import * as JsBarcode from "jsbarcode";
-
+import { AuthService } from 'src/app/auth/auth.service';
 @Component({
   selector: 'app-device-form',
   templateUrl: './device-form.component.html',
@@ -26,6 +25,7 @@ export class DeviceFormComponent implements OnInit {
     paidAdmissionFees: false,
     delivered: false,
     returned: false,
+    engineer: '',
     receivingDate: '',
     _id: '',
   };
@@ -38,9 +38,11 @@ export class DeviceFormComponent implements OnInit {
   clientSelection = ClientSelection;
   deviceType = DeviceType;
   section = section;
+  users:any;
 
   constructor(
     private deviceService: DeviceService,
+    private authService: AuthService,
     private router: Router,
     private route: ActivatedRoute,
     private location: Location,
@@ -57,6 +59,7 @@ export class DeviceFormComponent implements OnInit {
       });
     }
     this.date = this.getDate();
+    this.getUsers();
   }
   goBack(): void {
     this.location.back();
@@ -91,12 +94,20 @@ export class DeviceFormComponent implements OnInit {
       console.error("Failed to copy receipt ID to clipboard:", error);
     });
   }
+  getUsers() {
+    this.authService.getUsers().subscribe(
+      (users) => {
+        this.users = users;
+      }
+    )
+  }
   submit(): void {
     if (this.isNew) {
       this.receive.receivingDate = this.getDate();
       this.deviceService.create(this.receive).subscribe(
         (data) => {
           console.log(data._id);
+          console.log(data);
           this.edited = true;
           this.recieptId = data._id.slice(-12);
           window.alert(`Success saving device ${data._id}. You can print now.`);

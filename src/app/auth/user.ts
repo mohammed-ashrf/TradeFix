@@ -3,3 +3,8 @@ export class User {
     password !: string;
     email !:string;
 }
+
+export interface GUser {
+    user: object;
+}
+  

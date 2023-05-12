@@ -5,6 +5,7 @@ const deviceSchema = new mongoose.Schema({
   telnum: { type: String, required: true },
   deviceType: { type: String, required: true },
   section: { type: String, required: true },
+  engineer: { type: String, required: false},
   clientSelection: { type: String, required: true },
   complain: { type: String, required: true },
   notes: { type: String, required: false },

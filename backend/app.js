@@ -7,14 +7,28 @@ const config = require('./config/config');
 const app = express();
 
 // Middleware
-app.use(cors());
+// app.use(cors({
+//   origin: 'http://localhost:4200',
+//   credentials: true
+// }));
+// app.use(cors({
+//   origin: '*',
+//   credentials: true
+// }));
+const allowedOrigins = ['http://localhost:4200', 'http://example.com'];
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) === -1) {
+      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  },
+  credentials: true
+}));
 app.use(express.json());
-// app.use((req, res, next) => {
-//   res.setHeader('Access-Control-Allow-Origin', '*');
-//   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-//   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-//   next();
-// });
+
 // Routes
 app.use('/api', apiRouter);
 app.use('/auth', authRouter);

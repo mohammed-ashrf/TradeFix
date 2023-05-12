@@ -12,6 +12,7 @@ export interface Receive {
   paidAdmissionFees: boolean;
   delivered: boolean;
   returned: boolean;
+  engineer: string;
   receivingDate: string;
   _id: '';
 }
@@ -27,6 +28,7 @@ export interface Query {
     thisMonth: boolean,
     thisYear: boolean,
     specificYear: string,
+    engineer: string,
 }
 
 export const ClientSelection = ['User','Dealer'];

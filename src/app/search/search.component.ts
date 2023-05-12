@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { DeviceService } from '../device/device.service';
 import { Location } from '@angular/common';
-import { Receive } from '../shared/recieve';
-
+import { Receive, Query } from '../shared/recieve';
+import { AuthService } from '../auth/auth.service';
 @Component({
   selector: 'app-search',
   templateUrl: './search.component.html',
@@ -15,7 +15,7 @@ export class SearchComponent implements OnInit {
   isSearched:boolean = false;
   searchResult!:any[];
   allDevices: Receive[] = [];
-  query = {
+  query:Query = {
     repaired : false,
     paidAdmissionFees : false,
     delivered : false,
@@ -26,8 +26,11 @@ export class SearchComponent implements OnInit {
     thisMonth: false,
     thisYear: false,
     specificYear: '',
+    engineer: '',
   }
+  users:any;
   constructor(private deviceService: DeviceService,
+    private authService: AuthService,
     private location: Location) { }
 
   ngOnInit() {
@@ -36,6 +39,7 @@ export class SearchComponent implements OnInit {
       this.allDevices = this.devices;
       console.log(devices);
     });
+    this.getUsers();
   }
 
   goBack(): void {
@@ -77,6 +81,13 @@ export class SearchComponent implements OnInit {
       console.log(this.searchResult);
   }
   
+  getUsers() {
+    this.authService.getUsers().subscribe(
+      (users) => {
+        this.users = users;
+      }
+    )
+  }
 
   filterDevices() {
     this.devices = this.allDevices;
@@ -91,6 +102,7 @@ export class SearchComponent implements OnInit {
       thisMonth: this.query.thisMonth,
       thisYear: this.query.thisYear,
       specificYear: this.query.specificYear,
+      engineer: this.query.engineer,
     };
     const devices = this.deviceService.filterDevices(this.allDevices, filterCriteria);
     this.devices = devices;

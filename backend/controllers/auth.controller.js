@@ -61,3 +61,48 @@ exports.login = async function (req, res) {
     res.status(500).json({ message: 'Failed to login user' });
   }
 };
+
+exports.getUsers = async function(req, res) { 
+  try { 
+    const users = await User.find(); 
+    res.status(200).json(users); 
+  } catch (error) { 
+    console.error('Failed to get users:', error.message); 
+    res.status(500).json({ message: 'Failed to get users' }); 
+  }
+}
+
+exports.authMiddleware = (req, res, next) => {
+  const token = req.headers.authorization;
+  if (!token) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = decoded.user;
+    next();
+  } catch (err) {
+    return res.status(401).json({ message: "Invalid token" });
+  }
+};
+
+exports.checkToken = (req, res, next) => {
+  const token = req.headers.authorization.split(' ')[1];
+  jwt.verify(token, 'secret', (err, decoded) => {
+    if (err) {
+      return res.status(401).json({ message: 'Invalid token' });
+    }
+    req.user = decoded;
+    next();
+  });
+};
+
+exports.getUserById = async function(req, res) { 
+  try { 
+    const user = await User.findById(req.params.id); 
+    res.status(200).json(user); 
+  } catch (error) { 
+    console.error('Failed to get user by ID:', error.message); 
+    res.status(500).json({ message: 'Failed to get user by ID' }); 
+  }
+};

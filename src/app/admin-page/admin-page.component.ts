@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Receive,Query } from 'src/app/shared/recieve';
 import { DeviceService } from '../device/device.service';
-
+import { AuthService } from '../auth/auth.service';
 @Component({
   selector: 'app-admin-page',
   templateUrl: './admin-page.component.html',
@@ -23,8 +23,10 @@ export class AdminPageComponent implements OnInit {
     thisMonth: false,
     thisYear: true,
     specificYear: '',
+    engineer: '',
   }
-  constructor(private deviceService: DeviceService, private router: Router) {}
+  users:any;
+  constructor(private deviceService: DeviceService, private router: Router, private authService: AuthService) {}
 
   ngOnInit(): void {
     this.deviceService.getAll().subscribe((devices) => {
@@ -33,6 +35,14 @@ export class AdminPageComponent implements OnInit {
       this.filterDevices();
       this.DevicesCount = devices.length;
     });
+    this.getUsers();
+  }
+  getUsers() {
+    this.authService.getUsers().subscribe(
+      (users) => {
+        this.users = users;
+      }
+    )
   }
 
   filterDevices() {
@@ -48,6 +58,7 @@ export class AdminPageComponent implements OnInit {
       thisMonth: this.query.thisMonth,
       thisYear: this.query.thisYear,
       specificYear: this.query.specificYear,
+      engineer: this.query.engineer,
     };
     const devices = this.deviceService.filterDevices(this.allDevices, filterCriteria);
     this.devices = devices;

@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Receive } from 'src/app/shared/recieve';
+import { Receive, Query } from 'src/app/shared/recieve';
 import { DeviceService } from '../../device.service';
-
+import { AuthService } from 'src/app/auth/auth.service';
+import { User,GUser } from 'src/app/auth/user';
 @Component({
   selector: 'app-device-list',
   templateUrl: './device-list.component.html',
@@ -11,7 +12,7 @@ import { DeviceService } from '../../device.service';
 export class DeviceListComponent implements OnInit {
   devices: Receive[] = [];
   allDevices: Receive[] = [];
-  query = {
+  query: Query = {
     repaired : false,
     paidAdmissionFees : false,
     delivered : false,
@@ -22,8 +23,17 @@ export class DeviceListComponent implements OnInit {
     thisMonth: true,
     thisYear: false,
     specificYear: '',
+    engineer: '',
   }
-  constructor(private deviceService: DeviceService, private router: Router) {}
+  users:any;
+  currentUser: any;
+  user!: User;
+  id:any;
+  username:any;
+  constructor(private deviceService: DeviceService,
+    private authService: AuthService,
+    private router: Router
+    ) {}
 
   ngOnInit(): void {
     this.deviceService.getAll().subscribe((devices) => {
@@ -31,7 +41,41 @@ export class DeviceListComponent implements OnInit {
       this.allDevices = this.devices;
       this.filterDevices();
     });
+    this.getUsers();
   }
+
+  getUsers() {
+    this.authService.getUsers().subscribe(
+      (users) => {
+        this.users = users;
+        this.whichUser();
+      }
+    )
+  }
+
+  whichUser() {
+    this.authService.getUser().subscribe(
+      (userInfo) => {
+        this.currentUser = userInfo;
+        if (this.currentUser.user) {
+          this.id = this.currentUser.user.id;
+          
+          for (let i = 0; i < this.users.length; i++) {
+            if (this.users[i]._id === this.id) {
+              this.user = this.users[i];
+              this.username = this.user.username;
+              break;
+            }
+          }
+        }
+      },
+      error => {
+        console.log(error);
+      }
+    );
+  };
+
+
   filterDevices() {
     this.devices = this.allDevices;
     const filterCriteria = {
@@ -40,6 +84,7 @@ export class DeviceListComponent implements OnInit {
       delivered: this.query.delivered,
       returned: this.query.returned,
       inProgress: this.query.inProgress,
+      engineer: this.query.engineer,
       newDevices: this.query.newDevices,
       today: this.query.today,
       thisMonth: this.query.thisMonth,
