@@ -87,6 +87,21 @@ button[type="submit"] {
 button[type="submit"]:hover {
     background-color: #0062cc;
 }
+#role {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    text-align: left;
+    align-items: left;
+
+    &:focus {
+        outline: none;
+        border-color: #007bff;
+    }
+}
 
 .slide-in {
     animation: slideIn 1s ease-in-out;

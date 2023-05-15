@@ -5,9 +5,9 @@ const config = require('../config');
 
 exports.register = async function (req, res) {
   try {
-    const { username, email, password } = req.body;
+    const { username, email, password, role } = req.body;
 
-    if (!username || !email || !password) {
+    if (!username || !email || !password || !role) {
       return res.status(400).json({ message: 'Username, email, and password are required' });
     }
 
@@ -19,7 +19,7 @@ exports.register = async function (req, res) {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    const user = new User({ username, email, password: hashedPassword });
+    const user = new User({ username, email, password: hashedPassword, role });
     const savedUser = await user.save();
 
     const token = jwt.sign({ id: savedUser._id }, config.jwtSecret, { expiresIn: '1h' });

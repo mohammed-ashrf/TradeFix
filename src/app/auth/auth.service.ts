@@ -4,20 +4,29 @@ import { Observable, throwError } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { User } from './user';
 import { catchError } from 'rxjs/operators';
-
+import { map } from 'rxjs/operators';
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   private apiUrl = `${environment.apiUrl}/auth`;
-  private httpOptions = {
-    headers: new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${localStorage.getItem('token')}`
-    }),
-    withCredentials: true  // Include cookies in the request
-  };
+  // private httpOptions = {
+  //   headers: new HttpHeaders({
+  //     'Content-Type': 'application/json',
+  //     'Authorization': `Bearer ${localStorage.getItem('token')}`
+  //   }),
+  //   withCredentials: true  // Include cookies in the request
+  // };
 
+  private getHttpOptions(token: string): any {
+    return {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      }),
+      withCredentials: true
+    };
+  }
   constructor(private http: HttpClient) {}
 
   register(user: User): Observable<any> {
@@ -32,9 +41,26 @@ export class AuthService {
     return this.http.get(`${this.apiUrl}/users`);
   }
 
-  getUser(): Observable<User> {
-    return this.http.get<User>(`${this.apiUrl}/user`, this.httpOptions)
+  // getUser(): Observable<User> {
+  //   return this.http.get<User>(`${this.apiUrl}/user`, this.httpOptions)
+  //     .pipe(
+  //       catchError(this.handleError<User>('getUser'))
+  //     );
+  // };
+
+  // getUser(token: string): Observable<User> {
+  //   return this.http.get<User>(`${this.apiUrl}/user`, this.getHttpOptions(token))
+  //     .pipe(
+  //       catchError(this.handleError<User>('getUser'))
+  //     );
+  // };
+
+  getUser(token: string): Observable<User> {
+    return this.http.get(`${this.apiUrl}/user`, this.getHttpOptions(token))
       .pipe(
+        map((response: any) => {
+          return response as User;
+        }),
         catchError(this.handleError<User>('getUser'))
       );
   };

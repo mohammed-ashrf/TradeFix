@@ -30,6 +30,7 @@ export class DeviceListComponent implements OnInit {
   user!: User;
   id:any;
   username:any;
+  token:any;
   constructor(private deviceService: DeviceService,
     private authService: AuthService,
     private router: Router
@@ -42,6 +43,7 @@ export class DeviceListComponent implements OnInit {
       this.filterDevices();
     });
     this.getUsers();
+    this.token = localStorage.getItem('token');
   }
 
   getUsers() {
@@ -54,7 +56,7 @@ export class DeviceListComponent implements OnInit {
   }
 
   whichUser() {
-    this.authService.getUser().subscribe(
+    this.authService.getUser(this.token).subscribe(
       (userInfo) => {
         this.currentUser = userInfo;
         if (this.currentUser.user) {

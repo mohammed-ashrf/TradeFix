@@ -4,6 +4,7 @@ import { Receive,ClientSelection,DeviceType,section } from 'src/app/shared/recie
 import { DeviceService } from '../../device.service';
 import { Location } from '@angular/common';
 import { AuthService } from 'src/app/auth/auth.service';
+import { NgForm } from '@angular/forms';
 @Component({
   selector: 'app-device-form',
   templateUrl: './device-form.component.html',
@@ -29,6 +30,26 @@ export class DeviceFormComponent implements OnInit {
     receivingDate: '',
     _id: '',
   };
+  print: Receive = {
+    clientName: '',
+    telnum: '',
+    deviceType: '',
+    section: '',
+    clientSelection: '',
+    complain: '',
+    notes: '',
+    fees: 0,
+    finished: false,
+    repaired: false,
+    paidAdmissionFees: false,
+    delivered: false,
+    returned: false,
+    engineer: '',
+    receivingDate: '',
+    _id: '',
+  }
+  submited: boolean = false;
+  updating: boolean = false;
   isNew = true;
 
     
@@ -60,6 +81,11 @@ export class DeviceFormComponent implements OnInit {
     }
     this.date = this.getDate();
     this.getUsers();
+    if (this.isNew) {
+      console.log('isNew');
+    }else {
+      this.updating = true;
+    }
   }
   goBack(): void {
     this.location.back();
@@ -101,11 +127,13 @@ export class DeviceFormComponent implements OnInit {
       }
     )
   }
-  submit(): void {
+  submit(form : NgForm): void {
     if (this.isNew) {
       this.receive.receivingDate = this.getDate();
+      this.updating = false;
       this.deviceService.create(this.receive).subscribe(
         (data) => {
+          this.print = data;
           console.log(data._id);
           console.log(data);
           this.edited = true;
@@ -113,6 +141,8 @@ export class DeviceFormComponent implements OnInit {
           window.alert(`Success saving device ${data._id}. You can print now.`);
           navigator.clipboard.writeText(data._id);
           this.copyToClipboard();
+          this.submited = true;
+          form.resetForm();
         },
         (error) => {
           console.error('Error creating device:', error);

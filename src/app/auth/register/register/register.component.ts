@@ -13,6 +13,7 @@ export class RegisterComponent implements OnInit {
   username = '';
   email = '';
   password = '';
+  role = '';
   confirmPassword = '';
 
   constructor(private authService: AuthService, 
@@ -30,17 +31,22 @@ export class RegisterComponent implements OnInit {
       alert('Passwords do not match');
       return;
     }else {
-      const user: User = { username: this.username, email: this.email, password: this.password };
-    this.authService.register(user).subscribe(
-      (data) => {
-        this.authService.setToken(data.token);
-        window.alert('user added to the datatbase');
-      },
-      (error) => {
-        console.error(error);
-        window.alert(`try again: ${JSON.stringify(error)}`);
-      }
-    );
+      const user: User = { username: this.username, email: this.email, password: this.password, role: this.role };
+      this.authService.register(user).subscribe(
+        (data) => {
+          this.authService.setToken(data.token);
+          window.alert('user added to the datatbase');
+        },
+        (error) => {
+          console.error(error);
+          window.alert(`try again: ${JSON.stringify(error)}`);
+        }
+      );
+      this.username = '';
+      this.email = '';
+      this.password = '';
+      this.role = '';
+      this.confirmPassword = '';
     }
   }
 }

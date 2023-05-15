@@ -11,6 +11,7 @@ import { SearchComponent } from './search/search.component';
 import { PrintLayoutComponent } from './print-layout/print-layout.component';
 import { AdminPageComponent } from './admin-page/admin-page.component';
 import { AdminSearchComponent } from './admin-search/admin-search.component';
+import { UserDashboardComponent } from './user-dashboard/user-dashboard.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -25,7 +26,7 @@ const routes: Routes = [
   { path: 'print',  component: PrintLayoutComponent},
   { path: 'admin', component: AdminPageComponent },
   { path: 'adminSearch', component: AdminSearchComponent },
-
+  { path: 'userDashboard', component: UserDashboardComponent },
 ];
 
 @NgModule({
