@@ -5,6 +5,7 @@ export interface Receive {
   section: string;
   clientSelection: string;
   complain: string;
+  repair: string;
   notes: string;
   fees: number;
   finished: boolean;
@@ -13,6 +14,7 @@ export interface Receive {
   delivered: boolean;
   returned: boolean;
   engineer: string;
+  priority: string;
   receivingDate: string;
   _id: '';
 }
@@ -29,6 +31,7 @@ export interface Query {
     thisYear: boolean,
     specificYear: string,
     engineer: string,
+    priority: string,
 }
 
 export const ClientSelection = ['User','Dealer'];

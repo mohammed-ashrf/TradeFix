@@ -1,0 +1,228 @@
+$lt-gray: #ddd;
+$background-dark: #000000e5;
+$background-moredark: #4527A0;
+
+@mixin zero-margin($pad-up-down, $pad-left-right) {
+    margin: 0px auto;
+    padding: $pad-up-down $pad-left-right;
+}
+
+.jumbotron {
+    @include zero-margin(70px,30px);
+    background: $background-dark ;
+    color:floralwhite;
+    min-height: 150px;
+}
+
+.active {
+    background: $background-moredark;
+}
+
+// ---------------------------------------
+
+.filtterQuerry {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.query {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+label {
+    font-weight: bold;
+}
+
+input[type="checkbox"] {
+    margin-right: 0.5rem;
+}
+
+.Button {
+    padding: 0.5rem 1rem;
+    background-color: #000000e5;
+    color: #fff;
+    border: 3px solid #1976d2;
+    border-radius: 1.5rem;
+    cursor: pointer;
+}
+
+.Button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 17px rgba(0, 0, 0, 0.35);
+}
+// -----------------------------------------------------
+.centered {
+    text-align: center;
+}
+
+h2 {
+    font-size: 24px;
+    color: #333;
+}
+
+p {
+    margin-top: 10px;
+}
+
+a {
+    display: inline-block;
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: #fff;
+    border-radius: 4px;
+    text-decoration: none;
+}
+
+.data-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.data-column {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 50px;
+    margin-bottom: 10px;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-all;
+}
+
+.deviceCard {
+    margin: 0 10px;
+    border: 3px solid #1976d2;
+    border-radius: 25px;
+    background-color: #000000e5;
+    animation: cardEnterAnimation 500ms forwards;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+}
+
+.deviceCard p {
+    color: #fff;
+}
+
+.editButton {
+    margin-top: 10px;
+    background-color: #fff;
+    color: #000;
+    border: none;
+    border-radius: 15px;
+    padding: 8px 16px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.editButton:hover {
+    background-color: #2196f3;
+}
+#eng {
+    width : 200px;
+}
+#eng .option {
+    width: 200px;
+}
+
+#priority {
+    width : 200px;
+}
+#priority .option {
+    width: 200px;
+}
+.high-priority {
+    border: 3px solid red;
+}
+
+@keyframes cardEnterAnimation {
+    from {
+        opacity: 0;
+        transform: translateY(50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes cardLeaveAnimation {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(50px);
+    }
+}
+
+@media screen and (max-width: 400px) {
+    .header-column {
+        font-size: 14px;
+    }
+    .data-column {
+        font-size: 14px;
+        flex-basis: 100%;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .header-column {
+        font-size: 14px;
+    }
+    .data-column {
+        font-size: 14px;
+        flex-basis: 50%;
+    }
+}
+
+@media screen and (max-width: 800px) {
+    svg#rocket {
+        width: 80px;
+        height: 80px;
+        position: absolute;
+        left: -50px;
+        top: -24px;
+        border-radius: 100px;
+        border: 3px solid #fff;
+        background-color: #000000e5;
+    }
+}
+
+@media screen and (min-width: 601px) and (max-width: 900px) {
+    .header-column {
+        font-size: 14px;
+    }
+    .data-column {
+        font-size: 14px;
+        flex-basis: 50%;
+    }
+}
+
+@media screen and (min-width: 901px) and (max-width: 1200px) {
+    .header-column {
+        font-size: 16px;
+    }
+    .data-column {
+        font-size: 16px;
+        flex-basis: 33.33%;
+    }
+}
+
+@media screen and (min-width: 1201px) {
+    .header-column {
+        font-size: 16px;
+    }
+    .data-column {
+        font-size: 16px;
+        flex-basis: 25%;
+    }
+}

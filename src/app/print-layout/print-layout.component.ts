@@ -23,4 +23,8 @@ export class PrintLayoutComponent {
   _id!: string;
   @Input()
   fees!: number;
+  @Input()
+  deliveringDate!: number;
+  @Input()
+  isReturned!: boolean;
 }

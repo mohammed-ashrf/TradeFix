@@ -27,6 +27,7 @@ export class SearchComponent implements OnInit {
     thisYear: false,
     specificYear: '',
     engineer: '',
+    priority: '',
   }
   users:any;
   constructor(private deviceService: DeviceService,
@@ -103,6 +104,7 @@ export class SearchComponent implements OnInit {
       thisYear: this.query.thisYear,
       specificYear: this.query.specificYear,
       engineer: this.query.engineer,
+      priority: this.query.priority,
     };
     const devices = this.deviceService.filterDevices(this.allDevices, filterCriteria);
     this.devices = devices;

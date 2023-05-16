@@ -170,8 +170,8 @@
     </svg>
   
       <span>{{username}}</span>
-  
-  
+
+      <button class="Button" id="logout" (click)="logout()">Logout</button>  
   </div>
   
   <!-- Menu -->
@@ -251,11 +251,18 @@
       <mat-option class="option" *ngFor="let eng of users" [value]="eng.username">{{ eng.username }}</mat-option>
     </mat-select>
   </div>
-  <button (click)="filterDevices()" id="filterButton">Filter</button>
+  <div class="query" dir="rtl">
+    <mat-select placeholder="الأهميه" id="priority" name="priority" [(ngModel)]="query.priority" (selectionChange)="filterDevices()" required>
+      <mat-option class="option"  value="normal">عادي</mat-option>
+      <mat-option class="option"  value="high">مستعجل</mat-option>
+    </mat-select>
+  </div>
+  <button (click)="filterDevices()" class="Button" id="filterButton">Filter</button>
+  <button (click)="resetFilter()" class="Button" id="resetButton">reset</button>
 </div>
 
 <div class="cards-container" fxLayout="column" fxLayoutGap="20px" >
-  <mat-card class="deviceCard" *ngFor="let device of devices">
+  <mat-card class="deviceCard" *ngFor="let device of devices" [class.high-priority]="isPriorityHigh(device.priority)">
     <mat-card-content fxLayout="column" fxLayoutGap="10px">
       <div fxLayout="column" fxLayoutAlign="center">
         <div class="data-row">
@@ -287,6 +294,12 @@
           </div>
           <div class="data-column">
             <p><strong>Receiving Date:</strong> {{ device.receivingDate }}</p>
+          </div>
+          <div class="data-column">
+            <p><strong>tech:</strong> {{ device.engineer }}</p>
+          </div>
+          <div class="data-column">
+            <p><strong>priority:</strong> {{ device.priority }}</p>
           </div>
         </div>
       </div>

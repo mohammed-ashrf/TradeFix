@@ -249,6 +249,12 @@
         <mat-option class="option" *ngFor="let eng of users" [value]="eng.username">{{ eng.username }}</mat-option>
       </mat-select>
     </div>
+    <div class="query" dir="rtl">
+      <mat-select placeholder="الأهميه" id="priority" name="priority" [(ngModel)]="query.priority" (selectionChange)="filterDevices()" required>
+        <mat-option class="option"  value="normal">عادي</mat-option>
+        <mat-option class="option"  value="high">مستعجل</mat-option>
+      </mat-select>
+    </div>
     <button (click)="filterDevices()" id="filterButton">Filter</button>
   </div>
   <div class="cards-container" fxLayout="column" fxLayoutGap="20px">

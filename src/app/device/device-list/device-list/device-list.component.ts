@@ -24,6 +24,7 @@ export class DeviceListComponent implements OnInit {
     thisYear: false,
     specificYear: '',
     engineer: '',
+    priority: '',
   }
   users:any;
   currentUser: any;
@@ -37,13 +38,13 @@ export class DeviceListComponent implements OnInit {
     ) {}
 
   ngOnInit(): void {
+    this.token = localStorage.getItem('token');
     this.deviceService.getAll().subscribe((devices) => {
       this.devices = devices.reverse();
       this.allDevices = this.devices;
       this.filterDevices();
     });
     this.getUsers();
-    this.token = localStorage.getItem('token');
   }
 
   getUsers() {
@@ -87,6 +88,7 @@ export class DeviceListComponent implements OnInit {
       returned: this.query.returned,
       inProgress: this.query.inProgress,
       engineer: this.query.engineer,
+      priority: this.query.priority,
       newDevices: this.query.newDevices,
       today: this.query.today,
       thisMonth: this.query.thisMonth,
@@ -96,6 +98,34 @@ export class DeviceListComponent implements OnInit {
     const devices = this.deviceService.filterDevices(this.allDevices, filterCriteria);
     this.devices = devices;
 
+  }
+
+  resetFilter():void {
+    this.query = {
+      repaired : false,
+      paidAdmissionFees : false,
+      delivered : false,
+      returned : false,
+      inProgress : true,
+      newDevices: false,
+      today: false,
+      thisMonth: true,
+      thisYear: false,
+      specificYear: '',
+      engineer: '',
+      priority: '',
+    }
+
+    this.filterDevices();
+  }
+
+  logout(){
+    this.authService.logout();
+    this.router.navigate(['/']);
+  }
+
+  isPriorityHigh(priority: string): boolean {
+    return priority === 'high';
   }
 
 }

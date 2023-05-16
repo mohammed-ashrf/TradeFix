@@ -5,6 +5,7 @@ import { DeviceService } from '../../device.service';
 import { Location } from '@angular/common';
 import { AuthService } from 'src/app/auth/auth.service';
 import { NgForm } from '@angular/forms';
+import { User } from 'src/app/auth/user';
 @Component({
   selector: 'app-device-form',
   templateUrl: './device-form.component.html',
@@ -19,6 +20,7 @@ export class DeviceFormComponent implements OnInit {
     section: '',
     clientSelection: '',
     complain: '',
+    repair: '',
     notes: '',
     fees: 0,
     finished: false,
@@ -27,6 +29,7 @@ export class DeviceFormComponent implements OnInit {
     delivered: false,
     returned: false,
     engineer: '',
+    priority: '',
     receivingDate: '',
     _id: '',
   };
@@ -37,6 +40,7 @@ export class DeviceFormComponent implements OnInit {
     section: '',
     clientSelection: '',
     complain: '',
+    repair: '',
     notes: '',
     fees: 0,
     finished: false,
@@ -45,6 +49,7 @@ export class DeviceFormComponent implements OnInit {
     delivered: false,
     returned: false,
     engineer: '',
+    priority: '',
     receivingDate: '',
     _id: '',
   }
@@ -56,10 +61,18 @@ export class DeviceFormComponent implements OnInit {
   edited:boolean = false;
   recieptId:any;
   date:any;
+  today: any;
   clientSelection = ClientSelection;
   deviceType = DeviceType;
   section = section;
   users:any;
+  currentUser: any;
+  user!: User;
+  id:any;
+  username:any;
+  token:any;
+  role:any;
+  disabled = false;
 
   constructor(
     private deviceService: DeviceService,
@@ -70,6 +83,7 @@ export class DeviceFormComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.token = localStorage.getItem('token');
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.isNew = false;
@@ -80,6 +94,7 @@ export class DeviceFormComponent implements OnInit {
       });
     }
     this.date = this.getDate();
+    this.today = this.getDate();
     this.getUsers();
     if (this.isNew) {
       console.log('isNew');
@@ -87,8 +102,41 @@ export class DeviceFormComponent implements OnInit {
       this.updating = true;
     }
   }
-  goBack(): void {
-    this.location.back();
+  // goBack(deviceForm: NgForm): void {
+  //   if (this.submited) {
+  //     this.location.back();
+  //   }else {
+  //     if (confirm('You did not save the device do you want to save it?')) {
+  //       if (this.submited) {
+  //         this.location.back();
+  //       } else {
+  //         this.submit(deviceForm);
+  //         this.location.back();
+  //       }
+  //     }else {
+  //       this.location.back();
+  //     }
+  //   }
+  // }
+  goBack(deviceForm: NgForm): void {
+    if (this.submited) {
+      this.location.back();
+    } else {
+      if (deviceForm.valid) {
+        if (confirm('Do you want to save?')) {
+          if (this.submited) {
+            this.location.back();
+          } else {
+            this.submit(deviceForm);
+            this.location.back();
+          }
+        } else {
+          this.location.back();
+        }
+      } else {
+        this.location.back();
+      }
+    }
   }
 
   getDate() {
@@ -124,9 +172,37 @@ export class DeviceFormComponent implements OnInit {
     this.authService.getUsers().subscribe(
       (users) => {
         this.users = users;
+        this.whichUser();
       }
     )
   }
+
+  whichUser() {
+    this.authService.getUser(this.token).subscribe(
+      (userInfo) => {
+        this.currentUser = userInfo;
+        if (this.currentUser.user) {
+          this.id = this.currentUser.user.id;
+          
+          for (let i = 0; i < this.users.length; i++) {
+            if (this.users[i]._id === this.id) {
+              this.user = this.users[i];
+              this.username = this.user.username;
+              this.role = this.user.role;
+              console.log(this.role);
+              if (this.role == 'technition') {
+                this.disabled = true;
+              }
+              break;
+            }
+          }
+        }
+      },
+      error => {
+        console.log(error);
+      }
+    );
+  };
   submit(form : NgForm): void {
     if (this.isNew) {
       this.receive.receivingDate = this.getDate();
@@ -153,7 +229,9 @@ export class DeviceFormComponent implements OnInit {
     } else {
       this.deviceService.update(this.receive._id, this.receive).subscribe(
         () => {
-          this.router.navigate(['/devices']);
+          // this.router.navigate(['/devices']);
+          this.submited = true;
+          this.location.back();
         },
         (error) => {
           console.error('Error updating device:', JSON.stringify(error));

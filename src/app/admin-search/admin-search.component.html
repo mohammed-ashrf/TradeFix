@@ -41,6 +41,12 @@
         <label for="specificYear">Specific Year:</label>
         <input type="number" id="specificYear" lang="ar" dir="auto" [(ngModel)]="query.specificYear" (keyup.enter)="filterDevices()">
       </div>
+      <div class="query" dir="rtl">
+        <mat-select placeholder="الأهميه" id="priority" name="priority" [(ngModel)]="query.priority" (selectionChange)="filterDevices()" required>
+          <mat-option class="option"  value="normal">عادي</mat-option>
+          <mat-option class="option"  value="high">مستعجل</mat-option>
+        </mat-select>
+      </div>
     </div>
     <div fxLayout="row">
       <div class="searchBar">

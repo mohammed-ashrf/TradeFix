@@ -29,6 +29,7 @@ export class DeviceService {
           (!query.returned || device.returned === query.returned) &&
           (!query.inProgress || device.repaired === false) &&
           (!query.engineer || device.engineer === query.engineer) &&
+          (!query.priority || device.priority === query.priority) &&
           (!query.newDevices || deviceReceivingDate >= oneWeekAgo)&&
           (!query.today || deviceReceivingDate.toDateString() === new Date().toDateString()) &&
           (!query.thisMonth || deviceReceivingDate.getMonth() === new Date().getMonth()) &&

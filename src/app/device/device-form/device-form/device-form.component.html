@@ -1,40 +1,49 @@
 <div class="container">
   <div class="header">
-    <button (click)="goBack()">back</button>
+    <button (click)="goBack(deviceForm)">back</button>
     <h2>{{ isNew ? 'جهاز جديد' : 'تعديل جهاز' }}</h2>
   </div>
   <form (ngSubmit)="submit(deviceForm)" #deviceForm="ngForm" class="deviceForm" id="form">
     <div fxLayout="row" fxLayoutAlign="space-between center" dir="rtl">
       <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
-        <input type="text" id="clientName" placeholder="اسم العميل" name="clientName" [(ngModel)]="receive.clientName" required>
+        <input type="text" id="clientName" placeholder="اسم العميل" name="clientName" [(ngModel)]="receive.clientName" [disabled]="disabled" required>
       </div>
       <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
-        <input type="text" id="telnum" placeholder="رقم التليفون" name="telnum" [(ngModel)]="receive.telnum" required>
+        <input type="text" id="telnum" placeholder="رقم التليفون" name="telnum" [(ngModel)]="receive.telnum" [disabled]="disabled" required>
       </div>
     </div>
     <div class="form-group" fxLayout="row" fxLayoutAlign="center center" dir="rtl">
-      <input type="text" id="deviceType" placeholder="نوع الجهاز" name="deviceType" [(ngModel)]="receive.deviceType" required autocomplete="on">
+      <input type="text" id="deviceType" placeholder="نوع الجهاز" name="deviceType" [(ngModel)]="receive.deviceType" [disabled]="disabled" required autocomplete="on">
     </div>
     <div class="form-group" fxLayout="row" fxLayoutAlign="center center" dir="rtl">
-      <mat-select placeholder="نوع العميل" id="clientSelection" name="clientSelection" [(ngModel)]="receive.clientSelection" required>
+      <mat-select placeholder="نوع العميل" id="clientSelection" name="clientSelection" [(ngModel)]="receive.clientSelection" [disabled]="disabled" required>
           <mat-option class="option" *ngFor="let ctype of clientSelection" [value]="ctype" selected>{{ ctype }}</mat-option>
       </mat-select>
     </div>
     <div class="form-group" fxLayout="row" fxLayoutAlign="center center" dir="rtl">
-      <mat-select placeholder="القسم" id="section" name="section" [(ngModel)]="receive.section" (selectionChange)="determinFees()" required>
+      <mat-select placeholder="القسم" id="section" name="section" [(ngModel)]="receive.section" (selectionChange)="determinFees()" [disabled]="disabled" required>
           <mat-option class="option" *ngFor="let sec of section" [value]="sec">{{ sec }}</mat-option>
       </mat-select>
     </div>
     <div class="form-group" fxLayout="row" fxLayoutAlign="center center" dir="rtl">
-      <mat-select placeholder="الفني" id="eng" name="eng" [(ngModel)]="receive.engineer" required>
+      <mat-select placeholder="الفني" id="eng" name="eng" [(ngModel)]="receive.engineer" [disabled]="disabled" required>
           <mat-option class="option" *ngFor="let eng of users" [value]="eng.username">{{ eng.username }}</mat-option>
       </mat-select>
     </div>
     <div class="form-group" fxLayout="row" fxLayoutAlign="center center" dir="rtl">
-      <textarea matInput placeholder="الشكوي" lang="ar" dir="auto" id="complain" name="complain" cols="30" rows="10" [(ngModel)]="receive.complain" required></textarea>
+      <mat-select placeholder="الأهميه" id="periority" name="periority" [(ngModel)]="receive.priority" [disabled]="disabled" required>
+          <mat-option class="option" value="normal">عادي</mat-option>
+          <mat-option class="option" value="high">مستعجل</mat-option>
+      </mat-select>
     </div>
     <div class="form-group" fxLayout="row" fxLayoutAlign="center center" dir="rtl">
-      <textarea matInput placeholder="الملاحظات" lang="ar" dir="auto" id="notes" name="notes" cols="30" rows="10" [(ngModel)]="receive.notes"></textarea>
+      <textarea matInput placeholder="الشكوي" lang="ar" dir="auto" id="complain" name="complain" cols="30" rows="8" [(ngModel)]="receive.complain" required></textarea>
+    </div>
+    <div class="form-group" fxLayout="row" fxLayoutAlign="center center" dir="rtl">
+      <textarea matInput placeholder="الصيانه" lang="ar" dir="auto" id="repair" name="repair" cols="30" rows="8" [(ngModel)]="receive.repair" required></textarea>
+    </div>
+    <div class="form-group" fxLayout="row" fxLayoutAlign="center center" dir="rtl">
+      <textarea matInput placeholder="الملاحظات" lang="ar" dir="auto" id="notes" name="notes" cols="30" rows="2" [(ngModel)]="receive.notes"></textarea>
     </div>
     <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="10px" dir="rtl">
       <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
@@ -50,31 +59,33 @@
         <label for="repaired"> تم الإصلاح </label><br>
       </div>
       <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
-        <input type="checkbox" name="paidAdmissionFees" id="paidAdmissionFees" [(ngModel)]="receive.paidAdmissionFees">
+        <input type="checkbox" name="paidAdmissionFees" id="paidAdmissionFees" [(ngModel)]="receive.paidAdmissionFees" [disabled]="disabled">
         <label for="paidAdmissionFees"> تم دفع الرسوم </label><br>
       </div>
       <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
-        <input type="checkbox" name="delivered" id="delivered" [(ngModel)]="receive.delivered">
+        <input type="checkbox" name="delivered" id="delivered" [(ngModel)]="receive.delivered" [disabled]="disabled">
         <label for="delivered"> تم التسليم </label><br>
       </div>
       <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
-        <input type="checkbox" name="returned" id="returned" [(ngModel)]="receive.returned">
+        <input type="checkbox" name="returned" id="returned" [(ngModel)]="receive.returned" [disabled]="disabled">
         <label for="returned"> مرتجع </label><br>
       </div>
     </div>
     <button class="btn btn-primary" id="submit" type="submit" [disabled]="deviceForm.invalid">Save</button>
   </form>
   <div *ngIf="submited">
-    <app-print-layout [clientName]="print.clientName" [telnum]="print.telnum" [deviceType]="print.deviceType" [section]="print.section" [_id]="recieptId" [receivingDate]="date" [complain]="print.complain" [fees]="print.fees"></app-print-layout>
-    <button ngxPrint printSectionId="print-section" printTitle="إيصال الإستلام" [printStyle]="{p : {'line-height': '75%', 'font-weight': 'bold', 'font-size' : '11px'}, svg :{'width':'100px','height':'100px'}, span :{'padding-top': '7px'}, h3: {'padding' : '3px'}}" target="_blank">Print Receipt</button>
+    <app-print-layout [clientName]="print.clientName" [telnum]="print.telnum" [deviceType]="print.deviceType" [section]="print.section" [_id]="recieptId" [receivingDate]="date" [complain]="print.complain" [fees]="print.fees" [deliveringDate]="today" [isReturned]="print.returned"></app-print-layout>
+    <button ngxPrint printSectionId="print-section" printTitle="إيصال الإستلام" [printStyle]="{p : {'line-height': '75%', 'font-weight': 'bold', 'font-size' : '11px'}, svg :{'width':'100px','height':'100px'}, span :{'padding-top': '7px'}, h3: {'padding' : '3px'}}" target="_blank" [disabled]="disabled">Print Receipt</button>
 
     <button ngxPrint printSectionId="barcode">إطبع الباركود</button>
+    <button *ngIf="receive.delivered" ngxPrint printSectionId="delivery-receipt" printTitle="إيصال التسليم" [printStyle]="{p : {'line-height': '75%', 'font-weight': 'bold', 'font-size' : '11px'}, svg :{'width':'100px','height':'100px'}, span :{'padding-top': '7px'}, h3: {'padding' : '3px'}}" target="_blank" [disabled]="disabled">إيصال التسليم</button>
   </div>
 
   <div *ngIf="updating">
-    <app-print-layout [clientName]="receive.clientName" [telnum]="receive.telnum" [deviceType]="receive.deviceType" [section]="receive.section" [_id]="recieptId" [receivingDate]="date" [complain]="receive.complain" [fees]="receive.fees"></app-print-layout>
-    <button ngxPrint printSectionId="print-section" printTitle="إيصال الإستلام" [printStyle]="{p : {'line-height': '75%', 'font-weight': 'bold', 'font-size' : '11px'}, svg :{'width':'100px','height':'100px'}, span :{'padding-top': '7px'}, h3: {'padding' : '3px'}}" target="_blank">Print Receipt</button>
+    <app-print-layout [clientName]="receive.clientName" [telnum]="receive.telnum" [deviceType]="receive.deviceType" [section]="receive.section" [_id]="recieptId" [receivingDate]="date" [complain]="receive.complain" [fees]="receive.fees" [deliveringDate]="today" [isReturned]="receive.returned"></app-print-layout>
+    <button ngxPrint printSectionId="print-section" printTitle="إيصال الإستلام" [printStyle]="{p : {'line-height': '75%', 'font-weight': 'bold', 'font-size' : '11px'}, svg :{'width':'100px','height':'100px'}, span :{'padding-top': '7px'}, h3: {'padding' : '3px'}}" target="_blank" [disabled]="disabled">Print Receipt</button>
 
     <button ngxPrint printSectionId="barcode">إطبع الباركود</button>
+    <button *ngIf="receive.delivered" ngxPrint printSectionId="delivery-receipt" printTitle="إيصال التسليم" [printStyle]="{p : {'line-height': '100%', 'font-weight': 'bold', 'font-size' : '11px'}, svg :{'width':'100px','height':'100px'}, span :{'padding-top': '7px'}, h3: {'padding' : '3px'}}" target="_blank" [disabled]="disabled">إيصال التسليم</button>
   </div>
 </div>

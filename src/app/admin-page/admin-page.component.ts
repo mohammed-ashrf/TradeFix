@@ -24,6 +24,7 @@ export class AdminPageComponent implements OnInit {
     thisYear: true,
     specificYear: '',
     engineer: '',
+    priority: '',
   }
   users:any;
   constructor(private deviceService: DeviceService, private router: Router, private authService: AuthService) {}
@@ -59,6 +60,7 @@ export class AdminPageComponent implements OnInit {
       thisYear: this.query.thisYear,
       specificYear: this.query.specificYear,
       engineer: this.query.engineer,
+      priority: this.query.priority,
     };
     const devices = this.deviceService.filterDevices(this.allDevices, filterCriteria);
     this.devices = devices;

@@ -42,20 +42,6 @@
     margin-right: 0.5rem;
   }
   
-  #filterButton {
-    padding: 0.5rem 1rem;
-    background-color: #000000e5;
-    color: #fff;
-    border: 3px solid #1976d2;
-    border-radius: 1.5rem;
-    cursor: pointer;
-  }
-  
-  #filterButton:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 4px 17px rgba(0, 0, 0, 0.35);
-  }
-  
   #specificYear {
     border: none;
     font-size: 16px;
@@ -69,6 +55,13 @@
     width : 200px;
   }
   #eng .option {
+    width: 200px;
+  }
+
+  #priority {
+    width : 200px;
+  }
+  #priority .option {
     width: 200px;
   }
 
@@ -136,10 +129,22 @@ a:hover {
 @media (max-width: 767px) {
   /* adjust the table style for small screens */
   .table {
-    margin-top: 3rem;
+    margin-top: 16.5rem;
     font-size: 12px;
   }
 
+  th,
+  td {
+    padding: 5px;
+  }
+
+}
+
+@media screen and (min-width: 767px) and (max-width: 997px){
+  .table {
+    margin-top: 17rem;
+    font-size: 12px;
+  }
   th,
   td {
     padding: 5px;
@@ -159,5 +164,15 @@ a:hover {
   td {
     max-width: 400px; /* set a maximum width for the table cells */
     height: 80px; /* set the cell height for large screens */
+  }
+}
+
+@media (max-width : 997px) {
+  .Bar {
+    height: 270px;
+  }
+
+  .filtterQuerry {
+    margin-top: 20px;
   }
 }
