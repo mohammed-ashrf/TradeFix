@@ -27,4 +27,6 @@ export class PrintLayoutComponent {
   deliveringDate!: number;
   @Input()
   isReturned!: boolean;
+  @Input()
+  repair!: string;
 }

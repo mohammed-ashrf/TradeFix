@@ -49,7 +49,7 @@ export class DeviceFormComponent implements OnInit {
     delivered: false,
     returned: false,
     engineer: '',
-    priority: '',
+    priority: 'normal',
     receivingDate: '',
     _id: '',
   }
@@ -73,7 +73,7 @@ export class DeviceFormComponent implements OnInit {
   token:any;
   role:any;
   disabled = false;
-
+  repairdone = false;
   constructor(
     private deviceService: DeviceService,
     private authService: AuthService,
@@ -89,7 +89,7 @@ export class DeviceFormComponent implements OnInit {
       this.isNew = false;
       this.deviceService.getOne(id).subscribe((device) => {
         this.receive = device;
-        this.recieptId = device._id.slice(-12);
+        this.recieptId = device._id.slice(-7);
         this.date = device.receivingDate;
       });
     }
@@ -192,6 +192,9 @@ export class DeviceFormComponent implements OnInit {
               console.log(this.role);
               if (this.role == 'technition') {
                 this.disabled = true;
+                if (this.receive.repaired) {
+                  this.repairdone = true;
+                }
               }
               break;
             }
@@ -203,6 +206,16 @@ export class DeviceFormComponent implements OnInit {
       }
     );
   };
+
+  repairStatus() {
+    // this.whichUser();
+    if (this.role == 'technition') {
+      this.disabled = true;
+      if (this.receive.repaired) {
+        this.repairdone = true;
+      }
+    }
+  }
   submit(form : NgForm): void {
     if (this.isNew) {
       this.receive.receivingDate = this.getDate();
