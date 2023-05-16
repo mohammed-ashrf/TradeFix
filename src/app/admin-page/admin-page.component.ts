@@ -66,6 +66,25 @@ export class AdminPageComponent implements OnInit {
     this.devices = devices;
   }
 
+  resetFilter():void {
+    this.query = {
+      repaired : false,
+      paidAdmissionFees : false,
+      delivered : false,
+      returned : false,
+      inProgress : true,
+      newDevices: false,
+      today: false,
+      thisMonth: true,
+      thisYear: false,
+      specificYear: '',
+      engineer: '',
+      priority: '',
+    }
+
+    this.filterDevices();
+  }
+
   onDelete(id: string): void {
     if (confirm('Are you sure you want to delete this device?')) {
       this.deviceService.delete(id).subscribe(() => {
@@ -73,5 +92,14 @@ export class AdminPageComponent implements OnInit {
         this.DevicesCount = this.devices.length;
       });
     }
+  }
+
+  isPriorityHigh(priority: string): boolean {
+    return priority === 'high';
+  }
+
+  logout(){
+    this.authService.logout();
+    this.router.navigate(['/']);
   }
 }

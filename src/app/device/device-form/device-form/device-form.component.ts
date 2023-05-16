@@ -74,6 +74,7 @@ export class DeviceFormComponent implements OnInit {
   role:any;
   disabled = false;
   repairdone = false;
+  notBack = true;
   constructor(
     private deviceService: DeviceService,
     private authService: AuthService,
@@ -101,43 +102,29 @@ export class DeviceFormComponent implements OnInit {
     }else {
       this.updating = true;
     }
+
+    console.log(this.route);
   }
-  // goBack(deviceForm: NgForm): void {
-  //   if (this.submited) {
-  //     this.location.back();
-  //   }else {
-  //     if (confirm('You did not save the device do you want to save it?')) {
-  //       if (this.submited) {
-  //         this.location.back();
-  //       } else {
-  //         this.submit(deviceForm);
-  //         this.location.back();
-  //       }
-  //     }else {
-  //       this.location.back();
-  //     }
-  //   }
-  // }
+
   goBack(deviceForm: NgForm): void {
-    if (this.submited) {
+    this.notBack = false;
+    if (this.submited){
       this.location.back();
-    } else {
-      if (deviceForm.valid) {
+    }else {
+      if(deviceForm.valid) {
         if (confirm('Do you want to save?')) {
-          if (this.submited) {
-            this.location.back();
-          } else {
-            this.submit(deviceForm);
-            this.location.back();
-          }
-        } else {
+          this.submit(deviceForm);
+          this.location.back();
+        }else {
           this.location.back();
         }
-      } else {
+      }else {
         this.location.back();
       }
     }
   }
+  
+
 
   getDate() {
     const date = new Date();
@@ -231,7 +218,9 @@ export class DeviceFormComponent implements OnInit {
           navigator.clipboard.writeText(data._id);
           this.copyToClipboard();
           this.submited = true;
-          form.resetForm();
+          if (this.notBack){
+            form.resetForm();
+          }
         },
         (error) => {
           console.error('Error creating device:', error);
@@ -242,9 +231,10 @@ export class DeviceFormComponent implements OnInit {
     } else {
       this.deviceService.update(this.receive._id, this.receive).subscribe(
         () => {
-          // this.router.navigate(['/devices']);
-          this.submited = true;
-          this.location.back();
+          // this.submited = true;
+          if (this.notBack){
+           this.location.back();
+          }
         },
         (error) => {
           console.error('Error updating device:', JSON.stringify(error));

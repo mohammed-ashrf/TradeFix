@@ -133,7 +133,7 @@ input[type="checkbox"] {
   margin-right: 0.5rem;
 }
 
-#filterButton {
+.Button {
   padding: 0.5rem 1rem;
   background-color: #000000e5;
   color: #fff;
@@ -142,9 +142,20 @@ input[type="checkbox"] {
   cursor: pointer;
 }
 
-#filterButton:hover {
+.Button:hover {
   transform: translateY(-3px);
   box-shadow: 0 4px 17px rgba(0, 0, 0, 0.35);
+}
+
+#logout {
+  // margin-left: 20px;
+  position: relative;
+  right: -50px;
+  background-color: #125699;
+}
+
+#logout:hover {
+  transform: translateY(0px);
 }
 
 svg#rocket {
@@ -316,6 +327,20 @@ a {
 .editButton:hover {
   background-color: #2196f3;
 }
+.deletButton {
+  margin-top: 10px;
+  background-color: #fff;
+  color: #000;
+  border: none;
+  border-radius: 15px;
+  padding: 8px 16px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.deletButton:hover {
+  background-color: #2196f3;
+}
 #eng {
   width : 200px;
 }
@@ -327,6 +352,9 @@ a {
 }
 #priority .option {
   width: 200px;
+}
+.high-priority {
+  border: 3px solid red;
 }
 
 @keyframes cardEnterAnimation {

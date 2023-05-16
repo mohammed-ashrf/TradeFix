@@ -1,42 +1,38 @@
-const { app, BrowserWindow } = require("electron");
-const path = require("path");
-const url = require("url");
+const { app, BrowserWindow } = require('electron');
+const path = require('path');
+const fs = require('fs');
 
-let win;
 function createWindow() {
-  win = new BrowserWindow({
+  const iconPath = path.join(__dirname, 'dist/repair-app-new/assets/icons/win/repairing.ico');
+  const iconDataUrl = `data:image/png;base64,${fs.readFileSync(iconPath).toString('base64')}`;
+
+  const win = new BrowserWindow({
     width: 1000,
     height: 600,
-    backgroundColor:'#ffffff',
-    icon: url.format({
-      pathname: path.join(__dirname, `dist/repair-app-new/assets/icons/png/repairing.png`),
-      protocol: "file:",
-      slashes: true
-    }),
+    backgroundColor: '#ffffff',
+    icon: iconDataUrl,
     webPreferences: {
       nodeIntegration: true
-    }, 
+    }
   });
-  win.loadURL(
-    url.format({
-      pathname: path.join(__dirname, "dist/repair-app-new/index.html"),
-      protocol: "file:",
-      slashes: true
-    })
-  );
+
+  win.loadFile(path.join(__dirname, 'dist/repair-app-new/index.html'));
 }
-app.on("ready", createWindow);
-// on macOS, closing the window doesn't quit the app
-app.on("window-all-closed", () => {
-  if (process.platform !== "darwin") {
+
+app.whenReady().then(() => {
+  createWindow();
+
+  app.on('activate', () => {
+    if (BrowserWindow.getAllWindows().length === 0) {
+      createWindow();
+    }
+  });
+});
+
+app.on('window-all-closed', () => {
+  if (process.platform !== 'darwin') {
     app.quit();
   }
 });
 
-app.on('activate', function() {
-    // macOs specific close process
-    if (win === null) {
-        createWindow()
-    }
-})
 app.commandLine.appendSwitch('js-flags', '--max-old-space-size=4096');

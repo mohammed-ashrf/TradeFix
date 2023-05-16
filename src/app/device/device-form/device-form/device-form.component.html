@@ -1,6 +1,6 @@
 <div class="container">
   <div class="header">
-    <button (click)="goBack(deviceForm)">back</button>
+    <button (click)="goBack(deviceForm)">Back</button>
     <h2>{{ isNew ? 'جهاز جديد' : 'تعديل جهاز' }}</h2>
   </div>
   <form (ngSubmit)="submit(deviceForm)" #deviceForm="ngForm" class="deviceForm" id="form">
