@@ -36,4 +36,4 @@ export interface Query {
 
 export const ClientSelection = ['User','Dealer'];
 export const DeviceType = ['dell','acer','Asus','Mac','Lenovo','LG','Panasonic','samsong','Toshiba','Razer'];
-export const section = ['soft','laptop','cs3','MB','hdd','VGA']
+export const section = ['soft','laptop','cs3','MB','hdd','Monitor']

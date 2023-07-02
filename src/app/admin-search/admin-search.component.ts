@@ -35,6 +35,7 @@ export class AdminSearchComponent implements OnInit {
     private location: Location) { }
 
   ngOnInit() {
+    localStorage.setItem("location", "adminSearch");
     this.deviceService.getAll().subscribe((devices) => {
       this.devices = devices.reverse();
       this.allDevices = this.devices;

@@ -30,6 +30,7 @@ export class AdminPageComponent implements OnInit {
   constructor(private deviceService: DeviceService, private router: Router, private authService: AuthService) {}
 
   ngOnInit(): void {
+    localStorage.setItem("location", "admin");
     this.deviceService.getAll().subscribe((devices) => {
       this.devices = devices.reverse();
       this.allDevices = this.devices;

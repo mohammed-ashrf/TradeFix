@@ -39,44 +39,48 @@ export class DeviceListComponent implements OnInit {
 
   ngOnInit(): void {
     this.token = localStorage.getItem('token');
+    localStorage.setItem("location", "devices");
+    this.currentUser = localStorage.getItem('user'); 
+    this.user = JSON.parse(this.currentUser);
+    this.username = this.user.username;
     this.deviceService.getAll().subscribe((devices) => {
       this.devices = devices.reverse();
       this.allDevices = this.devices;
       this.filterDevices();
     });
-    this.getUsers();
+    // this.getUsers();
   }
 
-  getUsers() {
-    this.authService.getUsers().subscribe(
-      (users) => {
-        this.users = users;
-        this.whichUser();
-      }
-    )
-  }
+  // getUsers() {
+  //   this.authService.getUsers().subscribe(
+  //     (users) => {
+  //       this.users = users;
+  //       this.whichUser();
+  //     }
+  //   )
+  // }
 
-  whichUser() {
-    this.authService.getUser(this.token).subscribe(
-      (userInfo) => {
-        this.currentUser = userInfo;
-        if (this.currentUser.user) {
-          this.id = this.currentUser.user.id;
+  // whichUser() {
+  //   this.authService.getUser(this.token).subscribe(
+  //     (userInfo) => {
+  //       this.currentUser = userInfo;
+  //       if (this.currentUser.user) {
+  //         this.id = this.currentUser.user.id;
           
-          for (let i = 0; i < this.users.length; i++) {
-            if (this.users[i]._id === this.id) {
-              this.user = this.users[i];
-              this.username = this.user.username;
-              break;
-            }
-          }
-        }
-      },
-      error => {
-        console.log(error);
-      }
-    );
-  };
+  //         for (let i = 0; i < this.users.length; i++) {
+  //           if (this.users[i]._id === this.id) {
+  //             this.user = this.users[i];
+  //             this.username = this.user.username;
+  //             break;
+  //           }
+  //         }
+  //       }
+  //     },
+  //     error => {
+  //       console.log(error);
+  //     }
+  //   );
+  // };
 
 
   filterDevices() {

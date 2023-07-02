@@ -3,6 +3,7 @@ import { DeviceService } from '../device/device.service';
 import { Location } from '@angular/common';
 import { Receive, Query } from '../shared/recieve';
 import { AuthService } from '../auth/auth.service';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-search',
   templateUrl: './search.component.html',
@@ -30,21 +31,32 @@ export class SearchComponent implements OnInit {
     priority: '',
   }
   users:any;
+  user: any;
   constructor(private deviceService: DeviceService,
     private authService: AuthService,
-    private location: Location) { }
+    private location: Location,
+    private router: Router) { }
 
   ngOnInit() {
+    localStorage.setItem("location", "search");
+    this.user = localStorage.getItem('user');
+    console.log(this.user);
     this.deviceService.getAll().subscribe((devices) => {
       this.devices = devices.reverse();
       this.allDevices = this.devices;
       console.log(devices);
     });
-    this.getUsers();
+    // this.getUsers();
   }
 
-  goBack(): void {
-    this.location.back();
+  goBack() {
+    var user = JSON.parse(this.user);
+    if (user.role === 'receiver') {
+      this.router.navigate(['/devices']);
+    } else if (user.role === 'technition') {
+      this.router.navigate(['/userDashboard']);
+    }
+    // this.location.back();
   }
   searchDevice(devices: any[], userInput: any) {
     try {
@@ -81,14 +93,20 @@ export class SearchComponent implements OnInit {
       this.searchResult = this.searchDevice(this.devices, this.searchTerm);
       console.log(this.searchResult);
   }
-  
-  getUsers() {
-    this.authService.getUsers().subscribe(
-      (users) => {
-        this.users = users;
-      }
-    )
-  }
+  // resetSearch(){
+  //   this.deviceService.getAll().subscribe((devices) => {
+  //     this.devices = devices.reverse();
+  //     this.allDevices = this.devices;
+  //     console.log(devices);
+  //   });
+  // }
+  // getUsers() {
+  //   this.authService.getUsers().subscribe(
+  //     (users) => {
+  //       this.users = users;
+  //     }
+  //   )
+  // }
 
   filterDevices() {
     this.devices = this.allDevices;

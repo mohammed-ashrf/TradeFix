@@ -1,6 +1,6 @@
 <div class="container">
   <div class="header">
-    <button (click)="goBack(deviceForm)">Back</button>
+    <button (click)="goBack(deviceForm)">{{preLocation}}</button>
     <h2>{{ isNew ? 'جهاز جديد' : 'تعديل جهاز' }}</h2>
   </div>
   <form (ngSubmit)="submit(deviceForm)" #deviceForm="ngForm" class="deviceForm" id="form">
@@ -40,22 +40,22 @@
       <textarea matInput placeholder="الشكوي" lang="ar" dir="auto" id="complain" name="complain" cols="30" rows="8" [(ngModel)]="receive.complain" [disabled]="disabled" required></textarea>
     </div>
     <div class="form-group" fxLayout="row" fxLayoutAlign="center center" dir="rtl">
-      <textarea matInput placeholder="الصيانه" lang="ar" dir="auto" id="repair" name="repair" cols="30" rows="8" [(ngModel)]="receive.repair"></textarea>
+      <textarea matInput placeholder="الصيانه" lang="ar" dir="auto" id="repair" name="repair" cols="30" rows="8" [(ngModel)]="receive.repair" [disabled]="!sameEng"></textarea>
     </div>
     <div class="form-group" fxLayout="row" fxLayoutAlign="center center" dir="rtl">
-      <textarea matInput placeholder="الملاحظات" lang="ar" dir="auto" id="notes" name="notes" cols="30" rows="2" [(ngModel)]="receive.notes"></textarea>
+      <textarea matInput placeholder="الملاحظات" lang="ar" dir="auto" id="notes" name="notes" cols="30" rows="2" [(ngModel)]="receive.notes" [disabled]="!sameEng"></textarea>
     </div>
     <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="10px" dir="rtl">
       <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
         <input type="text" id="receivingDate" name="receivingDate" [(ngModel)]="receive.receivingDate" placeholder={{date}} value={{date}} disabled>
       </div>
       <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
-        <input type="number" id="fees" name="fees" [(ngModel)]="receive.fees" required>
+        <input type="number" id="fees" name="fees" [(ngModel)]="receive.fees" required [disabled]="!sameEng">
       </div>
     </div>
     <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="10px" dir="rtl">
       <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
-        <input type="checkbox" name="repaired" id="repaired" [(ngModel)]="receive.repaired" [disabled]="repairdone" (change)="repairStatus()">
+        <input type="checkbox" name="repaired" id="repaired" [(ngModel)]="receive.repaired" [disabled]="repairdone || !sameEng" (change)="repairStatus()">
         <label for="repaired"> تم الإصلاح </label><br>
       </div>
       <div class="form-group" fxLayout="row" fxLayoutAlign="center center">

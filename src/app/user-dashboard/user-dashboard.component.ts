@@ -46,6 +46,7 @@ export class UserDashboardComponent implements OnInit {
   ) {}
 
   async ngOnInit() {
+    localStorage.setItem("location", "userDashboard");
     this.token = localStorage.getItem('token');
     try {
       const userInfo = await firstValueFrom(this.authService.getUser(this.token));

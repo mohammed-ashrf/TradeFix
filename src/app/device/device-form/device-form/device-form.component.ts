@@ -75,6 +75,8 @@ export class DeviceFormComponent implements OnInit {
   disabled = false;
   repairdone = false;
   notBack = true;
+  sameEng = false;
+  preLocation!: any;
   constructor(
     private deviceService: DeviceService,
     private authService: AuthService,
@@ -85,6 +87,7 @@ export class DeviceFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.token = localStorage.getItem('token');
+    this.preLocation = localStorage.getItem('location'); 
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.isNew = false;
@@ -102,24 +105,26 @@ export class DeviceFormComponent implements OnInit {
     }else {
       this.updating = true;
     }
-
-    console.log(this.route);
   }
 
   goBack(deviceForm: NgForm): void {
     this.notBack = false;
     if (this.submited){
-      this.location.back();
+      this.router.navigate([`/${this.preLocation}`]);
+      // this.location.back();
     }else {
       if(deviceForm.valid) {
         if (confirm('Do you want to save?')) {
           this.submit(deviceForm);
-          this.location.back();
+          this.router.navigate([`/${this.preLocation}`]);
+          // this.location.back();
         }else {
-          this.location.back();
+          this.router.navigate([`/${this.preLocation}`]);
+          // this.location.back();
         }
       }else {
-        this.location.back();
+        this.router.navigate([`/${this.preLocation}`]);
+        // this.location.back();
       }
     }
   }
@@ -141,7 +146,7 @@ export class DeviceFormComponent implements OnInit {
       this.receive.fees = 25;
     }else if (this.receive.section == "cs3"){
       this.receive.fees = 50;
-    }else if (this.receive.section == "VGA"){
+    }else if (this.receive.section == "Monitor"){
       this.receive.fees = 40;
     }else if (this.receive.section == "hdd") {
       this.receive.fees = 75;
@@ -182,6 +187,13 @@ export class DeviceFormComponent implements OnInit {
                 if (this.receive.repaired) {
                   this.repairdone = true;
                 }
+                if (this.username == this.receive.engineer){
+                  this.sameEng = true;
+                }
+              }else if (this.role == 'receiver') {
+                this.sameEng = true;
+              }else {
+                this.sameEng = true;
               }
               break;
             }

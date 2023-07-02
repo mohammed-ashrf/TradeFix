@@ -52,6 +52,8 @@ export class LoginComponent implements OnInit {
           this.user = user;
           this.username = this.user.username;
           this.role = this.user.role;
+          const { password, ...logedUser } = user;
+          localStorage.setItem("user", JSON.stringify(logedUser));
           console.log(this.role);
           if (this.role === 'receiver') {
             return '/devices';
