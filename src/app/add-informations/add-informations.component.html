@@ -1,0 +1,62 @@
+<div class="container">
+    <div class="sections">
+        <button (click)="goBack()" class="btn btn-primary">back</button>
+        <h3>إضافة قسم</h3>
+        <form (ngSubmit)="submitSection(SectionForm)" #SectionForm="ngForm" dir="rtl" class="form">
+            <div fxLayout="row" fxLayoutAlign="space-between center" dir="rtl">
+                <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
+                    <input type="text" id="sectionName" placeholder="اسم القسم" name="sectionName" [(ngModel)]="section.name" required>
+                </div>
+                <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
+                    <label for="checkingFees">رسوم الفحص: </label>
+                    <input type="number" name="checkingFees" id="checkingFees" [(ngModel)]="section.checkingFees">
+                </div>
+            </div>
+            <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
+                <textarea matInput placeholder="الملاحظات" lang="ar" dir="auto" id="notes" name="notes" cols="30" rows="2" [(ngModel)]="section.description"></textarea>
+            </div>
+            <button class="btn btn-primary" id="submit" type="submit" [disabled]="SectionForm.invalid">Save</button>
+        </form>
+    </div>
+    <div class="suppliers">
+        <h3>إضافة موردين</h3>
+        <form (ngSubmit)="submintSupplier(supplierForm)" #supplierForm="ngForm" dir="rtl" class="form">
+            <div fxLayout="row" fxLayoutAlign="space-between center" dir="rtl">
+                <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
+                    <input type="text" id="supplierName" placeholder="إسم المورد" name="supplierName" [(ngModel)]="supplier.name" required>
+                </div>
+                <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
+                    <input type="text" id="supplierphone" placeholder="رقم التليفون" name="supplierphone" [(ngModel)]="supplier.phone" required>
+                </div>
+            </div>
+            <button class="btn btn-primary" id="submit" type="submit" [disabled]="supplierForm.invalid">Save</button>
+        </form>
+    </div>
+    <div class="dealers">
+        <h3>إضافة ديلر</h3>
+        <form (ngSubmit)="submintDealer(dealersForm)" #dealersForm="ngForm" dir="rtl" class="form">
+            <div fxLayout="row" fxLayoutAlign="space-between center" dir="rtl">
+                <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
+                    <input type="text" id="dealerName" placeholder="إسم الديلر" name="dealerName" [(ngModel)]="dealer.name" required>
+                </div>
+                <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
+                    <input type="text" id="dealerPhone" placeholder="رقم التليفون" name="dealerPhone" [(ngModel)]="dealer.phone" required>
+                </div>
+            </div>
+            <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
+                <input type="email" id="dealerEmail" placeholder="الإيميل" name="dealerEmail" [(ngModel)]="dealer.email">
+            </div>
+            <button class="btn btn-primary" id="submit" type="submit" [disabled]="dealersForm.invalid">Save</button>
+        </form>
+    </div>
+    <div class="dollarPrice">
+        <h3>سعر الدولار</h3>
+        <form (ngSubmit)="submitDollarPrice(dollarForm)" #dollarForm="ngForm" dir="rtl" class="form">
+            <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
+                <label for="dollarPrice">سعر الدولار : </label>
+                <input type="number" name="dollarPrice" id="dollarPrice" [(ngModel)]="dollarPrice.price">
+            </div>
+            <button class="btn btn-primary" id="submit" type="submit" [disabled]="dollarForm.invalid">Save</button>
+        </form>
+    </div>
+</div>

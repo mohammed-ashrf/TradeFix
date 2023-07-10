@@ -35,6 +35,10 @@ import { PrintLayoutComponent } from './print-layout/print-layout.component';
 import { AdminPageComponent } from './admin-page/admin-page.component';
 import { AdminSearchComponent } from './admin-search/admin-search.component';
 import { UserDashboardComponent } from './user-dashboard/user-dashboard.component';
+import { ProductsComponent } from './products/products.component';
+import { AddProductsComponent } from './add-products/add-products.component';
+import { SellComponent } from './sell/sell.component';
+import { AddInformationsComponent } from './add-informations/add-informations.component';
 
 
 @NgModule({
@@ -51,6 +55,10 @@ import { UserDashboardComponent } from './user-dashboard/user-dashboard.componen
     AdminPageComponent,
     AdminSearchComponent,
     UserDashboardComponent,
+    ProductsComponent,
+    AddProductsComponent,
+    SellComponent,
+    AddInformationsComponent,
   ],
   imports: [
     BrowserModule,

@@ -22,7 +22,7 @@
     </div>
     <div class="form-group" fxLayout="row" fxLayoutAlign="center center" dir="rtl">
       <mat-select placeholder="القسم" id="section" name="section" [(ngModel)]="receive.section" (selectionChange)="determinFees()" [disabled]="disabled" required>
-          <mat-option class="option" *ngFor="let sec of section" [value]="sec">{{ sec }}</mat-option>
+          <mat-option class="option" *ngFor="let sec of sections" [value]="sec.name">{{ sec.name }}</mat-option>
       </mat-select>
     </div>
     <div class="form-group" fxLayout="row" fxLayoutAlign="center center" dir="rtl">

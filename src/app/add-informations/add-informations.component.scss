@@ -1,0 +1,113 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  form {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  
+  .form-group {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+  }
+  
+  .form-group:first-child input {
+    margin-left: 10px;
+  }
+  
+  input[type="text"],
+  input[type="number"],
+  input[type="email"],
+  textarea {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    line-height: 1.5;
+    color: #555;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    transition: border-color 0.3s;
+  }
+  
+  input[type="text"]:focus,
+  input[type="number"]:focus,
+  input[type="email"]:focus,
+  textarea:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+  }
+  
+  input[type="email"] {
+    width: 100%;
+  }
+  
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  
+  button[type="submit"] {
+    display: block;
+    margin: 0 auto;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border-radius: 4px;
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    font-size: 16px;
+    transition: background-color 0.3s;
+  }
+  
+  button[type="submit"]:hover {
+    background-color: #0062cc;
+  }
+  
+  h2 {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  h3 {
+    font-size: 20px;
+    color: #333;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+  
+  h3 + .form-group {
+    border-top: 1px dashed #ccc;
+    padding-top: 20px;
+  }
+  
+  .sections, .dealers {
+    border-bottom: 1px dashed #ccc;
+    padding-bottom: 20px;
+  }
+  
+  .sections h3,
+  .dealers h3,
+  .dollarPrice h3 {
+    text-align: center;
+  }
+  
+  hr {
+    border: none;
+    border-top: 1px solid #ccc;
+    margin: 20px 0;
+  }

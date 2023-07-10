@@ -1,0 +1,63 @@
+<div class="Bar">
+    <div fxLayout="column">
+      <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="10px">
+        <div class="searchBar">
+          <button mat-button (click)="goBack()" class="back">back</button>
+          <input type="text" lang="ar" dir="auto" [(ngModel)]="searchTerm" placeholder="Search..." (keyup.enter)="search()" (keyup)="search()">
+          <button (click)="search()">Search</button>
+          <!-- <button (click)="resetSearch()">Reset</button> -->
+        </div>
+      </div>
+    </div>
+    
+  </div>
+  
+  
+  
+  
+  <table class="table" dir="rtl">
+      <thead dir="rtl">
+        <tr dir="rtl">
+          <th dir="rtl">الكود</th>
+          <th dir="rtl">الفئه</th>
+          <th dir="rtl">اﻷسم</th>
+          <th dir="rtl">بيع عميل</th>
+          <th dir="rtl">بيع ديلر</th>
+          <th dir="rtl">بيع ديلر جمله</th>
+          <th dir="rtl">الكمية</th>
+          <th dir="rtl">تاريخ الشراء</th>
+        </tr>
+      </thead>
+      <tbody dir="rtl" *ngIf="isSearched">
+        <tr *ngFor="let product of searchResult" dir="rtl">
+          <td dir="rtl">{{ product._id }}</td>
+          <td dir="rtl">{{ product.category }}</td>
+          <td dir="rtl">{{ product.name }}</td>
+          <td dir="rtl">{{ product.userSellingPrice }}</td>
+          <td dir="rtl">{{ product.deallerSellingPrice }}</td>
+          <td dir="rtl">{{ product.deallerSellingPriceAll }}</td>
+          <td dir="rtl">{{ product.quantity }}</td>   
+          <td dir="rtl">{{ product.purchasedate }}</td>
+          <td><a mat-button (click)="addToCart(product)">Add to Cart</a></td>
+          <!-- <td>
+            <a mat-button [routerLink]="['/devices', product._id, 'edit']">تعديل</a>
+          </td> -->
+        </tr>
+      </tbody>
+      <tbody dir="rtl" [hidden]="isSearched">
+        <tr *ngFor="let product of products" dir="rtl">
+          <td dir="rtl">{{ product._id }}</td>
+          <td dir="rtl">{{ product.category }}</td>
+          <td dir="rtl">{{ product.name }}</td>
+          <td dir="rtl">{{ product.userSellingPrice }}</td>
+          <td dir="rtl">{{ product.deallerSellingPrice }}</td>
+          <td dir="rtl">{{ product.deallerSellingPriceAll }}</td>
+          <td dir="rtl">{{ product.quantity }}</td>   
+          <td dir="rtl">{{ product.purchasedate }}</td>
+          <td><a mat-button (click)="addToCart(product)">Add to Cart</a></td>
+          <!-- <td>
+            <a mat-button [routerLink]="['/devices', product._id, 'edit']">تعديل</a>
+          </td> -->
+        </tr>
+      </tbody>
+  </table>  

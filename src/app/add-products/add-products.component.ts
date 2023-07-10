@@ -1,72 +1,68 @@
-import { Component, OnInit } from '@angular/core';
+import { Component,OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Receive,ClientSelection,DeviceType } from 'src/app/shared/recieve';
-import { Section } from 'src/app/shared/information';
-import { DeviceService } from '../../device.service';
-import { InformationService } from 'src/app/services/information.service';
+import { ClientSelection,DeviceType} from 'src/app/shared/recieve';
+import { Product, Buyer } from '../shared/products';
+import { ProductsService } from '../services/products.service';
+import { InformationService } from '../services/information.service';
 import { Location } from '@angular/common';
 import { AuthService } from 'src/app/auth/auth.service';
 import { NgForm } from '@angular/forms';
 import { User } from 'src/app/auth/user';
 @Component({
-  selector: 'app-device-form',
-  templateUrl: './device-form.component.html',
-  styleUrls: ['./device-form.component.scss'],
+  selector: 'app-add-products',
+  templateUrl: './add-products.component.html',
+  styleUrls: ['./add-products.component.scss']
 })
-export class DeviceFormComponent implements OnInit {
-
-  receive: Receive = {
-    clientName: '',
-    telnum: '',
-    deviceType: '',
-    section: '',
-    clientSelection: '',
-    complain: '',
-    repair: '',
-    notes: '',
-    fees: 0,
-    finished: false,
-    repaired: false,
-    paidAdmissionFees: false,
-    delivered: false,
-    returned: false,
-    engineer: '',
-    priority: '',
-    receivingDate: '',
+export class AddProductsComponent implements OnInit{
+  buyer!: Buyer;
+  product: Product = {
+    name: '',
+    description: '',
+    purchasePrice: 0,
+    deallerSellingPrice: 0,
+    deallerSellingPriceAll: 0,
+    userSellingPrice: 0,
+    category: '',
+    quantity: 0,
+    purchasedate: '',
+    sellingdate: '',
     _id: '',
+    supplier: '',
+    whatIsPaid: 0,
+    oweing: 0,
+    buyers: [this.buyer],
+    quantityToSell: 0,
   };
-  print: Receive = {
-    clientName: '',
-    telnum: '',
-    deviceType: '',
-    section: '',
-    clientSelection: '',
-    complain: '',
-    repair: '',
-    notes: '',
-    fees: 0,
-    finished: false,
-    repaired: false,
-    paidAdmissionFees: false,
-    delivered: false,
-    returned: false,
-    engineer: '',
-    priority: 'normal',
-    receivingDate: '',
+  print: Product = {
+    name: '',
+    description: '',
+    purchasePrice: 0,
+    deallerSellingPrice: 0,
+    deallerSellingPriceAll: 0,
+    userSellingPrice: 0,
+    category: '',
+    quantity: 0,
+    purchasedate: '',
+    sellingdate: '',
     _id: '',
-  }
+    supplier: '',
+    whatIsPaid: 0,
+    oweing: 0,
+    buyers: [this.buyer],
+    quantityToSell: 0,
+  };
   submited: boolean = false;
   updating: boolean = false;
   isNew = true;
 
-    
+  allSuppliers:any;
+  sections: any;
   edited:boolean = false;
   recieptId:any;
   date:any;
   today: any;
   clientSelection = ClientSelection;
   deviceType = DeviceType;
-  sections: Section[] = [];
   users:any;
   currentUser: any;
   user!: User;
@@ -80,7 +76,7 @@ export class DeviceFormComponent implements OnInit {
   sameEng = false;
   preLocation!: any;
   constructor(
-    private deviceService: DeviceService,
+    private productsService: ProductsService,
     private informationService: InformationService,
     private authService: AuthService,
     private router: Router,
@@ -94,10 +90,10 @@ export class DeviceFormComponent implements OnInit {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.isNew = false;
-      this.deviceService.getOne(id).subscribe((device) => {
-        this.receive = device;
-        this.recieptId = device._id.slice(-7);
-        this.date = device.receivingDate;
+      this.productsService.getOne(id).subscribe((product) => {
+        this.product = product;
+        this.recieptId = product._id.slice(-7);
+        this.date = product.purchasedate;
       });
     }
     this.getInformations();
@@ -110,11 +106,20 @@ export class DeviceFormComponent implements OnInit {
       this.updating = true;
     }
   }
-  getInformations() {
+
+  determineOweing() {
+    this.product.oweing = (this.product.quantity * this.product.purchasePrice) - this.product.whatIsPaid;
+  }
+
+  getInformations(){
+    this.informationService.getSuppliers().subscribe(
+      (suppliers) => {
+        this.allSuppliers = suppliers;
+      }
+    );
     this.informationService.getSections().subscribe(
       (sections) => {
         this.sections = sections;
-        console.log(this.sections);
       }
     )
   }
@@ -151,18 +156,25 @@ export class DeviceFormComponent implements OnInit {
     return `${year}-${month}-${day}`;
   }
 
-  determinFees() {
-    let selectedSection = this.sections.find((i: Section) => i.name === this.receive.section);
-    if (selectedSection) {
-      this.receive.fees = selectedSection.checkingFees;
-    }
-  }
+  // determinFees() {
+  //   if (this.product.section == "laptop" || this.product.section == "MB") {
+  //     this.product.fees = 75;
+  //   }else if (this.product.section == "soft"){
+  //     this.product.fees = 25;
+  //   }else if (this.product.section == "cs3"){
+  //     this.product.fees = 50;
+  //   }else if (this.product.section == "Monitor"){
+  //     this.product.fees = 40;
+  //   }else if (this.product.section == "hdd") {
+  //     this.product.fees = 75;
+  //   }
+  // }
 
   copyToClipboard() {
     navigator.clipboard.writeText(this.recieptId).then(() => {
-      console.log("Receipt ID copied to clipboard");
+      console.log("product ID copied to clipboard");
     }, (error) => {
-      console.error("Failed to copy receipt ID to clipboard:", error);
+      console.error("Failed to copy product ID to clipboard:", error);
     });
   }
   getUsers() {
@@ -187,19 +199,19 @@ export class DeviceFormComponent implements OnInit {
               this.username = this.user.username;
               this.role = this.user.role;
               console.log(this.role);
-              if (this.role == 'technition') {
-                this.disabled = true;
-                if (this.receive.repaired) {
-                  this.repairdone = true;
-                }
-                if (this.username == this.receive.engineer){
-                  this.sameEng = true;
-                }
-              }else if (this.role == 'receiver') {
-                this.sameEng = true;
-              }else {
-                this.sameEng = true;
-              }
+              // if (this.role == 'technition') {
+              //   this.disabled = true;
+              //   if (this.product.repaired) {
+              //     this.repairdone = true;
+              //   }
+              //   if (this.username == this.product.engineer){
+              //     this.sameEng = true;
+              //   }
+              // }else if (this.role == 'receiver') {
+              //   this.sameEng = true;
+              // }else {
+              //   this.sameEng = true;
+              // }
               break;
             }
           }
@@ -215,23 +227,23 @@ export class DeviceFormComponent implements OnInit {
     // this.whichUser();
     if (this.role == 'technition') {
       this.disabled = true;
-      if (this.receive.repaired) {
-        this.repairdone = true;
-      }
+      // if (this.receive.repaired) {
+      //   this.repairdone = true;
+      // }
     }
   }
   submit(form : NgForm): void {
     if (this.isNew) {
-      this.receive.receivingDate = this.getDate();
+      this.product.purchasedate = this.getDate();
       this.updating = false;
-      this.deviceService.create(this.receive).subscribe(
+      this.productsService.create(this.product).subscribe(
         (data) => {
           this.print = data;
           console.log(data._id);
           console.log(data);
           this.edited = true;
           this.recieptId = data._id.slice(-12);
-          window.alert(`Success saving device ${data._id}. You can print now.`);
+          window.alert(`Success saving product ${data._id}. You can print now.`);
           navigator.clipboard.writeText(data._id);
           this.copyToClipboard();
           this.submited = true;
@@ -244,9 +256,9 @@ export class DeviceFormComponent implements OnInit {
           window.alert('Error creating device. Please try again later.');
         }
       );
-      console.log(this.receive._id);
+      console.log(this.product._id);
     } else {
-      this.deviceService.update(this.receive._id, this.receive).subscribe(
+      this.productsService.update(this.product._id, this.product).subscribe(
         () => {
           // this.submited = true;
           if (this.notBack){
@@ -261,4 +273,3 @@ export class DeviceFormComponent implements OnInit {
     }
   }
 }
-

@@ -1,0 +1,98 @@
+<div class="container">
+    <div class="header">
+      <button (click)="goBack(productForm)">{{preLocation}}</button>
+      <h2>{{ isNew ? 'منتج جديد' : 'تعديل منتج' }}</h2>
+    </div>
+    <form (ngSubmit)="submit(productForm)" #productForm="ngForm" class="deviceForm" id="form">
+      <div class="form-group" fxLayout="row" fxLayoutAlign="center center" dir="rtl">
+        <input type="text" id="ProductName" placeholder="اسم المنتج" name="ProductName" [(ngModel)]="product.name" required>
+      </div>
+      <div class="form-group" fxLayout="row" fxLayoutAlign="center center" dir="rtl">
+        <mat-select placeholder="المورد" id="supplier" name="supplier" [(ngModel)]="product.supplier"  required>
+          <mat-option class="option" *ngFor="let supplier of allSuppliers" [value]="supplier.name">{{ supplier.name }}</mat-option>
+        </mat-select>
+      </div>
+      <div fxLayout="row" fxLayoutAlign="space-between center" dir="rtl">
+        <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
+            <label for="quantity" class="gray">الكمية: </label>
+            <input type="number" id="quantity" placeholder="الكمية" name="quantity" [(ngModel)]="product.quantity" (ngModelChange)="determineOweing()" required>
+        </div>
+        <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
+            <label for="purchasePrice" class="gray">سعر الشراء القطعة: </label>
+            <input type="number" id="purchasePrice" name="purchasePrice" [(ngModel)]="product.purchasePrice" (ngModelChange)="determineOweing()" required>
+        </div>
+      </div>
+      <div fxLayout="row" fxLayoutAlign="space-between center" dir="rtl">
+        <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
+          <label for="paidPrice" class="gray"> تم الدفع: </label>
+          <input type="number" id="paidPrice" name="paidPrice" [(ngModel)]="product.whatIsPaid" (ngModelChange)="determineOweing()" required>
+        </div>
+        <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
+            <label for="oweing" class="gray"> فاضل: </label>
+            <input type="number" id="oweing" name="oweing" [(ngModel)]="product.oweing" required>
+        </div>
+      </div>
+      <div class="form-group" fxLayout="row" fxLayoutAlign="center center" dir="rtl">
+        <mat-select placeholder="الفئه" id="category" name="category" [(ngModel)]="product.category" required>
+            <mat-option class="option" *ngFor="let sec of sections" [value]="sec.name">{{ sec.name }}</mat-option>
+        </mat-select>
+      </div>
+      <div class="form-group" fxLayout="row" fxLayoutAlign="center center" dir="rtl">
+        <textarea matInput placeholder="الوصف" lang="ar" dir="auto" id="description" name="description" cols="30" rows="8" [(ngModel)]="product.description"></textarea>
+      </div>
+      <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="10px" dir="rtl">
+        <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
+          <input type="text" id="purchasedate" name="purchasedate" [(ngModel)]="product.purchasedate" placeholder={{date}} value={{date}} disabled>
+        </div>
+        <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
+            <label for="userSellingPrice" class="gray">بيع قطعة عميل: </label>
+          <input type="number" id="userSellingPrice" name="userSellingPrice" [(ngModel)]="product.userSellingPrice" required>
+        </div>
+      </div>
+      <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="10px" dir="rtl">
+        <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
+            <label for="deallerSellingPrice" class="gray">بيع قطعة ديلر: </label>
+            <input type="number" id="deallerSellingPrice" name="deallerSellingPrice" [(ngModel)]="product.deallerSellingPrice" required>
+        </div>
+        <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
+            <label for="deallerSellingPriceAll" class="gray">بيع قطعه جمله ديلر: </label>
+          <input type="number" id="deallerSellingPriceAll" name="deallerSellingPriceAll" [(ngModel)]="product.deallerSellingPriceAll" required>
+        </div>
+      </div>
+      <!-- <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="10px" dir="rtl">
+        <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
+          <input type="checkbox" name="repaired" id="repaired" [(ngModel)]="receive.repaired" [disabled]="repairdone || !sameEng" (change)="repairStatus()">
+          <label for="repaired"> تم الإصلاح </label><br>
+        </div>
+        <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
+          <input type="checkbox" name="paidAdmissionFees" id="paidAdmissionFees" [(ngModel)]="receive.paidAdmissionFees" [disabled]="disabled">
+          <label for="paidAdmissionFees"> تم دفع الرسوم </label><br>
+        </div>
+        <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
+          <input type="checkbox" name="delivered" id="delivered" [(ngModel)]="receive.delivered" [disabled]="disabled">
+          <label for="delivered"> تم التسليم </label><br>
+        </div>
+        <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
+          <input type="checkbox" name="returned" id="returned" [(ngModel)]="receive.returned" [disabled]="disabled">
+          <label for="returned"> مرتجع </label><br>
+        </div>
+      </div> -->
+      <button class="btn btn-primary" id="submit" type="submit" [disabled]="productForm.invalid">Save</button>
+    </form>
+    <!-- <div *ngIf="submited">
+      <app-print-layout [clientName]="print.clientName" [telnum]="print.telnum" [deviceType]="print.deviceType" [section]="print.section" [_id]="recieptId" [receivingDate]="date" [complain]="print.complain" [fees]="print.fees" [deliveringDate]="today" [isReturned]="print.returned" [repair]="receive.repair"></app-print-layout>
+      <button ngxPrint printSectionId="print-section" printTitle="إيصال الإستلام" [printStyle]="{p : {'line-height': '75%', 'font-weight': 'bold', 'font-size' : '11px'}, svg :{'width':'100px','height':'100px'}, span :{'padding-top': '7px'}, h3: {'padding' : '3px'}}" target="_blank" [disabled]="disabled">Print Receipt</button>
+  
+      <button ngxPrint printSectionId="barcode" [disabled]="disabled">إطبع الباركود</button>
+      <button *ngIf="receive.delivered" ngxPrint printSectionId="delivery-receipt" printTitle="إيصال التسليم" [printStyle]="{p : {'line-height': '75%', 'font-weight': 'bold', 'font-size' : '11px'}, svg :{'width':'100px','height':'100px'}, span :{'padding-top': '7px'}, h3: {'padding' : '3px'}}" target="_blank" [disabled]="disabled">إيصال التسليم</button>
+    </div>
+  
+    <div *ngIf="updating">
+      <app-print-layout [clientName]="receive.clientName" [telnum]="receive.telnum" [deviceType]="receive.deviceType" [section]="receive.section" [_id]="recieptId" [receivingDate]="date" [complain]="receive.complain" [fees]="receive.fees" [deliveringDate]="today" [isReturned]="receive.returned" [repair]="receive.repair"></app-print-layout>
+      <button ngxPrint printSectionId="print-section" printTitle="إيصال الإستلام" [printStyle]="{p : {'line-height': '75%', 'font-weight': 'bold', 'font-size' : '11px'}, svg :{'width':'100px','height':'100px'}, span :{'padding-top': '7px'}, h3: {'padding' : '3px'}}" target="_blank" [disabled]="disabled">Print Receipt</button>
+  
+      <button ngxPrint printSectionId="barcode" [disabled]="disabled">إطبع الباركود</button>
+      <button *ngIf="receive.delivered" ngxPrint printSectionId="delivery-receipt" printTitle="إيصال التسليم" [printStyle]="{p : {'line-height': '100%', 'font-weight': 'bold', 'font-size' : '11px'}, svg :{'width':'100px','height':'100px'}, span :{'padding-top': '7px'}, h3: {'padding' : '3px'}}" target="_blank" [disabled]="disabled">إيصال التسليم</button>
+    </div> -->
+  </div>
+  

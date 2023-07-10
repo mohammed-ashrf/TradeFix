@@ -1,0 +1,98 @@
+<!-- <h2>بيع المنتجات</h2>
+<form #sellForm="ngForm">
+  <div class="form-group" fxLayout="row" fxLayoutAlign="center center" dir="rtl">
+    <mat-select placeholder="نوع العميل" id="buyerType" name="buyerType" required>
+      <mat-option class="option" value="User"> User </mat-option>
+      <mat-option class="option" value="Dealer"> Dealer </mat-option>
+    </mat-select>
+  </div>
+  <div class="form-group" fxLayout="row" fxLayoutAlign="center center" dir="rtl">
+    <input type="text" id="buyerName" placeholder="اسم المشتري" name="buyerName">
+  </div>
+  <div class="form-group" fxLayout="row" fxLayoutAlign="center center" dir="rtl">
+    <input type="text" id="buyerPhone" placeholder="رقم التليفون" name="buyerPhone">
+  </div>
+  <div class="form-group" fxLayout="row" fxLayoutAlign="center center" dir="rtl">
+    <input type="text" id="productName" placeholder="اسم المنتج" name="productName" required>
+  </div>
+  <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
+    <label for="quantity" class="gray">الكمية: </label>
+    <input type="number" id="quantity" placeholder="الكمية" name="quantity"  required>
+  </div>
+  <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
+    <label for="sellingPrice" class="gray">سعر بيع القطعة: </label>
+    <input type="number" id="sellingPrice" name="sellingPrice" required disabled>
+  </div>
+  <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
+    <label for="totalPrice" class="gray"> السعر الكلي: </label>
+    <input type="number" id="totalPrice" name="totalPrice" required>
+  </div>
+  <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
+    <label for="paid" class="gray">  تم الدفع: </label>
+    <input type="number" id="paid" name="paid" required>
+  </div>
+  <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
+    <label for="oweing" class="gray"> فاضل: </label>
+    <input type="number" id="oweing" name="oweing" required>
+  </div>
+</form> -->
+
+<h2>Cart</h2>
+
+<!-- display cart items -->
+<ng-container *ngIf="cart.length > 0; else emptyCart">
+  <table>
+    <thead>
+      <tr>
+        <th>Product Name</th>
+        <th>Price</th>
+        <th>Quantity</th>
+        <th>Total</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of cart">
+        <td>{{ item.product.name }}</td>
+        <td *ngIf="userType === 'user'">{{ (item.product.userSellingPrice * dollarPrice) | currency }}</td>
+        <td *ngIf="userType === 'dealer' && item.quantity >= 0 && item.quantity < 3">{{ (item.product.deallerSellingPrice * dollarPrice) | currency }}</td>
+        <td *ngIf="userType === 'dealer' && item.quantity >= 3">{{ (item.product.deallerSellingPriceAll * dollarPrice) | currency }}</td>
+        <td>
+          <input type="number" min="1" [(ngModel)]="item.quantity" (change)="updateCartItemQuantity(item.product, item.quantity)">
+        </td>
+        <td *ngIf="userType === 'user'">{{ (item.product.userSellingPrice * dollarPrice) * item.quantity| currency }}</td>
+        <td *ngIf="userType === 'dealer' && item.quantity >= 0 && item.quantity < 3">{{ (item.product.deallerSellingPrice * dollarPrice) * item.quantity | currency }}</td>
+        <td *ngIf="userType === 'dealer' && item.quantity >= 3">{{ (item.product.deallerSellingPriceAll * dollarPrice) * item.quantity | currency }}</td>
+        <td>
+          <button (click)="deleteCartItem(item.product)">Delete</button> <!-- add delete button -->
+        </td>
+      </tr>
+    </tbody>
+    <tfoot>
+      <tr>
+        <td colspan="4">Total Price:</td>
+        <td>{{  this.totalPrice | currency }}</td>
+      </tr>
+    </tfoot>
+  </table>
+</ng-container>
+
+<ng-template #emptyCart>
+  <p>Your cart is empty</p>
+</ng-template>
+
+<!-- display user type selection -->
+<label for="user-type">User Type:</label>
+<select id="user-type" [(ngModel)]="userType" (ngModelChange)="getTotalPrice()">
+  <option value="user">User</option>
+  <option value="dealer">Dealer</option>
+</select>
+
+<!-- display buyer information inputs -->
+<label for="buyer-name">Buyer Name:</label>
+<input id="buyer-name" type="text" [(ngModel)]="buyerName">
+
+<label for="buyer-phone">Buyer Phone Number:</label>
+<input id="buyer-phone" type="text" [(ngModel)]="buyerPhoneNumber">
+<button mat-button>save</button>
+

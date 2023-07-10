@@ -12,6 +12,10 @@ import { PrintLayoutComponent } from './print-layout/print-layout.component';
 import { AdminPageComponent } from './admin-page/admin-page.component';
 import { AdminSearchComponent } from './admin-search/admin-search.component';
 import { UserDashboardComponent } from './user-dashboard/user-dashboard.component';
+import { ProductsComponent } from './products/products.component';
+import { AddProductsComponent } from './add-products/add-products.component';
+import { SellComponent } from './sell/sell.component';
+import { AddInformationsComponent } from './add-informations/add-informations.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -27,6 +31,10 @@ const routes: Routes = [
   { path: 'admin', component: AdminPageComponent },
   { path: 'adminSearch', component: AdminSearchComponent },
   { path: 'userDashboard', component: UserDashboardComponent },
+  { path: 'products', component: ProductsComponent},
+  { path: 'addProduct', component: AddProductsComponent},
+  { path: 'sell', component: SellComponent},
+  { path: 'addInformation', component: AddInformationsComponent},
 ];
 
 @NgModule({

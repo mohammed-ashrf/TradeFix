@@ -1,0 +1,122 @@
+.Bar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f2f2f2;
+    height: 150px; 
+    position: fixed; 
+    top: 0;
+    width: 100%;
+  
+    .back {
+      border: none;
+      background-color: transparent;
+      cursor: pointer;
+      font-size: 16px;
+      color: #333;
+      text-decoration: none;
+      margin-right: 10px;
+      margin-left: 10px;
+    }
+    
+    .searchBar {
+      display: flex;
+      max-width: 400px;
+      margin: auto;
+      align-items: center;
+      background-color: white;
+      border-radius: 4px;
+      padding: 5px;
+  
+      input[type="text"] {
+        border: none;
+        flex: 1;
+        padding: 5px;
+        font-size: 16px;
+  
+        &:focus {
+          outline: none;
+        }
+      }
+  
+      button {
+        border: none;
+        background-color: blue;
+        color: white;
+        padding: 5px 10px;
+        cursor: pointer;
+        font-size: 16px;
+        border-radius: 4px;
+        margin-left: 5px;
+      }
+    }
+  }
+  .table {
+    width: 100%;
+    max-width: 100%;
+    border-collapse: collapse;
+    margin-top: 9.4rem;
+  }
+  
+  th {
+    background-color: #f2f2f2;
+    text-align: right;
+    padding: 10px;
+  }
+  
+  td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+  
+  a {
+    color: blue;
+    text-decoration: none;
+  }
+  
+  a:hover {
+    text-decoration: none;
+  }
+  
+  @media (max-width: 767px) {
+    /* adjust the table style for small screens */
+    .table {
+      margin-top: 9.3rem;
+      font-size: 12px;
+    }
+  
+    th,
+    td {
+      padding: 5px;
+    }
+  
+  }
+  
+  @media screen and (min-width: 767px) and (max-width: 997px){
+    .table {
+      margin-top: 9.3rem;
+      font-size: 12px;
+    }
+    th,
+    td {
+      padding: 5px;
+    }
+  }
+  
+  @media (min-width: 768px) {
+    /* adjust the table style for medium screens */
+    td {
+      max-width: 300px; /* set a maximum width for the table cells */
+      height: 50px; /* set the cell height for medium screens */
+    }
+  }
+  
+  @media (min-width: 992px) {
+    /* adjust the table style for large screens */
+    td {
+      max-width: 400px; /* set a maximum width for the table cells */
+      height: 80px; /* set the cell height for large screens */
+    }
+  }
