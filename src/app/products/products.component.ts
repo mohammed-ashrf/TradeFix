@@ -1,7 +1,7 @@
 import { Component, OnInit} from '@angular/core';
 import { ProductsService } from '../services/products.service';
-import { CartService } from '../services/cart.service';
-import { Product, Query } from '../shared/products';
+import { CartService, Cart, CartItem } from '../services/cart.service';
+import { Product } from '../shared/products';
 import { Router } from '@angular/router';
 @Component({
   selector: 'app-products',
@@ -19,6 +19,10 @@ export class ProductsComponent implements OnInit {
   quantity = 1;
   users:any;
   user: any;
+  selectedCartId: number = 0;
+  
+  carts: Cart[] = [];
+  currentCart!: Cart;
   constructor(private productsService: ProductsService,
     private cartService: CartService,    
     private router: Router) { }
@@ -32,7 +36,7 @@ export class ProductsComponent implements OnInit {
       this.allProducts = this.products;
       console.log(products);
     });
-    // this.getUsers();
+    this.carts = this.cartService.getCarts();
   }
 
   goBack() {
@@ -79,8 +83,18 @@ export class ProductsComponent implements OnInit {
       this.searchResult = this.searchProducts(this.products, this.searchTerm);
   }
 
-  addToCart(product: any) {
-    this.cartService.addToCart(product, 1);
-    console.log(`Added ${product.name} to cart`);
+  onChange(){
+    console.log(this.selectedCartId);
+  }
+
+  addToCart(product: Product) {
+    try {
+      this.cartService.addProduct(this.selectedCartId,product,this.quantity, 'user');
+      console.log(`Added ${product.name} to cart`);
+      alert(`Added ${product.name} to cart`);
+    } catch (e : any) {
+      alert(e.message);
+      console.log(e);
+    }
   }
 }

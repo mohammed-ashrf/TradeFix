@@ -1,17 +1,17 @@
 export interface Product {
     _id: '';
-    name: String,
-    description: String,
+    name: string,
+    description: string,
     purchasePrice: number,
     deallerSellingPrice: number,
     deallerSellingPriceAll: number,
     userSellingPrice: number,
-    category: String,
+    category: string,
     quantity: number,
     quantityToSell: number;
-    purchasedate: String
-    sellingdate: String,
-    supplier: String,
+    purchasedate: string
+    sellingdate: string,
+    supplier: string,
     whatIsPaid: number,
     oweing: number,
     buyers: [Buyer],

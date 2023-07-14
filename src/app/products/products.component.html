@@ -8,6 +8,13 @@
           <!-- <button (click)="resetSearch()">Reset</button> -->
         </div>
       </div>
+      <label for="cart-id">Choose a cart ID:</label>
+      <!-- <select id="cart-id" [(ngModel)]="selectedCartId">
+        <option *ngFor="let cartId of cartIds" [value]="cartId">{{ cartId }}</option>
+      </select> -->
+      <select [(ngModel)]="selectedCartId" (change)="onChange()">
+        <option *ngFor="let cart of carts" [value]="cart.id">{{ cart.id }}. {{ cart.cartName }}</option>
+      </select>
     </div>
     
   </div>

@@ -1,70 +1,96 @@
 import { Component, OnInit } from '@angular/core';
 import { ProductsService } from '../services/products.service';
 import { InformationService } from '../services/information.service';
-import { CartService } from '../services/cart.service';
-import { Product,Buyer,SoldProduct } from '../shared/products';
+import { CartService, Cart, CartItem } from '../services/cart.service';
+import { Product } from '../shared/products';
+// import { Cart, CartItem } from '../services/cart.service';
+
 @Component({
   selector: 'app-sell',
   templateUrl: './sell.component.html',
   styleUrls: ['./sell.component.scss']
 })
 export class SellComponent implements OnInit {
-  cart: any[];
-  userType: string;
-  buyerName: string;
-  buyerPhoneNumber: string;
-  dealerThreshold = 3;
-  basePrice!: number;
+  carts: Cart[] = [];
+  currentCart!: Cart;
   totalPrice: number = 0;
-  dollarPrice!: any;
-  constructor(private productService: ProductsService,
-    private informationService: InformationService,
-    private cartService: CartService) {
-      this.cart = cartService.getCart();
-      this.userType = 'user'; // set default user type
-      this.buyerName = '';
-      this.buyerPhoneNumber = '';
-    }
+  buyerName: string = '';
+  buyerPhoneNumber: string = '';
+  userType: string = 'user';
+  dollarPrice: number = 1; // default value, can be changed according to currency conversion rate
+  cart:any;
+  cartId!: number;
+  products: any;
+  constructor(private cartService: CartService) { }
 
   ngOnInit() {
+    this.carts = this.cartService.getCarts();
+    this.currentCart = this.carts[0];
+    this.products = this.currentCart.products;
+    this.buyerName = this.currentCart.buyerName;
+    this.buyerPhoneNumber = this.currentCart.phoneNumber;
+    console.log(this.currentCart);
     this.getTotalPrice();
-    console.log(this.cart);
-    this.getInformations();
   }
-  updateCartItemQuantity(product: any, quantity: number): void {
-    this.cartService.updateCartItemQuantity(product, quantity);
-    this.cart = this.cartService.getCart();
-  }
-  getInformations() {
-    this.informationService.getDollatPrice().subscribe(
-      (dollar) => {
-        let index = 'price';
-        this.dollarPrice = dollar[index as keyof typeof dollar];
+
+  createNewCart() {
+    const cartName = prompt('Enter cart name:');
+    if (cartName) {
+      this.cartService.addCart(cartName, this.buyerName, this.buyerPhoneNumber, '', new Date());
+      this.carts = this.cartService.getCarts();
+      const cart = this.carts.find(cart => (cart: { cartName: string; }) => cart.cartName === cartName);
+      if (cart) {
+        this.currentCart = cart;
       }
-    )
-  }
-
-  deleteCartItem(product: any): void {
-    this.cartService.deleteCartItem(product);
-    this.cart = this.cartService.getCart();
-  }
-
-  getTotalPrice(): void {
-    for (const item of this.cart) {
-      this.basePrice = item.product.userSellingPrice * this.dollarPrice;
-
-      // apply discounts based on user type and purchase quantity
-      if (this.userType === 'dealer') {
-        if (item.quantity >= this.dealerThreshold) {
-          this.basePrice = item.product.deallerSellingPriceAll * this.dollarPrice;
-        }else {
-          this.basePrice = item.product.deallerSellingPrice * this.dollarPrice;
-        }
-      }
-      this.totalPrice += (this.basePrice * item.quantity);
+      this.getTotalPrice();
     }
   }
 
-  
+  onCartChange(cartId: number) {
+    console.log('changed' + cartId)
+    const cart = this.cartService.getCart(cartId);
+    if (cart) {
+      this.currentCart = cart;
+      this.products = cart.products;
+      this.buyerName = cart.buyerName;
+      this.buyerPhoneNumber = this.currentCart.phoneNumber;
+      console.log(this.currentCart);
+      this.getTotalPrice();
+    }
+  }
 
+  updateCartItemQuantity(cartItem: CartItem) {
+    try {
+      this.cartService.updateProductQuantity(this.currentCart.id - 1, this.currentCart.products.indexOf(cartItem), cartItem.quantity, this.userType);
+      this.getTotalPrice();
+    } catch (e : any) {
+      alert(e.message);
+    }
+  }
+
+  deleteCartItem(cartItem: CartItem) {
+    this.cartService.deleteProduct(this.currentCart.id - 1, this.currentCart.products.indexOf(cartItem));
+    this.currentCart = this.cartService.getCart(this.currentCart.id - 1);
+    this.getTotalPrice();
+  }
+
+  deleteCart() {
+    this.cartService.deleteCart(this.currentCart.id);
+  }
+
+  updateCartInformation() {
+    this.currentCart.buyerName = this.buyerName;
+    this.currentCart.phoneNumber = this.buyerPhoneNumber;
+    this.cartService.updateCart(this.currentCart.id - 1, this.currentCart);
+    this.getTotalPrice();
+  }
+
+  getTotalPrice() {
+    let total = 0;
+    for (const item of this.currentCart.products) {
+      let price = this.userType === 'user' ? item.product.userSellingPrice : item.quantity >= 3 ? item.product.deallerSellingPriceAll : item.product.deallerSellingPrice;
+      total += price * item.quantity;
+    }
+    this.totalPrice = total * this.dollarPrice;
+  }
 }
