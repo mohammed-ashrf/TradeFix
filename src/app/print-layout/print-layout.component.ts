@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { Cart,CartItem } from '../services/cart.service';
 @Component({
   selector: 'app-print-layout',
   templateUrl: './print-layout.component.html',
@@ -29,4 +30,9 @@ export class PrintLayoutComponent {
   isReturned!: boolean;
   @Input()
   repair!: string;
+  // invoice
+  @Input()
+  products!: CartItem[];
+  @Input()
+  cart!: Cart;
 }

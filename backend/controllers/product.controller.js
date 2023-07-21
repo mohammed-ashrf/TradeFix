@@ -13,7 +13,7 @@ exports.getProducts = async (req, res) => {
 // Add a new product
 exports.createProduct = async (req, res) => {
     try {
-      const { name, description, purchasePrice,quantity,quantityToSell, deallerSellingPrice, deallerSellingPriceAll, userSellingPrice, category, purchasedate, sellingdate,supplier,whatIsPaid,oweing,buyers } = req.body;
+      const { name, description, purchasePrice,quantity,quantitySold, deallerSellingPrice, deallerSellingPriceAll, userSellingPrice, category, purchasedate, sellingdate,supplier,whatIsPaid,oweing } = req.body;
   
       if (!name || !purchasePrice || !category) {
         return res.status(400).json({ message: 'Name, price, and category are required' });
@@ -24,7 +24,7 @@ exports.createProduct = async (req, res) => {
         description, 
         purchasePrice, 
         quantity,
-        quantityToSell,
+        quantitySold,
         deallerSellingPrice, 
         deallerSellingPriceAll, 
         userSellingPrice, 
@@ -34,7 +34,6 @@ exports.createProduct = async (req, res) => {
         supplier,
         whatIsPaid,
         oweing,
-        buyers
       });
   
       const savedProduct = await newProduct.save();

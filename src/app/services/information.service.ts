@@ -71,8 +71,8 @@ export class InformationService {
     return this.http.delete(`${this.apiUrl}/dealers/${id}`);
   }
 
-  getDollatPrice(): Observable<DollarPrice[]> {
-    return this.http.get<DollarPrice[]>(`${this.apiUrl}/dollar-price`);
+  getDollatPrice(): Observable<DollarPrice> {
+    return this.http.get<DollarPrice>(`${this.apiUrl}/dollar-price`);
   }
   getOneDollarPrice(id: string): Observable<DollarPrice> {
     return this.http.get<DollarPrice>(`${this.apiUrl}/dollar-price/${id}`);

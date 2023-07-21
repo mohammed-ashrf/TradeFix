@@ -1,6 +1,6 @@
 <div class="container">
-    <div class="sections">
-        <button (click)="goBack()" class="btn btn-primary">back</button>
+    <button (click)="goBack()" class="btn btn-primary">back</button>
+    <div class="sections" *ngIf="isNew || isSection">
         <h3>إضافة قسم</h3>
         <form (ngSubmit)="submitSection(SectionForm)" #SectionForm="ngForm" dir="rtl" class="form">
             <div fxLayout="row" fxLayoutAlign="space-between center" dir="rtl">
@@ -18,7 +18,7 @@
             <button class="btn btn-primary" id="submit" type="submit" [disabled]="SectionForm.invalid">Save</button>
         </form>
     </div>
-    <div class="suppliers">
+    <div class="suppliers" *ngIf="isNew || isSupplier">
         <h3>إضافة موردين</h3>
         <form (ngSubmit)="submintSupplier(supplierForm)" #supplierForm="ngForm" dir="rtl" class="form">
             <div fxLayout="row" fxLayoutAlign="space-between center" dir="rtl">
@@ -29,10 +29,16 @@
                     <input type="text" id="supplierphone" placeholder="رقم التليفون" name="supplierphone" [(ngModel)]="supplier.phone" required>
                 </div>
             </div>
+            <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
+                <input type="text" id="companyName" placeholder="إسم الشركة" name="companyName" [(ngModel)]="supplier.companyName" required>
+            </div>
+            <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
+                <textarea matInput placeholder="الملاحظات" lang="ar" dir="auto" id="notes" name="notes" cols="30" rows="2" [(ngModel)]="supplier.notes"></textarea>
+            </div>
             <button class="btn btn-primary" id="submit" type="submit" [disabled]="supplierForm.invalid">Save</button>
         </form>
     </div>
-    <div class="dealers">
+    <div class="dealers" *ngIf="isNew || isDealer">
         <h3>إضافة ديلر</h3>
         <form (ngSubmit)="submintDealer(dealersForm)" #dealersForm="ngForm" dir="rtl" class="form">
             <div fxLayout="row" fxLayoutAlign="space-between center" dir="rtl">
@@ -46,10 +52,16 @@
             <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
                 <input type="email" id="dealerEmail" placeholder="الإيميل" name="dealerEmail" [(ngModel)]="dealer.email">
             </div>
+            <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
+                <input type="text" id="companyName" placeholder="إسم الشركة" name="companyName" [(ngModel)]="dealer.companyName" required>
+            </div>
+            <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
+                <textarea matInput placeholder="الملاحظات" lang="ar" dir="auto" id="notes" name="notes" cols="30" rows="2" [(ngModel)]="dealer.notes"></textarea>
+            </div>
             <button class="btn btn-primary" id="submit" type="submit" [disabled]="dealersForm.invalid">Save</button>
         </form>
     </div>
-    <div class="dollarPrice">
+    <div class="dollarPrice" *ngIf="isNew || isDollarPrice">
         <h3>سعر الدولار</h3>
         <form (ngSubmit)="submitDollarPrice(dollarForm)" #dollarForm="ngForm" dir="rtl" class="form">
             <div class="form-group" fxLayout="row" fxLayoutAlign="center center">

@@ -7,14 +7,18 @@ export interface Section {
 
 export interface Supplier {
     name: string,
+    companyName: string,
     phone: string,
+    notes: string,
     _id: string,
 }
 
 export interface Dealer {
     name: string,
+    companyName: string,
     email: string,
     phone: string,
+    notes: string,
     _id: string,
 }
 

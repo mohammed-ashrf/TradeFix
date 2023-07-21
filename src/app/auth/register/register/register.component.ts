@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { AuthService } from '../../auth.service';
 import { User } from '../../user';
 import { Location } from '@angular/common';
-
+import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
@@ -13,15 +12,26 @@ export class RegisterComponent implements OnInit {
   username = '';
   email = '';
   password = '';
-  role = '';
+  role = 'technition';
   confirmPassword = '';
 
   constructor(private authService: AuthService, 
-    private router: Router,
+    private route: ActivatedRoute,
     private location: Location,
     ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    const id = this.route.snapshot.paramMap.get('id');
+    if(id) {
+      this.authService.getUserById(id).subscribe(
+        (user) => {
+          this.username = user.username;
+          this.email = user.email;
+          this.role = user.role;
+        }
+      )
+    }
+  }
 
   goBack(): void {
     this.location.back();

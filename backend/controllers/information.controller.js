@@ -10,17 +10,16 @@ async function getSections(req, res) {
     res.status(500).json({ error: 'Internal server error' });
   }
 }
+async function getSectionById (req, res) {
+  try {
+    const section = await Section.findById(req.params.id);
+    res.json(section);
+  } catch (error) {
+    console.error('Failed to get device:', error.message);
+    res.status(500).json({ message: 'Failed to get device' });
+  }
+};
 
-// async function createSection(req, res) {
-//   try {
-//     const section = new Section(req.body);
-//     await section.save();
-//     res.json(section);
-//   } catch (err) {
-//     console.error(err);
-//     res.status(500).json({ error: 'Internal server error' });
-//   }
-// }
 async function createSection(req, res) {
   try {
     const section = new Section({
@@ -67,12 +66,23 @@ async function getSuppliers(req, res) {
     res.status(500).json({ error: 'Internal server error' });
   }
 }
+async function getSupplierById (req, res) {
+  try {
+    const supplier = await Supplier.findById(req.params.id);
+    res.json(supplier);
+  } catch (error) {
+    console.error('Failed to get device:', error.message);
+    res.status(500).json({ message: 'Failed to get device' });
+  }
+};
 
 async function createSupplier(req, res) {
   try {
     const supplier = new Supplier({
       name: req.body.name,
+      companyName: req.body.companyName,
       phone: req.body.phone,
+      notes: req.body.notes,
     });
 
     const savedSupplier = await supplier.save();
@@ -114,12 +124,24 @@ async function getDealers(req, res) {
   }
 }
 
+async function getDealerById (req, res) {
+  try {
+    const dealer = await Dealer.findById(req.params.id);
+    res.json(dealer);
+  } catch (error) {
+    console.error('Failed to get device:', error.message);
+    res.status(500).json({ message: 'Failed to get device' });
+  }
+};
+
 async function createDealer(req, res) {
   try {
     const dealer = new Dealer({
       name: req.body.name,
+      companyName: req.body.companyName,
       email: req.body.email,
       phone: req.body.phone,
+      notes: req.body.notes,
     });
     const savedDealer = await dealer.save();
     res.status(201).json(savedDealer);
@@ -158,7 +180,17 @@ async function getDollarPrice(req, res) {
     console.error(err);
     res.status(500).json({ error: 'Internal server error' });
   }
-}
+};
+
+async function getDollarPriceById (req, res) {
+  try {
+    const dollarPrice = await DollarPrice.findById(req.params.id);
+    res.json(dollarPrice);
+  } catch (error) {
+    console.error('Failed to get device:', error.message);
+    res.status(500).json({ message: 'Failed to get device' });
+  }
+};
 
 async function createDollarPrice(req, res) {
   try {
@@ -196,18 +228,22 @@ async function deleteDollarPrice(req, res) {
 
 module.exports = {
   getSections,
+  getSectionById,
   createSection,
   updateSection,
   deleteSection,
   getSuppliers,
+  getSupplierById,
   createSupplier,
   updateSupplier,
   deleteSupplier,
   getDealers,
+  getDealerById,
   createDealer,
   updateDealer,
   deleteDealer,
   getDollarPrice,
+  getDollarPriceById,
   createDollarPrice,
   updateDollarPrice,
   deleteDollarPrice,

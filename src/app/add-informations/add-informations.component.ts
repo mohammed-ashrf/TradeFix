@@ -19,17 +19,21 @@ export class AddInformationsComponent implements OnInit {
 
   supplier: Supplier = {
     name: '',
+    companyName: '',
     phone: '',
+    notes: '',
     _id: '',
   }
 
   dealer: Dealer = {
     name:'',
+    companyName: '',
     email: '',
     phone: '',
+    notes: '',
     _id: '',
   }
-
+ 
   dollarPrice: DollarPrice = {
     price: 0,
     date: Date.now,
@@ -37,6 +41,10 @@ export class AddInformationsComponent implements OnInit {
   }
 
   isNew = true;
+  isDealer = false;
+  isSection = false;
+  isSupplier = false;
+  isDollarPrice = false;
   constructor(
     private informationService: InformationService,
     private route: ActivatedRoute,
@@ -44,12 +52,36 @@ export class AddInformationsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    let route = localStorage.getItem('informationType');
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.isNew = false;
-      this.informationService.getOneDealer(id).subscribe((dealer) => {
-        this.dealer = dealer
-      });
+      if(route === 'dealers'){
+        this.informationService.getOneDealer(id).subscribe((dealer) => {
+          this.isDealer = true;
+          this.dealer = dealer;
+        });
+      }else if (route === 'suppliers') {
+        this.informationService.getOneSupplier(id).subscribe((supplier) => {
+          this.isSupplier = true;
+          this.supplier = supplier;
+        });
+      }else if ( route === 'sections') {
+        this.informationService.getOneSection(id).subscribe(
+          (section) => {
+            this.isSection = true;
+            this.section = section;
+          }
+        )
+      }else if (route === 'dollarPrice') {
+        this.informationService.getOneDollarPrice(id).subscribe(
+          (dollarPrice) => {
+            this.isDollarPrice = true;
+            this.dollarPrice = dollarPrice;
+          }
+        )
+      }
+      
     }
   }
   goBack() {

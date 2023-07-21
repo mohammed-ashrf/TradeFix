@@ -7,12 +7,16 @@ const sectionSchema = new mongoose.Schema({
 });
 const supplierSchema = new mongoose.Schema({
     name: { type: String, required: true },
+    companyName: {type: String},
     phone: { type: String},
+    notes: {type: String},
 })
 const dealerSchema = new mongoose.Schema({
     name: { type: String, required: true },
+    companyName: { type: String},
     email: { type: String, unique: true, required: false },
     phone: { type: String },
+    notes: { type: String },
 });
 
 const dollarPriceSchema = new mongoose.Schema({

@@ -24,11 +24,11 @@
       </div>
       <div fxLayout="row" fxLayoutAlign="space-between center" dir="rtl">
         <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
-          <label for="paidPrice" class="gray"> تم الدفع: </label>
+          <label for="paidPrice" class="gray"> كاش : </label>
           <input type="number" id="paidPrice" name="paidPrice" [(ngModel)]="product.whatIsPaid" (ngModelChange)="determineOweing()" required>
         </div>
         <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
-            <label for="oweing" class="gray"> فاضل: </label>
+            <label for="oweing" class="gray"> آجل: </label>
             <input type="number" id="oweing" name="oweing" [(ngModel)]="product.oweing" required>
         </div>
       </div>

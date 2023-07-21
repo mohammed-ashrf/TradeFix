@@ -1,16 +1,41 @@
 const mongoose = require('mongoose');
 
-const sellSchema = new mongoose.Schema({
-    type: {type: String, required: true},
-    buyerName: {type: String, required: false},
-    number: {type: String, required: false},
-    product: {type: String, required: true},
+const CartItem = new mongoose.Schema({
+    product: {
+        name: { type: String, required: true, unique: true},
+        description: { type: String },
+        purchasePrice: { type: Number, required: true },
+        deallerSellingPrice: { type: Number, required: true },
+        deallerSellingPriceAll: { type: Number, required: true },
+        userSellingPrice: { type: Number, required: true },
+        category: { type: String, required: true },
+        quantity: { type: Number, default: 0 },
+        quantitySold: {type: Number, required: false},
+        purchasedate: { type: String, required: true},
+        sellingdate: { type: String, required: false},
+        supplier: {type: String, required: false},
+        whatIsPaid: {type: Number, required: true},
+        oweing: {type: Number, required: true},
+    },
     quantity: {type: Number, required: true},
-    itemPrice: {type: Number, required: true},
     totalPrice: {type: Number, required: true},
-    paid: {type: Number, required: true},
-    Owing: {type: Number, required: true},
-    date: {type: Date, default: Date.now},
 });
 
-module.exports = mongoose.model('Sell', sellSchema);
+const soldCartSchema = new mongoose.Schema({
+    cartName: {type: String, required: true},
+    buyerName: {type: String, required: false},
+    PhoneNumber: {type: String, required: false},
+    totalPrice: {type: Number, required: true},
+    discount: {type: Number, required: true},
+    pastOwing: {type:Number, required: true},
+    total: {type:Number, required: true},
+    paid: {type: Number, required: true},
+    owing: {type: Number, required: true},
+    sellerName: {type: String, required: true},
+    payType: {type: String, required: true},
+    buyerType: {type: String, required: true},
+    date: {type: Date, default: Date.now},
+    products:[CartItem],
+});
+
+module.exports = mongoose.model('soldCart', soldCartSchema);

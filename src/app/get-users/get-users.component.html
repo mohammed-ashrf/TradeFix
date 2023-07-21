@@ -1,0 +1,59 @@
+<div class="container">
+  <div class="Bar">
+    <div fxLayout="column">
+      <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="10px">
+        <div class="searchBar">
+          <button (click)="goBack()" class="back">back</button>
+          <input type="text" lang="ar" dir="auto" [(ngModel)]="searchTerm" placeholder="Search..." (keyup.enter)="search()" (keyup)="search()">
+          <button (click)="search()" class="search-button">Search</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <table class="table" dir="rtl">
+    <thead dir="rtl">
+      <tr dir="rtl">
+        <th dir="rtl">الكود</th>
+        <th dir="rtl">الإسم</th>
+        <th dir="rtl">الإيميل</th>
+        <th dir="rtl">الدور</th>
+      </tr>
+    </thead>
+    <tbody dir="rtl" *ngIf="isSearched">
+      <tr *ngFor="let user of searchResult" dir="rtl">
+        <td dir="rtl">{{ user._id }}</td>
+        <td dir="rtl">{{ user.username }}</td>
+        <td dir="rtl">{{ user.email }}</td>
+        <td dir="rtl">{{ user.role }}</td>
+        <td>
+          <a mat-button [routerLink]="['/register', user._id, 'edit']">تعديل</a>
+          <!-- <a mat-button (click)="onDelete(device._id)">حذف</a> -->
+        </td>
+        <!-- <td>
+          <a mat-button [routerLink]="['/devices', product._id, 'edit']">تعديل</a>
+        </td> -->
+      </tr>
+    </tbody>
+    <tbody dir="rtl" [hidden]="isSearched">
+      <tr *ngFor="let user of users" dir="rtl">
+        <td dir="rtl">{{ user._id }}</td>
+        <td dir="rtl">{{ user.username }}</td>
+        <td dir="rtl">{{ user.email }}</td>
+        <td dir="rtl">{{ user.role }}</td>
+        <td>
+          <a mat-button [routerLink]="['/register', user._id, 'edit']">تعديل</a>
+          <!-- <a mat-button (click)="onDelete(device._id)">حذف</a> -->
+        </td>
+        <!-- <td>
+          <a mat-button [routerLink]="['/devices', product._id, 'edit']">تعديل</a>
+        </td> -->
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+  
+  
+  
+  
+  

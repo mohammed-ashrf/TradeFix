@@ -1,7 +1,7 @@
 import { Component,OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ClientSelection,DeviceType} from 'src/app/shared/recieve';
-import { Product, Buyer } from '../shared/products';
+import { Product } from '../shared/products';
 import { ProductsService } from '../services/products.service';
 import { InformationService } from '../services/information.service';
 import { Location } from '@angular/common';
@@ -14,7 +14,7 @@ import { User } from 'src/app/auth/user';
   styleUrls: ['./add-products.component.scss']
 })
 export class AddProductsComponent implements OnInit{
-  buyer!: Buyer;
+  // buyer!: Buyer;
   product: Product = {
     name: '',
     description: '',
@@ -30,8 +30,8 @@ export class AddProductsComponent implements OnInit{
     supplier: '',
     whatIsPaid: 0,
     oweing: 0,
-    buyers: [this.buyer],
-    quantityToSell: 0,
+    quantitySold: 0,
+    // buyers: [this.buyer],
   };
   print: Product = {
     name: '',
@@ -48,8 +48,8 @@ export class AddProductsComponent implements OnInit{
     supplier: '',
     whatIsPaid: 0,
     oweing: 0,
-    buyers: [this.buyer],
-    quantityToSell: 0,
+    quantitySold:0,
+    // buyers: [this.buyer],
   };
   submited: boolean = false;
   updating: boolean = false;

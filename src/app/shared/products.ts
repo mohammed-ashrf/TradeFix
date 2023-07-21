@@ -8,22 +8,22 @@ export interface Product {
     userSellingPrice: number,
     category: string,
     quantity: number,
-    quantityToSell: number;
+    quantitySold:number,
     purchasedate: string
     sellingdate: string,
     supplier: string,
     whatIsPaid: number,
     oweing: number,
-    buyers: [Buyer],
+    // buyers: [Buyer],
 }
-export interface Buyer {
-    name: String,
-    number: String,
-    product: String,
-    quantity: number,
-    paid: number,
-    Owing: number,
-}
+// export interface Buyer {
+//     name: String,
+//     number: String,
+//     product: String,
+//     quantity: number,
+//     paid: number,
+//     Owing: number,
+// }
 
 export interface Query {
     repaired: boolean,

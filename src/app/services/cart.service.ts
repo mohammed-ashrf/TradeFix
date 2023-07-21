@@ -13,9 +13,14 @@ export interface Cart {
   buyerName: string;
   phoneNumber: string;
   totalPrice: number;
+  discount: number;
+  pastOwing: number;
+  total: number;
   paid: number;
   owing: number;
   sellerName: string;
+  payType: string;
+  buyerType: string;
   date: Date;
   products: CartItem[];
 }
@@ -36,9 +41,14 @@ export class CartService {
       buyerName,
       phoneNumber,
       totalPrice: 0,
+      discount:0,
+      pastOwing:0,
+      total:0,
       paid:0,
       owing: 0,
       sellerName,
+      payType: 'cash',
+      buyerType: 'user',
       date,
       products: []
     };
@@ -68,7 +78,8 @@ export class CartService {
       }
       existingCartItem.quantity = newQuantity;
       existingCartItem.totalPrice += price * quantity;
-      // existingCartItem.product.quantitySold += quantity; // update the quantity sold of the product
+      existingCartItem.product.quantity -= quantity; // update the current quantity of the product
+      existingCartItem.product.quantitySold += quantity; // update the quantity sold of the product
     } else {
       if (quantity > product.quantity) {
         throw new Error(`Not enough stock for ${product.name}. Available stock: ${product.quantity}`);
@@ -79,10 +90,12 @@ export class CartService {
         totalPrice: price * quantity
       };
       cart.products.push(newCartItem);
-      // product.quantitySold += quantity; // update the quantity sold of the product
+      product.quantity -= quantity;
+      product.quantitySold += quantity; // update the quantity sold of the product
     }
     cart.totalPrice += price * quantity;
-    cart.owing = cart.totalPrice - cart.paid;
+    cart.total = (cart.totalPrice - cart.discount) + cart.pastOwing;
+    cart.owing = cart.total - cart.paid;
     this.saveCartsToLocalStorage();
   }
 
@@ -106,9 +119,11 @@ export class CartService {
     cartItem.quantity = quantity;
     cartItem.totalPrice = price * quantity;
     cart.totalPrice += cartItem.totalPrice - oldTotalPrice;
-    cart.owing = cart.totalPrice - cart.paid;
+    cart.total = (cart.totalPrice - cart.discount) + cart.pastOwing;
+    cart.owing = cart.total - cart.paid;
     const product = cartItem.product;
-    // product.quantitySold += quantity - oldQuantity; // update the quantity sold of the product
+    product.quantity -= quantity - oldQuantity; // update the current quantity of the product
+    product.quantitySold += quantity - oldQuantity; // update the quantity sold of the product
     this.saveCartsToLocalStorage();
   }
 
@@ -121,9 +136,11 @@ export class CartService {
     const cart = this.carts[cartIndex];
     const deletedProduct = cart.products.splice(productIndex, 1)[0];
     cart.totalPrice -= deletedProduct.totalPrice;
-    cart.owing = cart.totalPrice - cart.paid;
+    cart.total = (cart.totalPrice - cart.discount) + cart.pastOwing;
+    cart.owing = cart.total - cart.paid;
     const product = deletedProduct.product;
-    // product.quantitySold -= deletedProduct.quantity; // subtract the sold quantity from the quantity sold of the product
+    product.quantity += deletedProduct.quantity;
+    product.quantitySold -= deletedProduct.quantity; // subtract the sold quantity from the quantity sold of the product
     this.saveCartsToLocalStorage();
   }
 
@@ -145,7 +162,7 @@ export class CartService {
   updatePaid(cartIndex: number, paid: number) {
     const cart = this.carts[cartIndex];
     cart.paid = paid;
-    cart.owing = cart.totalPrice - paid;
+    cart.owing = cart.total - paid;
     this.saveCartsToLocalStorage();
   }
 

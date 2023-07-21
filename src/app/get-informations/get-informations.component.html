@@ -1,0 +1,230 @@
+<div class="container">
+    <div class="controller">
+      <button (click)="goBack()">back</button>
+      <input *ngIf="notHidden" type="text" class="input" lang="ar" dir="auto" [(ngModel)]="searchTerm" placeholder="Search..." (keyup.enter)="search()" (keyup)="search()">
+      <select name="informationType" id="informationType" [(ngModel)]="informationType" (ngModelChange)="whichInformation()">
+          <option value="sections">الأقسام</option>
+          <option value="suppliers">الموردين</option>
+          <option value="dealers">الديلر</option>
+          <option value="dollarPrice">سعر الدولار</option>
+      </select>
+    </div>
+
+    <div class="output" *ngIf="!isSearched">
+        <div class="sections" *ngIf="informationType === 'sections'">
+            <div class="cards-container" fxLayout="column" fxLayoutGap="20px" >
+                <mat-card class="deviceCard" *ngFor="let section of sections">
+                  <mat-card-content fxLayout="column" fxLayoutGap="10px">
+                    <div fxLayout="column" fxLayoutAlign="center">
+                      <div class="data-row">
+                        <div class="data-column">
+                          <p><strong>ID:</strong> {{ section._id }}</p>
+                        </div>
+                        <div class="data-column">
+                          <p><strong>Section:</strong> {{ section.name }}</p>
+                        </div>
+                        <div class="data-column">
+                          <p><strong>Checking Fees:</strong> {{ section.checkingFees }}</p>
+                        </div>
+                        <div class="data-column">
+                          <p><strong>Notes:</strong> {{ section.description }}</p>
+                        </div>
+                      </div>
+                    </div>
+                    <button class="editButton" mat-button [routerLink]="['/addInformation', section._id, 'edit']">Edit</button>
+                  </mat-card-content>
+                </mat-card>
+            </div>
+        </div>
+        <div class="suppliers" *ngIf="informationType === 'suppliers'">
+            <div class="cards-container" fxLayout="column" fxLayoutGap="20px" >
+                <mat-card class="deviceCard" *ngFor="let supplier of suppliers">
+                  <mat-card-content fxLayout="column" fxLayoutGap="10px">
+                    <div fxLayout="column" fxLayoutAlign="center">
+                      <div class="data-row">
+                        <div class="data-column">
+                          <p><strong>ID:</strong> {{ supplier._id }}</p>
+                        </div>
+                        <div class="data-column">
+                          <p><strong>Name:</strong> {{ supplier.name }}</p>
+                        </div>
+                        <div class="data-column">
+                          <p><strong>Phone Number:</strong> {{ supplier.phone }}</p>
+                        </div>
+                        <div class="data-column">
+                          <p><strong>Company Name:</strong> {{ supplier.companyName }}</p>
+                        </div>
+                        <div class="data-column">
+                            <p><strong>Notes:</strong> {{ supplier.notes }}</p>
+                        </div>
+                      </div>
+                    </div>
+                    <button class="editButton" mat-button [routerLink]="['/addInformation', supplier._id, 'edit']">Edit</button>
+                  </mat-card-content>
+                </mat-card>
+            </div>
+        </div>
+        <div class="dealers" *ngIf="informationType === 'dealers'">
+            <div class="cards-container" fxLayout="column" fxLayoutGap="20px" >
+                <mat-card class="deviceCard" *ngFor="let dealer of dealers">
+                  <mat-card-content fxLayout="column" fxLayoutGap="10px">
+                    <div fxLayout="column" fxLayoutAlign="center">
+                      <div class="data-row">
+                        <div class="data-column">
+                          <p><strong>ID:</strong> {{ dealer._id }}</p>
+                        </div>
+                        <div class="data-column">
+                          <p><strong>Name:</strong> {{ dealer.name }}</p>
+                        </div>
+                        <div class="data-column">
+                          <p><strong>Phone Number:</strong> {{ dealer.phone }}</p>
+                        </div>
+                        <div class="data-column">
+                          <p><strong>Email:</strong> {{ dealer.email }}</p>
+                        </div>
+                        <div class="data-column">
+                          <p><strong>Company Name:</strong> {{ dealer.companyName }}</p>
+                        </div>
+                        <div class="data-column">
+                          <p><strong>notes:</strong> {{ dealer.notes }}</p>
+                        </div>
+                      </div>
+                    </div>
+                    <button class="editButton" mat-button [routerLink]="['/addInformation', dealer._id, 'edit']">Edit</button>
+                  </mat-card-content>
+                </mat-card>
+            </div>
+        </div>
+        <div class="dollarPrice" *ngIf="informationType === 'dollarPrice'">
+            <div class="cards-container" fxLayout="column" fxLayoutGap="20px" >
+                <mat-card class="deviceCard">
+                  <mat-card-content fxLayout="column" fxLayoutGap="10px">
+                    <div fxLayout="column" fxLayoutAlign="center">
+                      <div class="data-row">
+                        <div class="data-column">
+                          <p><strong>ID:</strong> {{ dollarPrice._id }}</p>
+                        </div>
+                        <div class="data-column">
+                          <p><strong>Price:</strong> {{ dollarPrice.price }}</p>
+                        </div>
+                        <div class="data-column">
+                          <p><strong>Date:</strong> {{ dollarPrice.date | date}}</p>
+                        </div>
+                      </div>
+                    </div>
+                    <button class="editButton" mat-button [routerLink]="['/addInformation', dollarPrice._id, 'edit']">Edit</button>
+                  </mat-card-content>
+                </mat-card>
+            </div>
+        </div>
+    </div>
+
+    <div class="output" *ngIf="isSearched">
+      <div class="sections" *ngIf="informationType === 'sections'">
+          <div class="cards-container" fxLayout="column" fxLayoutGap="20px" >
+              <mat-card class="deviceCard" *ngFor="let section of searchResult">
+                <mat-card-content fxLayout="column" fxLayoutGap="10px">
+                  <div fxLayout="column" fxLayoutAlign="center">
+                    <div class="data-row">
+                      <div class="data-column">
+                        <p><strong>ID:</strong> {{ section._id }}</p>
+                      </div>
+                      <div class="data-column">
+                        <p><strong>Section:</strong> {{ section.name }}</p>
+                      </div>
+                      <div class="data-column">
+                        <p><strong>Checking Fees:</strong> {{ section.checkingFees }}</p>
+                      </div>
+                      <div class="data-column">
+                        <p><strong>Notes:</strong> {{ section.description }}</p>
+                      </div>
+                    </div>
+                  </div>
+                  <button class="editButton" mat-button [routerLink]="['/addInformation', section._id, 'edit']">Edit</button>
+                </mat-card-content>
+              </mat-card>
+          </div>
+      </div>
+      <div class="suppliers" *ngIf="informationType === 'suppliers'">
+          <div class="cards-container" fxLayout="column" fxLayoutGap="20px" >
+              <mat-card class="deviceCard" *ngFor="let supplier of searchResult">
+                <mat-card-content fxLayout="column" fxLayoutGap="10px">
+                  <div fxLayout="column" fxLayoutAlign="center">
+                    <div class="data-row">
+                      <div class="data-column">
+                        <p><strong>ID:</strong> {{ supplier._id }}</p>
+                      </div>
+                      <div class="data-column">
+                        <p><strong>Name:</strong> {{ supplier.name }}</p>
+                      </div>
+                      <div class="data-column">
+                        <p><strong>Phone Number:</strong> {{ supplier.phone }}</p>
+                      </div>
+                      <div class="data-column">
+                        <p><strong>Company Name:</strong> {{ supplier.companyName }}</p>
+                      </div>
+                      <div class="data-column">
+                          <p><strong>Notes:</strong> {{ supplier.notes }}</p>
+                      </div>
+                    </div>
+                  </div>
+                  <button class="editButton" mat-button [routerLink]="['/addInformation', supplier._id, 'edit']">Edit</button>
+                </mat-card-content>
+              </mat-card>
+          </div>
+      </div>
+      <div class="dealers" *ngIf="informationType === 'dealers'">
+          <div class="cards-container" fxLayout="column" fxLayoutGap="20px" >
+              <mat-card class="deviceCard" *ngFor="let dealer of searchResult">
+                <mat-card-content fxLayout="column" fxLayoutGap="10px">
+                  <div fxLayout="column" fxLayoutAlign="center">
+                    <div class="data-row">
+                      <div class="data-column">
+                        <p><strong>ID:</strong> {{ dealer._id }}</p>
+                      </div>
+                      <div class="data-column">
+                        <p><strong>Name:</strong> {{ dealer.name }}</p>
+                      </div>
+                      <div class="data-column">
+                        <p><strong>Phone Number:</strong> {{ dealer.phone }}</p>
+                      </div>
+                      <div class="data-column">
+                        <p><strong>Email:</strong> {{ dealer.email }}</p>
+                      </div>
+                      <div class="data-column">
+                        <p><strong>Company Name:</strong> {{ dealer.companyName }}</p>
+                      </div>
+                      <div class="data-column">
+                        <p><strong>notes:</strong> {{ dealer.notes }}</p>
+                      </div>
+                    </div>
+                  </div>
+                  <button class="editButton" mat-button [routerLink]="['/addInformation', dealer._id, 'edit']">Edit</button>
+                </mat-card-content>
+              </mat-card>
+          </div>
+      </div>
+      <div class="dollarPrice" *ngIf="informationType === 'dollarPrice'">
+          <div class="cards-container" fxLayout="column" fxLayoutGap="20px" >
+              <mat-card class="deviceCard">
+                <mat-card-content fxLayout="column" fxLayoutGap="10px">
+                  <div fxLayout="column" fxLayoutAlign="center">
+                    <div class="data-row">
+                      <div class="data-column">
+                        <p><strong>ID:</strong> {{ dollarPrice._id }}</p>
+                      </div>
+                      <div class="data-column">
+                        <p><strong>Price:</strong> {{ dollarPrice.price }}</p>
+                      </div>
+                      <div class="data-column">
+                        <p><strong>Date:</strong> {{ dollarPrice.date | date}}</p>
+                      </div>
+                    </div>
+                  </div>
+                  <button class="editButton" mat-button [routerLink]="['/addInformation', dollarPrice._id, 'edit']">Edit</button>
+                </mat-card-content>
+              </mat-card>
+          </div>
+      </div>
+  </div>
+</div>

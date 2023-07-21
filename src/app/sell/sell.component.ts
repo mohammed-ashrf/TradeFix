@@ -16,21 +16,35 @@ export class SellComponent implements OnInit {
   totalPrice: number = 0;
   buyerName: string = '';
   buyerPhoneNumber: string = '';
+  discount: number = 0;
   userType: string = 'user';
-  dollarPrice: number = 1; // default value, can be changed according to currency conversion rate
+  payType: string = 'cash';
+  paid: number = 0;
+  total: number = 0;
+  owing: number=0;
+  pastOwing:number =0;
+  dollarPrice: any = 1; // default value, can be changed according to currency conversion rate
   cart:any;
-  cartId!: number;
+  cartId: number = 1;
   products: any;
-  constructor(private cartService: CartService) { }
+  constructor(private cartService: CartService,
+    private informationService: InformationService) { }
 
   ngOnInit() {
     this.carts = this.cartService.getCarts();
-    this.currentCart = this.carts[0];
+    this.currentCart = this.cartService.getCart(this.cartId);
     this.products = this.currentCart.products;
+    this.getdollarPrice();
+    this.getTotalPrice();
+    this.paid = this.currentCart.paid;
+    this.discount = this.currentCart.discount;
     this.buyerName = this.currentCart.buyerName;
     this.buyerPhoneNumber = this.currentCart.phoneNumber;
+    this.payType = this.currentCart.payType;
+    this.userType = this.currentCart.buyerType;
+    this.totalPrice = this.currentCart.totalPrice;
+    this.total = this.currentCart.total;
     console.log(this.currentCart);
-    this.getTotalPrice();
   }
 
   createNewCart() {
@@ -54,6 +68,12 @@ export class SellComponent implements OnInit {
       this.products = cart.products;
       this.buyerName = cart.buyerName;
       this.buyerPhoneNumber = this.currentCart.phoneNumber;
+      this.userType = this.currentCart.buyerType;
+      this.payType = this.currentCart.payType;
+      this.discount = this.currentCart.discount;
+      this.paid = this.currentCart.paid;
+      this.totalPrice = this.currentCart.totalPrice;
+      this.total = this.currentCart.total;
       console.log(this.currentCart);
       this.getTotalPrice();
     }
@@ -81,6 +101,12 @@ export class SellComponent implements OnInit {
   updateCartInformation() {
     this.currentCart.buyerName = this.buyerName;
     this.currentCart.phoneNumber = this.buyerPhoneNumber;
+    this.currentCart.paid = this.paid;
+    this.currentCart.payType = this.payType;
+    this.currentCart.buyerType = this.userType;
+    this.currentCart.discount = this.discount;
+    this.currentCart.totalPrice = this.totalPrice;
+    this.currentCart.total = this.total;
     this.cartService.updateCart(this.currentCart.id - 1, this.currentCart);
     this.getTotalPrice();
   }
@@ -88,9 +114,29 @@ export class SellComponent implements OnInit {
   getTotalPrice() {
     let total = 0;
     for (const item of this.currentCart.products) {
-      let price = this.userType === 'user' ? item.product.userSellingPrice : item.quantity >= 3 ? item.product.deallerSellingPriceAll : item.product.deallerSellingPrice;
+      // let price = this.userType === 'user' ? item.product.userSellingPrice : item.quantity >= 3 ? item.product.deallerSellingPriceAll : item.product.deallerSellingPrice;
+      let price = item.product.userSellingPrice;
+      if (this.userType === 'dealer') {
+        if (item.quantity >= 3) {
+          price = item.product.deallerSellingPriceAll;
+        } else {
+          price = item.product.deallerSellingPrice;
+        }
+      }
       total += price * item.quantity;
     }
     this.totalPrice = total * this.dollarPrice;
+    this.total = (this.totalPrice - this.discount) + this.pastOwing ;
+    this.owing = this.total - this.paid;
+  }
+
+  getdollarPrice() {
+    this.informationService.getDollatPrice().subscribe(
+      (dollar) => {
+        let index = 'price';
+        this.dollarPrice = dollar[index as keyof typeof dollar];
+        console.log(this.dollarPrice);
+      }
+    )
   }
 }

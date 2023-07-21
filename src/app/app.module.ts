@@ -27,8 +27,6 @@ import { LoginComponent } from './auth/login/login/login.component';
 import { RegisterComponent } from './auth/register/register/register.component';
 import { DeviceListComponent } from './device/device-list/device-list/device-list.component';
 import { DeviceFormComponent } from './device/device-form/device-form/device-form.component';
-import { RepairListComponent } from './repair/repair-list/repair-list/repair-list.component';
-import { RepairFormComponent } from './repair/repair-form/repair-form.component';
 import { NgxPrintModule } from 'ngx-print';
 import { SearchComponent } from './search/search.component';
 import { PrintLayoutComponent } from './print-layout/print-layout.component';
@@ -39,6 +37,8 @@ import { ProductsComponent } from './products/products.component';
 import { AddProductsComponent } from './add-products/add-products.component';
 import { SellComponent } from './sell/sell.component';
 import { AddInformationsComponent } from './add-informations/add-informations.component';
+import { GetInformationsComponent } from './get-informations/get-informations.component';
+import { GetUsersComponent } from './get-users/get-users.component';
 
 
 @NgModule({
@@ -48,8 +48,6 @@ import { AddInformationsComponent } from './add-informations/add-informations.co
     RegisterComponent,
     DeviceListComponent,
     DeviceFormComponent,
-    RepairListComponent,
-    RepairFormComponent,
     SearchComponent,
     PrintLayoutComponent,
     AdminPageComponent,
@@ -59,6 +57,8 @@ import { AddInformationsComponent } from './add-informations/add-informations.co
     AddProductsComponent,
     SellComponent,
     AddInformationsComponent,
+    GetInformationsComponent,
+    GetUsersComponent,
   ],
   imports: [
     BrowserModule,

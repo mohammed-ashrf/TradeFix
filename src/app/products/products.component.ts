@@ -45,6 +45,8 @@ export class ProductsComponent implements OnInit {
       this.router.navigate(['/devices']);
     } else if (user.role === 'technition') {
       this.router.navigate(['/userDashboard']);
+    }else {
+      this.router.navigate(['/admin']);
     }
     // this.location.back();
   }

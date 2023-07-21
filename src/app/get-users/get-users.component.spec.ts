@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { RepairFormComponent } from './repair-form.component';
+import { GetUsersComponent } from './get-users.component';
 
-describe('RepairFormComponent', () => {
-  let component: RepairFormComponent;
-  let fixture: ComponentFixture<RepairFormComponent>;
+describe('GetUsersComponent', () => {
+  let component: GetUsersComponent;
+  let fixture: ComponentFixture<GetUsersComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ RepairFormComponent ]
+      declarations: [ GetUsersComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(RepairFormComponent);
+    fixture = TestBed.createComponent(GetUsersComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
