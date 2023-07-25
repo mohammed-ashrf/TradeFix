@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Section, Supplier,Dealer, DollarPrice } from '../shared/information';
+import { Section, ProductSection, Supplier,Dealer, DollarPrice } from '../shared/information';
 import { ActivatedRoute } from '@angular/router';
 import { InformationService } from '../services/information.service';
 import { NgForm } from '@angular/forms';
@@ -17,6 +17,11 @@ export class AddInformationsComponent implements OnInit {
     _id: '',
   }
 
+  productSection: ProductSection = {
+    name: '',
+    description: '',
+    _id: ''
+  }
   supplier: Supplier = {
     name: '',
     companyName: '',
@@ -43,6 +48,7 @@ export class AddInformationsComponent implements OnInit {
   isNew = true;
   isDealer = false;
   isSection = false;
+  isProductSection = false;
   isSupplier = false;
   isDollarPrice = false;
   constructor(
@@ -65,6 +71,11 @@ export class AddInformationsComponent implements OnInit {
         this.informationService.getOneSupplier(id).subscribe((supplier) => {
           this.isSupplier = true;
           this.supplier = supplier;
+        });
+      }else if(route === 'product-sections') {
+        this.informationService.getOneProductSection(id).subscribe((productSection) => {
+          this.isProductSection = true;
+          this.productSection = productSection;
         });
       }else if ( route === 'sections') {
         this.informationService.getOneSection(id).subscribe(
@@ -108,6 +119,29 @@ export class AddInformationsComponent implements OnInit {
         }, (error) => {
           console.error('Error updating section:', JSON.stringify(error));
           window.alert(`Error updating section: ${JSON.stringify(error)}. Please try again later.`);
+        }
+      )
+    }
+  }
+
+  submitProductSection(form: NgForm) {
+    if (this.isNew) {
+      this.informationService.addProductSection(this.productSection).subscribe(
+        (productSection) => {
+          window.alert(`Success saving Product Section ${productSection.name}.`);
+          form.resetForm();
+        },(error) => {
+          console.error('Error creating Product Section:', error);
+          window.alert('Error creating Product Section. Please try again later.');
+        }
+      )
+    }else {
+      this.informationService.updateProductSection(this.productSection._id, this.productSection).subscribe(
+        () => {
+          window.alert(`Product Section Updated`);
+        }, (error) => {
+          console.error('Error updating Product Section:', JSON.stringify(error));
+          window.alert(`Error updating Product Section: ${JSON.stringify(error)}. Please try again later.`);
         }
       )
     }

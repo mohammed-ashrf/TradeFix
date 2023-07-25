@@ -71,7 +71,7 @@
       <P> اﻵجل: {{owing}}</P>
     </div>
     <button mat-button (click)="updateCartInformation()" style="margin-bottom: 10px;">Update Information</button>
-    <button mat-button style="margin-bottom: 10px;">بيع</button>
+    <button mat-button style="margin-bottom: 10px;" (click)="sellCart()">بيع</button>
     <app-print-layout [cart]="currentCart" [products]="currentCart.products"></app-print-layout>
     <button mat-button ngxPrint printSectionId="invoice" [printStyle]="{
       p: {'line-height': '75%', 'font-weight': 'bold', 'font-size': '11px'},

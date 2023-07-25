@@ -5,6 +5,12 @@ export interface Section {
     _id: string,
 }
 
+export interface ProductSection {
+    name: string,
+    description: string,
+    _id: string,
+}
+
 export interface Supplier {
     name: string,
     companyName: string,

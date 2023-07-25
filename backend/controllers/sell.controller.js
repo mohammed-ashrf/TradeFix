@@ -1,9 +1,9 @@
-const soldCart = require('../models/sell.model');
+const {SoldCart, Buyer}= require('../models/sell.model');
 
 //Get all sold carts
 exports.getSoldCarts = async (req,res) => {
     try{
-        const soldCarts = await soldCart.find();
+        const soldCarts = await SoldCart.find();
         res.status(200).json(soldCarts);
     }catch (err) {
         res.status(500).json({ message: err.message });
@@ -11,8 +11,8 @@ exports.getSoldCarts = async (req,res) => {
 };
 exports.getSoldCartById = async (req, res) =>{
     try {
-        const soldCart = await soldCart.findById(req.params.id);
-        res.json(device);
+        const soldCart = await SoldCart.findById(req.params.id);
+        res.json(soldCart);
     }catch (error) {
         console.error('Faild to get Cart:', error.message);
         res.status(500).json({ message: 'Faild to get device'});
@@ -20,7 +20,7 @@ exports.getSoldCartById = async (req, res) =>{
 };
 exports.updateSoldCartById = async (req, res) => {
     try {
-        const soldCart = await soldCart.findByIdAndUpdate(req.params.id, req.body, {new: true});
+        const soldCart = await SoldCart.findByIdAndUpdate(req.params.id, req.body, {new: true});
         res.json(soldCart);
     } catch (error) {
         console.error('Faild to update cart:', error.message);
@@ -29,7 +29,7 @@ exports.updateSoldCartById = async (req, res) => {
 };
 exports.deleteSoldCartById = async (req, res) => {
     try {
-        const soldCart = await soldCart.findByIdAndDelete(req.params.id);
+        const soldCart = await SoldCart.findByIdAndDelete(req.params.id);
         if(!soldCart) {
             return res.statue(404).json({ message: 'Cart not found'});
         }
@@ -48,7 +48,7 @@ exports.sellCart = async(req, res) => {
             return res.status(400).json({ message: 'Cart Name, Total Price, Paid are required'});
         }
 
-        const newSoldCart = new soldCart({
+        const newSoldCart = new SoldCart({
             cartName, 
             buyerName, 
             phoneNumber, 

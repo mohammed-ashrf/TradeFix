@@ -222,3 +222,29 @@ mat-option {
     background-color: #0062cc;
     width: 100%;
   }
+
+
+  .list {
+    position: relative;
+    // top: 100%;
+    top: -19px;
+    left: 0;
+    z-index: 1;
+    width: 100%;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-top: none;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+  
+  .list li {
+    padding: 10px;
+    cursor: pointer;
+  }
+  
+  .list li:hover {
+    background-color: #f5f5f5;
+  }

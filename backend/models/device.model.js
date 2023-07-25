@@ -1,5 +1,10 @@
 const mongoose = require('mongoose');
 
+const product = new mongoose.Schema({
+  productId: {type: String},
+  productName: {type: String},
+  productPrice: {type: Number},
+})
 const deviceSchema = new mongoose.Schema({
   clientName: { type: String, required: true },
   telnum: { type: String, required: true },
@@ -10,6 +15,7 @@ const deviceSchema = new mongoose.Schema({
   clientSelection: { type: String, required: true },
   complain: { type: String, required: true },
   repair: { type: String, required: false },
+  products: [product],
   notes: { type: String, required: false },
   fees: { type: Number, required: true },
   finished: { type: Boolean, required: false },

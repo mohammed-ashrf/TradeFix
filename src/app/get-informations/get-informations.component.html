@@ -4,6 +4,7 @@
       <input *ngIf="notHidden" type="text" class="input" lang="ar" dir="auto" [(ngModel)]="searchTerm" placeholder="Search..." (keyup.enter)="search()" (keyup)="search()">
       <select name="informationType" id="informationType" [(ngModel)]="informationType" (ngModelChange)="whichInformation()">
           <option value="sections">الأقسام</option>
+          <option value="product-sections">أقسام المنتجات</option>
           <option value="suppliers">الموردين</option>
           <option value="dealers">الديلر</option>
           <option value="dollarPrice">سعر الدولار</option>
@@ -36,6 +37,28 @@
                 </mat-card>
             </div>
         </div>
+        <div class="ProductSections" *ngIf="informationType === 'product-sections'">
+          <div class="cards-container" fxLayout="column" fxLayoutGap="20px" >
+              <mat-card class="deviceCard" *ngFor="let productSection of productSections">
+                <mat-card-content fxLayout="column" fxLayoutGap="10px">
+                  <div fxLayout="column" fxLayoutAlign="center">
+                    <div class="data-row">
+                      <div class="data-column">
+                        <p><strong>ID:</strong> {{ productSection._id }}</p>
+                      </div>
+                      <div class="data-column">
+                        <p><strong>Section:</strong> {{ productSection.name }}</p>
+                      </div>
+                      <div class="data-column">
+                        <p><strong>Notes:</strong> {{ productSection.description }}</p>
+                      </div>
+                    </div>
+                  </div>
+                  <button class="editButton" mat-button [routerLink]="['/addInformation', productSection._id, 'edit']">Edit</button>
+                </mat-card-content>
+              </mat-card>
+          </div>
+      </div>
         <div class="suppliers" *ngIf="informationType === 'suppliers'">
             <div class="cards-container" fxLayout="column" fxLayoutGap="20px" >
                 <mat-card class="deviceCard" *ngFor="let supplier of suppliers">

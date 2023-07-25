@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ProductsService } from '../services/products.service';
 import { InformationService } from '../services/information.service';
-import { CartService, Cart, CartItem } from '../services/cart.service';
+import { CartService, Cart, CartItem, Buyer } from '../services/cart.service';
 import { Product } from '../shared/products';
 // import { Cart, CartItem } from '../services/cart.service';
 
@@ -27,15 +27,18 @@ export class SellComponent implements OnInit {
   cart:any;
   cartId: number = 1;
   products: any;
+  buyers: any;
+  user: any;
   constructor(private cartService: CartService,
     private informationService: InformationService) { }
 
   ngOnInit() {
+    const user = localStorage.getItem('user');
+    if (user) this.user = JSON.parse(user);
     this.carts = this.cartService.getCarts();
     this.currentCart = this.cartService.getCart(this.cartId);
     this.products = this.currentCart.products;
     this.getdollarPrice();
-    this.getTotalPrice();
     this.paid = this.currentCart.paid;
     this.discount = this.currentCart.discount;
     this.buyerName = this.currentCart.buyerName;
@@ -43,7 +46,9 @@ export class SellComponent implements OnInit {
     this.payType = this.currentCart.payType;
     this.userType = this.currentCart.buyerType;
     this.totalPrice = this.currentCart.totalPrice;
-    this.total = this.currentCart.total;
+    this.getTotalPrice();
+    this.getBuyers();
+    this.currentCart.sellerName = this.user.username;
     console.log(this.currentCart);
   }
 
@@ -59,6 +64,18 @@ export class SellComponent implements OnInit {
       this.getTotalPrice();
     }
   }
+
+
+
+  getBuyers() {
+    this.cartService.getBuyers().subscribe(
+      (buyers) => {
+        this.buyers = buyers;
+      }
+    )
+  }
+  
+ 
 
   onCartChange(cartId: number) {
     console.log('changed' + cartId)
@@ -99,16 +116,37 @@ export class SellComponent implements OnInit {
   }
 
   updateCartInformation() {
+    console.log('started');
+    let buyer = this.cartService.searchBuyers(this.buyers, this.buyerName);
+    this.currentCart.products = this.products;
     this.currentCart.buyerName = this.buyerName;
     this.currentCart.phoneNumber = this.buyerPhoneNumber;
-    this.currentCart.paid = this.paid;
-    this.currentCart.payType = this.payType;
     this.currentCart.buyerType = this.userType;
+    this.currentCart.payType = this.payType;
+    this.currentCart.paid = this.paid;
     this.currentCart.discount = this.discount;
     this.currentCart.totalPrice = this.totalPrice;
-    this.currentCart.total = this.total;
-    this.cartService.updateCart(this.currentCart.id - 1, this.currentCart);
-    this.getTotalPrice();
+    this.currentCart.sellerName = this.user.username;
+    if (buyer.length !== 0) {
+      if (this.buyerName !== '') {
+        let carts = buyer[buyer.length - 1].carts;
+        this.currentCart.pastOwing = carts[carts.length - 1].owing;
+      }else {
+        this.currentCart.pastOwing = 0;
+      }
+      this.currentCart.total = (this.totalPrice - this.discount) + this.currentCart.pastOwing;
+      this.currentCart.owing = this.currentCart.total - this.paid;
+      this.cartService.updateCart(this.currentCart.id - 1, this.currentCart);
+      console.log("finished, buyers founded");
+      this.getTotalPrice();
+    }else {
+      this.currentCart.pastOwing = 0;
+      this.currentCart.total = (this.totalPrice - this.discount) + this.currentCart.pastOwing;
+      this.currentCart.owing = this.currentCart.total - this.paid;
+      this.cartService.updateCart(this.currentCart.id - 1, this.currentCart);
+      console.log("finished, no buyers");
+      this.getTotalPrice();
+    }
   }
 
   getTotalPrice() {
@@ -136,6 +174,17 @@ export class SellComponent implements OnInit {
         let index = 'price';
         this.dollarPrice = dollar[index as keyof typeof dollar];
         console.log(this.dollarPrice);
+      }
+    )
+  }
+
+  sellCart(){
+    this.updateCartInformation();
+    const cart = this.cartService.getCart(this.cartId);
+    this.cartService.sellCart(cart).subscribe(
+      (soldCart) => {
+        console.log(soldCart);
+        this.deleteCart();
       }
     )
   }

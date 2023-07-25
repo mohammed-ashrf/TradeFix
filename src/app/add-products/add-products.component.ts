@@ -1,6 +1,5 @@
 import { Component,OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ClientSelection,DeviceType} from 'src/app/shared/recieve';
 import { Product } from '../shared/products';
 import { ProductsService } from '../services/products.service';
 import { InformationService } from '../services/information.service';
@@ -8,6 +7,7 @@ import { Location } from '@angular/common';
 import { AuthService } from 'src/app/auth/auth.service';
 import { NgForm } from '@angular/forms';
 import { User } from 'src/app/auth/user';
+import { ProductSection } from '../shared/information';
 @Component({
   selector: 'app-add-products',
   templateUrl: './add-products.component.html',
@@ -56,13 +56,10 @@ export class AddProductsComponent implements OnInit{
   isNew = true;
 
   allSuppliers:any;
-  sections: any;
   edited:boolean = false;
   recieptId:any;
   date:any;
   today: any;
-  clientSelection = ClientSelection;
-  deviceType = DeviceType;
   users:any;
   currentUser: any;
   user!: User;
@@ -75,6 +72,7 @@ export class AddProductsComponent implements OnInit{
   notBack = true;
   sameEng = false;
   preLocation!: any;
+  productSections!: ProductSection[];
   constructor(
     private productsService: ProductsService,
     private informationService: InformationService,
@@ -117,9 +115,9 @@ export class AddProductsComponent implements OnInit{
         this.allSuppliers = suppliers;
       }
     );
-    this.informationService.getSections().subscribe(
-      (sections) => {
-        this.sections = sections;
+    this.informationService.getProductSections().subscribe(
+      (productSections) => {
+        this.productSections = productSections;
       }
     )
   }

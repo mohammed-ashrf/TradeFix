@@ -18,6 +18,20 @@
             <button class="btn btn-primary" id="submit" type="submit" [disabled]="SectionForm.invalid">Save</button>
         </form>
     </div>
+    <div class="product-sections" *ngIf="isNew || isProductSection">
+        <h3>إضافة قسم للمنتجات</h3>
+        <form (ngSubmit)="submitProductSection(ProductSectionForm)" #ProductSectionForm="ngForm" dir="rtl" class="form">
+            <div fxLayout="row" fxLayoutAlign="space-between center" dir="rtl">
+                <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
+                    <input type="text" id="productSectionName" placeholder="اسم القسم" name="productSectionName" [(ngModel)]="productSection.name" required>
+                </div>
+            </div>
+            <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
+                <textarea matInput placeholder="الملاحظات" lang="ar" dir="auto" id="productSectionnotes" name="productSectionnotes" cols="30" rows="2" [(ngModel)]="productSection.description"></textarea>
+            </div>
+            <button class="btn btn-primary" id="submit" type="submit" [disabled]="ProductSectionForm.invalid">Save</button>
+        </form>
+    </div>
     <div class="suppliers" *ngIf="isNew || isSupplier">
         <h3>إضافة موردين</h3>
         <form (ngSubmit)="submintSupplier(supplierForm)" #supplierForm="ngForm" dir="rtl" class="form">

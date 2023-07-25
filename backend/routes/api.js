@@ -7,6 +7,7 @@ const inventoryController = require('../controllers/inventory.controller');
 const productController = require('../controllers/product.controller');
 const informationController = require('../controllers/information.controller');
 const cartController = require('../controllers/sell.controller');
+const buyerController = require('../controllers/buyer.controller');
 
 router.get('/devices', deviceController.getDevices);
 router.get('/devices/:id', deviceController.getDeviceById);
@@ -35,6 +36,13 @@ router.post('/sections', informationController.createSection);
 router.put('/sections/:id', informationController.updateSection);
 router.delete('/sections/:id', informationController.deleteSection);
 
+// Product Sections API
+router.get('/product-sections', informationController.getProductSection);
+router.get('/product-sections/:id', informationController.getProductSectionById);
+router.post('/product-sections', informationController.createProductSection);
+router.put('/product-sections/:id', informationController.updateProductSection);
+router.delete('/product-sections/:id', informationController.deleteProductSection);
+
 // Suppliers API
 router.get('/suppliers', informationController.getSuppliers);
 router.get('/suppliers/:id', informationController.getSupplierById);
@@ -56,11 +64,17 @@ router.put('/dollar-price/:id', informationController.updateDollarPrice);
 router.delete('/dollar-price/:id', informationController.deleteDollarPrice);
 
 // Sold Carts API
-router.get('sold-carts', cartController.getSoldCarts);
+router.get('/sold-carts', cartController.getSoldCarts);
 router.get('/sold-carts/:id', cartController.getSoldCartById);
 router.delete('/sold-carts/:id', cartController.deleteSoldCartById);
 router.put('/sold-carts/:id', cartController.updateSoldCartById);
 router.post('/sold-carts', cartController.sellCart);
 
+// Buyer API
+router.get('/buyers', buyerController.getbuyers);
+router.get('/buyers/:id', buyerController.getbuyerById);
+router.delete('/buyers/:id',  buyerController.deletebuyerById);
+router.put('/buyers/:id', buyerController.updatebuyerById);
+router.post('/buyers', buyerController.sellCart);
 
 module.exports = router;

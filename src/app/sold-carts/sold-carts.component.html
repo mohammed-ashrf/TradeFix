@@ -1,0 +1,43 @@
+<h2>Buyers</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Buyer Name</th>
+      <th>Phone Number</th>
+      <th>Cart Name</th>
+      <th>Total Price</th>
+      <th>Paid</th>
+      <th>Owing</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let buyer of buyers">
+      <td>{{ buyer.buyerName }}</td>
+      <td>{{ buyer.phoneNumber }}</td>
+      <td>{{ buyer.carts[0].cartName }}</td>
+      <td>{{ buyer.carts[0].totalPrice }}</td>
+      <td>{{ buyer.carts[0].paid }}</td>
+      <td>{{ buyer.carts[0].totalPrice - buyer.carts[0].paid }}</td>
+    </tr>
+  </tbody>
+  <tfoot>
+    <tr>
+      <th colspan="4">Total Money Earned</th>
+      <td>{{ moneyEarned }}</td>
+      <td></td>
+    </tr>
+  </tfoot>
+</table>
+
+<div>
+  <label for="time-period">Select time period:</label>
+  <select id="time-period" [(ngModel)]="selectedTimePeriod" (change)="getMoneyEarned()">
+    <option *ngFor="let timePeriod of timePeriods" [value]="timePeriod.value">{{ timePeriod.label }}</option>
+  </select>
+
+  <div *ngIf="selectedTimePeriod === 'specific_year'">
+    <label for="specific-year">Select year:</label>
+    <input type="number" id="specific-year" [(ngModel)]="specificYear" (change)="getMoneyEarned()" />
+  </div>
+</div>

@@ -27,7 +27,7 @@ const soldCartSchema = new mongoose.Schema({
     PhoneNumber: {type: String, required: false},
     totalPrice: {type: Number, required: true},
     discount: {type: Number, required: true},
-    pastOwing: {type:Number, required: true},
+    pastOwing: {type:Number, required: false},
     total: {type:Number, required: true},
     paid: {type: Number, required: true},
     owing: {type: Number, required: true},
@@ -38,4 +38,16 @@ const soldCartSchema = new mongoose.Schema({
     products:[CartItem],
 });
 
-module.exports = mongoose.model('soldCart', soldCartSchema);
+const buyerSchema = new mongoose.Schema({
+    buyerName: {type: String, required: false},
+    PhoneNumber: {type: String, required: false},
+    carts: [soldCartSchema],
+})
+
+const SoldCart = mongoose.model('SoldCart', soldCartSchema);
+const Buyer = mongoose.model('Buyer', buyerSchema);
+
+module.exports = {
+   SoldCart,
+   Buyer
+};

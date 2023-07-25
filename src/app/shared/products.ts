@@ -1,5 +1,5 @@
 export interface Product {
-    _id: '';
+    _id: string;
     name: string,
     description: string,
     purchasePrice: number,
@@ -14,7 +14,7 @@ export interface Product {
     supplier: string,
     whatIsPaid: number,
     oweing: number,
-    // buyers: [Buyer],
+    // buyers: Buyer[],
 }
 // export interface Buyer {
 //     name: String,

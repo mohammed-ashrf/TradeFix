@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { environment } from 'src/environments/environment';
-import { Section, Supplier,Dealer, DollarPrice } from '../shared/information';  
+import { Section, ProductSection,Supplier,Dealer, DollarPrice } from '../shared/information';  
 @Injectable({
   providedIn: 'root'
 })
@@ -29,6 +29,26 @@ export class InformationService {
 
   deleteSection(id: string): Observable<any> {
     return this.http.delete(`${this.apiUrl}/sections/${id}`);
+  }
+
+  getProductSections(): Observable<ProductSection[]> {
+    return this.http.get<ProductSection[]>(`${this.apiUrl}/product-sections`);
+  }
+
+  getOneProductSection(id: string): Observable<ProductSection> {
+    return this.http.get<ProductSection>(`${this.apiUrl}/product-sections/${id}`);
+  }
+
+  addProductSection(section : ProductSection): Observable<ProductSection> {
+    return this.http.post<ProductSection>(`${this.apiUrl}/product-sections`, section);
+  }
+
+  updateProductSection(id: string, section: ProductSection): Observable<ProductSection> {
+    return this.http.put<ProductSection>(`${this.apiUrl}/product-sections/${id}`, section);
+  }
+
+  deleteProductSection(id: string): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/product-sections/${id}`);
   }
 
   getSuppliers(): Observable<Supplier[]> {

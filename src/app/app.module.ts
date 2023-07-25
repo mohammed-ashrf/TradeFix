@@ -39,6 +39,7 @@ import { SellComponent } from './sell/sell.component';
 import { AddInformationsComponent } from './add-informations/add-informations.component';
 import { GetInformationsComponent } from './get-informations/get-informations.component';
 import { GetUsersComponent } from './get-users/get-users.component';
+import { SoldCartsComponent } from './sold-carts/sold-carts.component';
 
 
 @NgModule({
@@ -59,6 +60,7 @@ import { GetUsersComponent } from './get-users/get-users.component';
     AddInformationsComponent,
     GetInformationsComponent,
     GetUsersComponent,
+    SoldCartsComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,4 +1,4 @@
-const { Section, Dealer, DollarPrice, Supplier } = require('../models/information.model');
+const { Section, ProductSection,Dealer, DollarPrice, Supplier } = require('../models/information.model');
 
 // Sections controller
 async function getSections(req, res) {
@@ -49,6 +49,62 @@ async function updateSection(req, res) {
 async function deleteSection(req, res) {
   try {
     await Section.findByIdAndDelete(req.params.id);
+    res.status(204).send();
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
+// ProductSections controller
+async function getProductSection(req, res) {
+  try {
+    const productSections = await ProductSection.find();
+    res.json(productSections);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+async function getProductSectionById (req, res) {
+  try {
+    const productSections = await ProductSection.findById(req.params.id);
+    res.json(productSections);
+  } catch (error) {
+    console.error('Failed to get device:', error.message);
+    res.status(500).json({ message: 'Failed to get device' });
+  }
+};
+
+async function createProductSection(req, res) {
+  try {
+    const productSections = new ProductSection({
+      name: req.body.name,
+      description: req.body.description,
+      checkingFees: req.body.checkingFees,
+    });
+
+    const savedProductSection = await productSections.save();
+    res.status(201).json(savedProductSection);
+  } catch (err) {
+    console.warn(err);
+    res.status(400).send(err);
+  }
+};
+
+async function updateProductSection(req, res) {
+  try {
+    const productSections = await ProductSection.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    res.json(productSections);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
+async function deleteProductSection(req, res) {
+  try {
+    await ProductSection.findByIdAndDelete(req.params.id);
     res.status(204).send();
   } catch (err) {
     console.error(err);
@@ -232,6 +288,11 @@ module.exports = {
   createSection,
   updateSection,
   deleteSection,
+  getProductSection,
+  getProductSectionById,
+  createProductSection,
+  updateProductSection,
+  deleteProductSection,
   getSuppliers,
   getSupplierById,
   createSupplier,

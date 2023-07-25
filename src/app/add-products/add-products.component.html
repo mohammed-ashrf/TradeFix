@@ -34,7 +34,7 @@
       </div>
       <div class="form-group" fxLayout="row" fxLayoutAlign="center center" dir="rtl">
         <mat-select placeholder="الفئه" id="category" name="category" [(ngModel)]="product.category" required>
-            <mat-option class="option" *ngFor="let sec of sections" [value]="sec.name">{{ sec.name }}</mat-option>
+            <mat-option class="option" *ngFor="let sec of productSections" [value]="sec.name">{{ sec.name }}</mat-option>
         </mat-select>
       </div>
       <div class="form-group" fxLayout="row" fxLayoutAlign="center center" dir="rtl">
@@ -59,40 +59,7 @@
           <input type="number" id="deallerSellingPriceAll" name="deallerSellingPriceAll" [(ngModel)]="product.deallerSellingPriceAll" required>
         </div>
       </div>
-      <!-- <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="10px" dir="rtl">
-        <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
-          <input type="checkbox" name="repaired" id="repaired" [(ngModel)]="receive.repaired" [disabled]="repairdone || !sameEng" (change)="repairStatus()">
-          <label for="repaired"> تم الإصلاح </label><br>
-        </div>
-        <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
-          <input type="checkbox" name="paidAdmissionFees" id="paidAdmissionFees" [(ngModel)]="receive.paidAdmissionFees" [disabled]="disabled">
-          <label for="paidAdmissionFees"> تم دفع الرسوم </label><br>
-        </div>
-        <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
-          <input type="checkbox" name="delivered" id="delivered" [(ngModel)]="receive.delivered" [disabled]="disabled">
-          <label for="delivered"> تم التسليم </label><br>
-        </div>
-        <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
-          <input type="checkbox" name="returned" id="returned" [(ngModel)]="receive.returned" [disabled]="disabled">
-          <label for="returned"> مرتجع </label><br>
-        </div>
-      </div> -->
       <button class="btn btn-primary" id="submit" type="submit" [disabled]="productForm.invalid">Save</button>
     </form>
-    <!-- <div *ngIf="submited">
-      <app-print-layout [clientName]="print.clientName" [telnum]="print.telnum" [deviceType]="print.deviceType" [section]="print.section" [_id]="recieptId" [receivingDate]="date" [complain]="print.complain" [fees]="print.fees" [deliveringDate]="today" [isReturned]="print.returned" [repair]="receive.repair"></app-print-layout>
-      <button ngxPrint printSectionId="print-section" printTitle="إيصال الإستلام" [printStyle]="{p : {'line-height': '75%', 'font-weight': 'bold', 'font-size' : '11px'}, svg :{'width':'100px','height':'100px'}, span :{'padding-top': '7px'}, h3: {'padding' : '3px'}}" target="_blank" [disabled]="disabled">Print Receipt</button>
-  
-      <button ngxPrint printSectionId="barcode" [disabled]="disabled">إطبع الباركود</button>
-      <button *ngIf="receive.delivered" ngxPrint printSectionId="delivery-receipt" printTitle="إيصال التسليم" [printStyle]="{p : {'line-height': '75%', 'font-weight': 'bold', 'font-size' : '11px'}, svg :{'width':'100px','height':'100px'}, span :{'padding-top': '7px'}, h3: {'padding' : '3px'}}" target="_blank" [disabled]="disabled">إيصال التسليم</button>
-    </div>
-  
-    <div *ngIf="updating">
-      <app-print-layout [clientName]="receive.clientName" [telnum]="receive.telnum" [deviceType]="receive.deviceType" [section]="receive.section" [_id]="recieptId" [receivingDate]="date" [complain]="receive.complain" [fees]="receive.fees" [deliveringDate]="today" [isReturned]="receive.returned" [repair]="receive.repair"></app-print-layout>
-      <button ngxPrint printSectionId="print-section" printTitle="إيصال الإستلام" [printStyle]="{p : {'line-height': '75%', 'font-weight': 'bold', 'font-size' : '11px'}, svg :{'width':'100px','height':'100px'}, span :{'padding-top': '7px'}, h3: {'padding' : '3px'}}" target="_blank" [disabled]="disabled">Print Receipt</button>
-  
-      <button ngxPrint printSectionId="barcode" [disabled]="disabled">إطبع الباركود</button>
-      <button *ngIf="receive.delivered" ngxPrint printSectionId="delivery-receipt" printTitle="إيصال التسليم" [printStyle]="{p : {'line-height': '100%', 'font-weight': 'bold', 'font-size' : '11px'}, svg :{'width':'100px','height':'100px'}, span :{'padding-top': '7px'}, h3: {'padding' : '3px'}}" target="_blank" [disabled]="disabled">إيصال التسليم</button>
-    </div> -->
   </div>
   

@@ -42,6 +42,21 @@
     <div class="form-group" fxLayout="row" fxLayoutAlign="center center" dir="rtl">
       <textarea matInput placeholder="الصيانه" lang="ar" dir="auto" id="repair" name="repair" cols="30" rows="8" [(ngModel)]="receive.repair" [disabled]="!sameEng"></textarea>
     </div>
+    <div class="form-group" fxLayout="row" fxLayoutAlign="space-between center" *ngFor="let product of receive.products" dir="rtl">
+      <input type="text" placeholder="إسم المنتج" value="{{product.productName}}" style="margin-left: 5px;" disabled>
+      <input type="number" name="Price" id="price" value="{{product.productPrice}}" style="margin-left: 5px; line-height: 1.5; padding: 10px;" disabled>
+      <button (click)="onDelete(product.productId)" style="line-height: 1.5; padding: 10px;">delete</button>
+    </div>
+    <div class="form-group" fxLayout="column" fxLayoutAlign="center center">
+      <div class="form-group" fxLayout="row" fxLayoutAlign="center center" dir="rtl" style="width: 100%;">
+        <input type="text" id="searchProduct" placeholder="ابحث عن قطع غيار" name="searchProduct" [(ngModel)]="searchTerm" (keyup)="onSearch()">
+      </div>
+      <ul class="list" *ngIf="isSearched">
+        <li *ngFor="let product of searchResult" (click)="onSelect(product)">
+          {{ product.name }} - {{ receive.clientSelection == 'User' ? product.userSellingPrice * dollarPrice : product.deallerSellingPrice * dollarPrice}}
+        </li>
+      </ul>
+    </div>
     <div class="form-group" fxLayout="row" fxLayoutAlign="center center" dir="rtl">
       <textarea matInput placeholder="الملاحظات" lang="ar" dir="auto" id="notes" name="notes" cols="30" rows="2" [(ngModel)]="receive.notes" [disabled]="!sameEng"></textarea>
     </div>

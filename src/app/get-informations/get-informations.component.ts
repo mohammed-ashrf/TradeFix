@@ -1,6 +1,6 @@
 import { Component,OnInit } from '@angular/core';
 import { InformationService } from '../services/information.service';
-import { Dealer,Section,Supplier,DollarPrice } from '../shared/information';
+import { Dealer,ProductSection,Section,Supplier,DollarPrice } from '../shared/information';
 import { Location } from '@angular/common';
 @Component({
   selector: 'app-get-informations',
@@ -10,6 +10,7 @@ import { Location } from '@angular/common';
 export class GetInformationsComponent implements OnInit{
   informationType: string = 'dealers';
   sections!: Section[];
+  productSections!: ProductSection[];
   suppliers!: Supplier[];
   dealers!: Dealer[];
   dollarPrice: DollarPrice = {
@@ -41,21 +42,28 @@ export class GetInformationsComponent implements OnInit{
           this.sections = sections;
           localStorage.setItem('informationType', this.informationType);
         }
-      )
+      );
+    }else if(this.informationType === 'product-sections'){
+      this.informationService.getProductSections().subscribe(
+        (productSections) => {
+          this.productSections = productSections;
+          localStorage.setItem('informationType', this.informationType);
+        }
+      );
     }else if (this.informationType === 'suppliers') {
       this.informationService.getSuppliers().subscribe(
         (suppliers) => {
           this.suppliers = suppliers;
           localStorage.setItem('informationType', this.informationType);
         }
-      )
+      );
     }else if (this.informationType === 'dealers') {
       this.informationService.getDealers().subscribe(
         (dealers) => {
           this.dealers = dealers;
           localStorage.setItem('informationType', this.informationType);
         }
-      )
+      );
     }else if (this.informationType === 'dollarPrice') {
       this.informationService.getDollatPrice().subscribe(
         (dollar) => {
@@ -63,7 +71,7 @@ export class GetInformationsComponent implements OnInit{
           this.dollarPrice = dollar;
           localStorage.setItem('informationType', this.informationType);
         }
-      )
+      );
     }
   }
 
@@ -103,6 +111,8 @@ export class GetInformationsComponent implements OnInit{
       this.searchResult = this.searchProducts(this.dealers, this.searchTerm);
     }else if (this.informationType === 'sections'){
       this.searchResult = this.searchProducts(this.sections, this.searchTerm);
+    }else if (this.informationType === 'product-sections'){
+      this.searchResult = this.searchProducts(this.productSections, this.searchTerm);
     }else if (this.informationType === 'suppliers') {
       this.searchResult = this.searchProducts(this.suppliers, this.searchTerm);
     }

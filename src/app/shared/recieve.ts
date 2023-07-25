@@ -6,6 +6,7 @@ export interface Receive {
   clientSelection: string;
   complain: string;
   repair: string;
+  products: product[];
   notes: string;
   fees: number;
   finished: boolean;
@@ -16,9 +17,13 @@ export interface Receive {
   engineer: string;
   priority: string;
   receivingDate: string;
-  _id: '';
+  _id: string;
 }
-
+export interface product {
+  productId: string,
+  productName: string,
+  productPrice: number,
+}
 export interface Query {
     repaired: boolean,
     paidAdmissionFees: boolean,

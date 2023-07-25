@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Receive,ClientSelection,DeviceType } from 'src/app/shared/recieve';
+import { Receive,ClientSelection,DeviceType, product } from 'src/app/shared/recieve';
 import { Section } from 'src/app/shared/information';
+import { Product } from 'src/app/shared/products';
+import { ProductsService } from 'src/app/services/products.service';
 import { DeviceService } from '../../device.service';
 import { InformationService } from 'src/app/services/information.service';
 import { Location } from '@angular/common';
@@ -15,12 +17,13 @@ import { User } from 'src/app/auth/user';
 })
 export class DeviceFormComponent implements OnInit {
 
+  product!: product;
   receive: Receive = {
     clientName: '',
     telnum: '',
     deviceType: '',
     section: '',
-    clientSelection: '',
+    clientSelection: 'user',
     complain: '',
     repair: '',
     notes: '',
@@ -33,6 +36,7 @@ export class DeviceFormComponent implements OnInit {
     engineer: '',
     priority: '',
     receivingDate: '',
+    products: [],
     _id: '',
   };
   print: Receive = {
@@ -43,6 +47,7 @@ export class DeviceFormComponent implements OnInit {
     clientSelection: '',
     complain: '',
     repair: '',
+    products: [],
     notes: '',
     fees: 0,
     finished: false,
@@ -54,7 +59,8 @@ export class DeviceFormComponent implements OnInit {
     priority: 'normal',
     receivingDate: '',
     _id: '',
-  }
+  };
+  products: Product[] = [];
   submited: boolean = false;
   updating: boolean = false;
   isNew = true;
@@ -79,8 +85,14 @@ export class DeviceFormComponent implements OnInit {
   notBack = true;
   sameEng = false;
   preLocation!: any;
+  isSearched: boolean = false;
+  searchResult!: Product[];
+  searchTerm!: string;
+  productPrice: number = 0;
+  dollarPrice: number = 1;
   constructor(
     private deviceService: DeviceService,
+    private productService: ProductsService,
     private informationService: InformationService,
     private authService: AuthService,
     private router: Router,
@@ -89,6 +101,7 @@ export class DeviceFormComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.receive.products = [];
     this.token = localStorage.getItem('token');
     this.preLocation = localStorage.getItem('location'); 
     const id = this.route.snapshot.paramMap.get('id');
@@ -108,16 +121,78 @@ export class DeviceFormComponent implements OnInit {
       console.log('isNew');
     }else {
       this.updating = true;
-    }
+    };
+    this.productService.getAll().subscribe(
+      (products) => {
+        this.products = products;
+      }
+    );
   }
+
   getInformations() {
     this.informationService.getSections().subscribe(
       (sections) => {
         this.sections = sections;
-        console.log(this.sections);
       }
-    )
+    );
+    this.informationService.getDollatPrice().subscribe(
+      (dollar) => {
+        let index = 'price';
+        this.dollarPrice = dollar[index as keyof typeof dollar];
+        console.log(this.dollarPrice);
+      }
+    );
   }
+
+  searchProducts(products: any[], userInput: string) {
+    try {
+      if (typeof userInput !== 'string') {
+        console.log('User input must be a string');
+        throw new Error('User input must be a string');
+      }
+      userInput = userInput.toLowerCase();
+      return products.filter(product => {
+        return product.name.toLowerCase().includes(userInput);
+      });
+    } catch (error) {
+      console.error(error);
+      return [];
+    }
+  }
+  testInput(str: string) {
+    return /[A-Za-z0-9\s\S]+/.test(str);
+  }
+
+  onSearch() {
+      this.searchResult = this.searchProducts(this.products, this.searchTerm);
+      this.isSearched = true;
+  }
+
+  onSelect(item: Product) {
+    if (this.receive['clientSelection'] === 'User') {
+      this.productPrice = item.userSellingPrice * this.dollarPrice;
+    }else if (this.receive['clientSelection'] === 'Dealer'){
+      this.productPrice = item.deallerSellingPrice * this.dollarPrice;
+    }
+    this.product = {
+      productId: item._id,
+      productName: item.name,
+      productPrice: this.productPrice,
+    };
+    console.log(this.receive['products']);
+    this.receive['products'].push(this.product);
+    console.log(this.product);
+    this.receive.fees += item.userSellingPrice;
+    this.product = { productId: '', productName: '', productPrice: 0};
+    this.searchTerm = '';
+    this.isSearched = false;
+  }
+
+  onDelete(key: string) {
+    this.receive['products'].forEach((value,index)=>{
+        if(value.productId == key) this.receive['products'].splice(index,1);
+    });
+  } 
 
   goBack(deviceForm: NgForm): void {
     this.notBack = false;
@@ -155,7 +230,7 @@ export class DeviceFormComponent implements OnInit {
     let selectedSection = this.sections.find((i: Section) => i.name === this.receive.section);
     if (selectedSection) {
       this.receive.fees = selectedSection.checkingFees;
-    }
+    };
   }
 
   copyToClipboard() {
