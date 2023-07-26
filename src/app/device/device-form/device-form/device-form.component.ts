@@ -77,9 +77,7 @@ export class DeviceFormComponent implements OnInit {
   currentUser: any;
   user!: User;
   id:any;
-  username:any;
   token:any;
-  role:any;
   disabled = false;
   repairdone = false;
   notBack = true;
@@ -103,7 +101,9 @@ export class DeviceFormComponent implements OnInit {
   ngOnInit(): void {
     this.receive.products = [];
     this.token = localStorage.getItem('token');
-    this.preLocation = localStorage.getItem('location'); 
+    this.preLocation = localStorage.getItem('location');
+    this.currentUser = localStorage.getItem('user'); 
+    this.user = JSON.parse(this.currentUser);
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.isNew = false;
@@ -116,7 +116,21 @@ export class DeviceFormComponent implements OnInit {
     this.getInformations();
     this.date = this.getDate();
     this.today = this.getDate();
-    this.getUsers();
+
+    if (this.user.role == 'technition') {
+      this.disabled = true;
+      if (this.receive.repaired) {
+        this.repairdone = true;
+      }
+      if (this.user.username == this.receive.engineer){
+        this.sameEng = true;
+      }
+    }else if (this.user.role == 'receiver') {
+      this.sameEng = true;
+    }else {
+      this.sameEng = true;
+    };
+    
     if (this.isNew) {
       console.log('isNew');
     }else {
@@ -240,55 +254,10 @@ export class DeviceFormComponent implements OnInit {
       console.error("Failed to copy receipt ID to clipboard:", error);
     });
   }
-  getUsers() {
-    this.authService.getUsers().subscribe(
-      (users) => {
-        this.users = users;
-        this.whichUser();
-      }
-    )
-  }
-
-  whichUser() {
-    this.authService.getUser(this.token).subscribe(
-      (userInfo) => {
-        this.currentUser = userInfo;
-        if (this.currentUser.user) {
-          this.id = this.currentUser.user.id;
-          
-          for (let i = 0; i < this.users.length; i++) {
-            if (this.users[i]._id === this.id) {
-              this.user = this.users[i];
-              this.username = this.user.username;
-              this.role = this.user.role;
-              console.log(this.role);
-              if (this.role == 'technition') {
-                this.disabled = true;
-                if (this.receive.repaired) {
-                  this.repairdone = true;
-                }
-                if (this.username == this.receive.engineer){
-                  this.sameEng = true;
-                }
-              }else if (this.role == 'receiver') {
-                this.sameEng = true;
-              }else {
-                this.sameEng = true;
-              }
-              break;
-            }
-          }
-        }
-      },
-      error => {
-        console.log(error);
-      }
-    );
-  };
 
   repairStatus() {
     // this.whichUser();
-    if (this.role == 'technition') {
+    if (this.user.role == 'technition') {
       this.disabled = true;
       if (this.receive.repaired) {
         this.repairdone = true;

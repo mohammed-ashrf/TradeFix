@@ -1,9 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { ProductsService } from '../services/products.service';
 import { InformationService } from '../services/information.service';
 import { CartService, Cart, CartItem, Buyer } from '../services/cart.service';
-import { Product } from '../shared/products';
-// import { Cart, CartItem } from '../services/cart.service';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-sell',
@@ -30,7 +28,8 @@ export class SellComponent implements OnInit {
   buyers: any;
   user: any;
   constructor(private cartService: CartService,
-    private informationService: InformationService) { }
+    private informationService: InformationService,
+    private location: Location) { }
 
   ngOnInit() {
     const user = localStorage.getItem('user');
@@ -73,6 +72,10 @@ export class SellComponent implements OnInit {
         this.buyers = buyers;
       }
     )
+  }
+
+  goBack() {
+    this.location.back();
   }
   
  

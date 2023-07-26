@@ -1,6 +1,6 @@
 import { Component, OnInit} from '@angular/core';
 import { ProductsService } from '../services/products.service';
-import { CartService, Cart, CartItem } from '../services/cart.service';
+import { CartService, Cart } from '../services/cart.service';
 import { Product } from '../shared/products';
 import { Router } from '@angular/router';
 @Component({
@@ -19,7 +19,7 @@ export class ProductsComponent implements OnInit {
   quantity = 1;
   users:any;
   user: any;
-  selectedCartId: number = 0;
+  selectedCartId: number = 1;
   
   carts: Cart[] = [];
   currentCart!: Cart;

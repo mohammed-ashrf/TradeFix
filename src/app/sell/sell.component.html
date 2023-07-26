@@ -1,6 +1,6 @@
 <div class="cart-container">
   <div class="cart-sidebar">
-    <!-- <button style="margin-bottom: 0px;">back</button> -->
+    <button mat-button (click)="goBack()">Back</button>
     <h3>فاتورة</h3>
     <select [(ngModel)]="cartId" (change)="onCartChange(cartId)">
       <option *ngFor="let cart of carts" [value]="cart.id">{{ cart.id }}. {{ cart.cartName }}</option>

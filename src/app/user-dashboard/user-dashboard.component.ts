@@ -46,30 +46,15 @@ export class UserDashboardComponent implements OnInit {
   ) {}
 
   async ngOnInit() {
-    localStorage.setItem("location", "userDashboard");
     this.token = localStorage.getItem('token');
-    try {
-      const userInfo = await firstValueFrom(this.authService.getUser(this.token));
-      this.currentUser = userInfo;
-      if (this.currentUser.user) {
-        this.id = this.currentUser.user.id;
-        const users = await firstValueFrom(this.authService.getUsers());
-        this.users = users;
-        for (let i = 0; i < this.users.length; i++) {
-          if (this.users[i]._id === this.id) {
-            this.user = this.users[i];
-            this.username = this.user.username;
-            break;
-          }
-        }
-        const devices = await firstValueFrom(this.deviceService.getAll());
-        this.allDevices = Object.assign([], devices.reverse());
-        this.filterDevices();
-        this.countDevices();
-      }
-    } catch (error) {
-      console.log(error);
-    }
+    localStorage.setItem("location", "userDashboard");
+    this.currentUser = localStorage.getItem('user'); 
+    this.user = JSON.parse(this.currentUser);
+    this.username = this.user.username;
+    const devices = await firstValueFrom(this.deviceService.getAll());
+    this.allDevices = Object.assign([], devices.reverse());
+    this.filterDevices();
+    this.countDevices();
   }
 
   logout() {
