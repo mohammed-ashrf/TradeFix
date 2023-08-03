@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { NgForm } from '@angular/forms';
 import { Section, ProductSection, Supplier,Dealer, DollarPrice } from '../shared/information';
 import { ActivatedRoute } from '@angular/router';
 import { InformationService } from '../services/information.service';
-import { NgForm } from '@angular/forms';
 import { Location } from '@angular/common';
 @Component({
   selector: 'app-add-informations',
@@ -51,6 +51,7 @@ export class AddInformationsComponent implements OnInit {
   isProductSection = false;
   isSupplier = false;
   isDollarPrice = false;
+  informationType: string = 'sections';
   constructor(
     private informationService: InformationService,
     private route: ActivatedRoute,
@@ -98,8 +99,6 @@ export class AddInformationsComponent implements OnInit {
   goBack() {
     this.location.back();
   }
-
-  
 
   submitSection(form: NgForm) {
     if (this.isNew) {

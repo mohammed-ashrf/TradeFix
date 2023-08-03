@@ -2,7 +2,8 @@ import { Component, OnInit} from '@angular/core';
 import { ProductsService } from '../services/products.service';
 import { CartService, Cart } from '../services/cart.service';
 import { Product } from '../shared/products';
-import { Router } from '@angular/router';
+import { User } from '../auth/user';
+import { Location } from '@angular/common';
 @Component({
   selector: 'app-products',
   templateUrl: './products.component.html',
@@ -17,20 +18,20 @@ export class ProductsComponent implements OnInit {
   allProducts: Product[] = [];
   product: any;
   quantity = 1;
-  users:any;
-  user: any;
+  currentUser: any;
+  user!: User;
   selectedCartId: number = 1;
   
   carts: Cart[] = [];
   currentCart!: Cart;
   constructor(private productsService: ProductsService,
     private cartService: CartService,    
-    private router: Router) { }
+    private location: Location) { }
 
   ngOnInit() {
     localStorage.setItem("location", "products");
-    this.user = localStorage.getItem('user');
-    console.log(this.user);
+    this.currentUser = localStorage.getItem('user');
+    this.user = JSON.parse(this.currentUser);
     this.productsService.getAll().subscribe((products) => {
       this.products = products.reverse();
       this.allProducts = this.products;
@@ -40,15 +41,7 @@ export class ProductsComponent implements OnInit {
   }
 
   goBack() {
-    var user = JSON.parse(this.user);
-    if (user.role === 'receiver') {
-      this.router.navigate(['/devices']);
-    } else if (user.role === 'technition') {
-      this.router.navigate(['/userDashboard']);
-    }else {
-      this.router.navigate(['/admin']);
-    }
-    // this.location.back();
+    this.location.back();
   }
   searchProducts(products: any[], userInput: any) {
     try {

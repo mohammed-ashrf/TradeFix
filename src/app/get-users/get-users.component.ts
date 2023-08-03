@@ -31,18 +31,7 @@ export class GetUsersComponent implements OnInit{
   }
 
   goBack() {
-    var user = JSON.parse(this.user);
-    if(user) {
-      if (user.role === 'receiver') {
-        this.router.navigate(['/devices']);
-      } else if (user.role === 'technition') {
-        this.router.navigate(['/userDashboard']);
-      }else {
-        this.router.navigate(['/admin']);
-      }
-    }else {
-      this.location.back();
-    }
+    this.location.back();
   }
   searchUsers(products: any[], userInput: any) {
     try {

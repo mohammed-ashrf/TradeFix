@@ -2,20 +2,25 @@ export interface Product {
     _id: string;
     name: string,
     description: string,
-    purchasePrice: number,
     deallerSellingPrice: number,
     deallerSellingPriceAll: number,
     userSellingPrice: number,
     category: string,
+    status: string,
     quantity: number,
     quantitySold:number,
-    purchasedate: string
     sellingdate: string,
-    supplier: string,
-    whatIsPaid: number,
-    oweing: number,
-    // buyers: Buyer[],
+    suppliers: Supplier[],
 }
+export interface Supplier {
+    name: string,
+    quantity: number,
+    purchasePrice: number,
+    purchasedate: string,
+    whatIsPaid: number,
+    oweing: number
+}
+
 // export interface Buyer {
 //     name: String,
 //     number: String,

@@ -1,0 +1,10 @@
+<h2 mat-dialog-title>Enter cart name:</h2>
+<mat-dialog-content>
+  <mat-form-field>
+    <input matInput [(ngModel)]="cartName" required>
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button (click)="onCancel()">Cancel</button>
+  <button mat-button [disabled]="!cartName" (click)="onSave()">Save</button>
+</mat-dialog-actions>

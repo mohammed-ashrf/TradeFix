@@ -34,6 +34,7 @@ const routes: Routes = [
   { path: 'userDashboard', component: UserDashboardComponent },
   { path: 'products', component: ProductsComponent},
   { path: 'addProduct', component: AddProductsComponent},
+  { path: 'addProduct/:id/edit', component: AddProductsComponent},
   { path: 'sell', component: SellComponent},
   { path: 'addInformation', component: AddInformationsComponent},
   { path: 'addInformation/:id/edit', component: AddInformationsComponent },

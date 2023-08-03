@@ -2,7 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { InformationService } from '../services/information.service';
 import { CartService, Cart, CartItem, Buyer } from '../services/cart.service';
 import { Location } from '@angular/common';
-
+import { Dealer } from '../shared/information';
+import { product } from '../shared/recieve';
+import { MatDialog } from '@angular/material/dialog';
+import { CartDialogComponent } from '../cart-dialog/cart-dialog.component';
 @Component({
   selector: 'app-sell',
   templateUrl: './sell.component.html',
@@ -24,44 +27,53 @@ export class SellComponent implements OnInit {
   dollarPrice: any = 1; // default value, can be changed according to currency conversion rate
   cart:any;
   cartId: number = 1;
-  products: any;
+  products!: CartItem[];
   buyers: any;
+  dealers: Dealer[] = [];
   user: any;
+  cartName!: string;
   constructor(private cartService: CartService,
     private informationService: InformationService,
-    private location: Location) { }
+    private location: Location,
+    private dialog: MatDialog) { }
 
   ngOnInit() {
     const user = localStorage.getItem('user');
     if (user) this.user = JSON.parse(user);
     this.carts = this.cartService.getCarts();
     this.currentCart = this.cartService.getCart(this.cartId);
-    this.products = this.currentCart.products;
     this.getdollarPrice();
-    this.paid = this.currentCart.paid;
-    this.discount = this.currentCart.discount;
-    this.buyerName = this.currentCart.buyerName;
-    this.buyerPhoneNumber = this.currentCart.phoneNumber;
-    this.payType = this.currentCart.payType;
-    this.userType = this.currentCart.buyerType;
-    this.totalPrice = this.currentCart.totalPrice;
-    this.getTotalPrice();
-    this.getBuyers();
-    this.currentCart.sellerName = this.user.username;
-    console.log(this.currentCart);
+    if(this.currentCart){
+      this.paid = this.currentCart.paid;
+      this.discount = this.currentCart.discount;
+      this.buyerName = this.currentCart.buyerName;
+      this.buyerPhoneNumber = this.currentCart.phoneNumber;
+      this.payType = this.currentCart.payType;
+      this.userType = this.currentCart.buyerType;
+      this.totalPrice = this.currentCart.totalPrice;
+      this.products = this.currentCart.products;
+      this.getTotalPrice();
+      this.getBuyers();
+      this.getDealers();
+      this.currentCart.sellerName = this.user.username;
+      console.log(this.currentCart);
+    }
   }
 
   createNewCart() {
-    const cartName = prompt('Enter cart name:');
-    if (cartName) {
-      this.cartService.addCart(cartName, this.buyerName, this.buyerPhoneNumber, '', new Date());
-      this.carts = this.cartService.getCarts();
-      const cart = this.carts.find(cart => (cart: { cartName: string; }) => cart.cartName === cartName);
-      if (cart) {
-        this.currentCart = cart;
+    const dialogRef = this.dialog.open(CartDialogComponent);
+
+    dialogRef.afterClosed().subscribe(cartName => {
+      if (cartName) {
+        this.cartService.addCart(cartName, cartName, '', '', new Date());
+        this.carts = this.cartService.getCarts();
+        const cart = this.carts.find(cart => cart.cartName === cartName);
+        if (cart) {
+          this.currentCart = cart;
+        }
+        this.getTotalPrice();
       }
-      this.getTotalPrice();
-    }
+    });
   }
 
 
@@ -70,6 +82,13 @@ export class SellComponent implements OnInit {
     this.cartService.getBuyers().subscribe(
       (buyers) => {
         this.buyers = buyers;
+      }
+    )
+  }
+  getDealers(){
+    this.informationService.getDealers().subscribe(
+      (dealers) => {
+        this.dealers =dealers;
       }
     )
   }

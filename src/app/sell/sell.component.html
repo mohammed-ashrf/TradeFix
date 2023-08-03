@@ -6,36 +6,39 @@
       <option *ngFor="let cart of carts" [value]="cart.id">{{ cart.id }}. {{ cart.cartName }}</option>
     </select>
     <h4>Buyer Information</h4>
-    <label for="buyerName">عميل </label>
-    <input type="text" name="buyerName" [(ngModel)]="buyerName">
+    <label for="buyerName">{{userType === 'user' ? 'عميل' : 'ديلر'}} </label>
+    <input type="text" name="buyerName" [(ngModel)]="buyerName" (ngModelChange)="updateCartInformation()" *ngIf="userType === 'user'">
+    <select [(ngModel)]="buyerName" (ngModelChange)="updateCartInformation()" *ngIf="userType === 'dealer'">
+      <option *ngFor="let dealer of dealers" [value]="dealer.name">{{dealer.name}}</option>
+    </select>
 
     <label for="buyerPhoneNumber">رقم التليفون </label>
-    <input type="text" name="buyerPhoneNumber" [(ngModel)]="buyerPhoneNumber">
+    <input type="text" name="buyerPhoneNumber" [(ngModel)]="buyerPhoneNumber" (ngModelChange)="updateCartInformation()">
 
     <label for="userType">نوع العميل </label>
-    <select [(ngModel)]="userType">
+    <select [(ngModel)]="userType" (ngModelChange)="updateCartInformation()">
       <option value="user">user</option>
       <option value="dealer">dealer</option>
     </select>
 
     <label for="payType">نوعية الدفع </label>
-    <select [(ngModel)]="payType">
+    <select [(ngModel)]="payType" (ngModelChange)="updateCartInformation()">
       <option value="cash">كاش</option>
       <option value="vodafone-cash">فودافون كاش</option>
       <option value="bank">بنك</option>
     </select>
 
     <label for="discount">خصم </label>
-    <input type="number" name="discount" id="discount" [(ngModel)]="discount">
+    <input type="number" name="discount" id="discount" [(ngModel)]="discount" (ngModelChange)="updateCartInformation()">
     
     <label for="paid">كاش</label>
-    <input type="number" name="paid" id="paid" [(ngModel)]="paid">
+    <input type="number" name="paid" id="paid" [(ngModel)]="paid" (ngModelChange)="updateCartInformation()">
 
     <button mat-button (click)="createNewCart()" style="margin-top: 10px;">New Cart</button>
     <button mat-button (click)="deleteCart()">cancel cart</button>
 
   </div>
-  <div class="cart-items">
+  <div class="cart-items" *ngIf="products">
     <h3>Items in Cart</h3>
     <table>
       <thead>

@@ -1,6 +1,15 @@
 <div class="container">
-    <button (click)="goBack()" class="btn btn-primary">back</button>
-    <div class="sections" *ngIf="isNew || isSection">
+    <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="10px">
+        <button (click)="goBack()" class="btn btn-primary">back</button>
+        <select name="informationType" id="informationType" [(ngModel)]="informationType">
+            <option value="sections">الأقسام</option>
+            <option value="product-sections">أقسام المنتجات</option>
+            <option value="suppliers">الموردين</option>
+            <option value="dealers">الديلر</option>
+            <option value="dollarPrice">سعر الدولار</option>
+        </select>
+    </div>
+    <div class="sections" *ngIf="(isNew && informationType ==='sections')  || isSection">
         <h3>إضافة قسم</h3>
         <form (ngSubmit)="submitSection(SectionForm)" #SectionForm="ngForm" dir="rtl" class="form">
             <div fxLayout="row" fxLayoutAlign="space-between center" dir="rtl">
@@ -18,7 +27,7 @@
             <button class="btn btn-primary" id="submit" type="submit" [disabled]="SectionForm.invalid">Save</button>
         </form>
     </div>
-    <div class="product-sections" *ngIf="isNew || isProductSection">
+    <div class="product-sections" *ngIf="(isNew && informationType === 'product-sections') || isProductSection">
         <h3>إضافة قسم للمنتجات</h3>
         <form (ngSubmit)="submitProductSection(ProductSectionForm)" #ProductSectionForm="ngForm" dir="rtl" class="form">
             <div fxLayout="row" fxLayoutAlign="space-between center" dir="rtl">
@@ -32,7 +41,7 @@
             <button class="btn btn-primary" id="submit" type="submit" [disabled]="ProductSectionForm.invalid">Save</button>
         </form>
     </div>
-    <div class="suppliers" *ngIf="isNew || isSupplier">
+    <div class="suppliers" *ngIf="(isNew && informationType === 'suppliers') || isSupplier">
         <h3>إضافة موردين</h3>
         <form (ngSubmit)="submintSupplier(supplierForm)" #supplierForm="ngForm" dir="rtl" class="form">
             <div fxLayout="row" fxLayoutAlign="space-between center" dir="rtl">
@@ -52,7 +61,7 @@
             <button class="btn btn-primary" id="submit" type="submit" [disabled]="supplierForm.invalid">Save</button>
         </form>
     </div>
-    <div class="dealers" *ngIf="isNew || isDealer">
+    <div class="dealers" *ngIf="(isNew && informationType === 'dealers') || isDealer">
         <h3>إضافة ديلر</h3>
         <form (ngSubmit)="submintDealer(dealersForm)" #dealersForm="ngForm" dir="rtl" class="form">
             <div fxLayout="row" fxLayoutAlign="space-between center" dir="rtl">
@@ -75,7 +84,7 @@
             <button class="btn btn-primary" id="submit" type="submit" [disabled]="dealersForm.invalid">Save</button>
         </form>
     </div>
-    <div class="dollarPrice" *ngIf="isNew || isDollarPrice">
+    <div class="dollarPrice" *ngIf="(isNew && informationType === 'dollarPrice') || isDollarPrice">
         <h3>سعر الدولار</h3>
         <form (ngSubmit)="submitDollarPrice(dollarForm)" #dollarForm="ngForm" dir="rtl" class="form">
             <div class="form-group" fxLayout="row" fxLayoutAlign="center center">

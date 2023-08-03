@@ -40,6 +40,7 @@ import { AddInformationsComponent } from './add-informations/add-informations.co
 import { GetInformationsComponent } from './get-informations/get-informations.component';
 import { GetUsersComponent } from './get-users/get-users.component';
 import { SoldCartsComponent } from './sold-carts/sold-carts.component';
+import { CartDialogComponent } from './cart-dialog/cart-dialog.component';
 
 
 @NgModule({
@@ -61,6 +62,7 @@ import { SoldCartsComponent } from './sold-carts/sold-carts.component';
     GetInformationsComponent,
     GetUsersComponent,
     SoldCartsComponent,
+    CartDialogComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,17 +1,13 @@
 <div class="Bar">
     <div fxLayout="column">
       <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="10px">
+        <button mat-button (click)="goBack()" class="back">back</button>
         <div class="searchBar">
-          <button mat-button (click)="goBack()" class="back">back</button>
           <input type="text" lang="ar" dir="auto" [(ngModel)]="searchTerm" placeholder="Search..." (keyup.enter)="search()" (keyup)="search()">
           <button (click)="search()">Search</button>
-          <!-- <button (click)="resetSearch()">Reset</button> -->
         </div>
       </div>
       <label for="cart-id">Choose a cart ID:</label>
-      <!-- <select id="cart-id" [(ngModel)]="selectedCartId">
-        <option *ngFor="let cartId of cartIds" [value]="cartId">{{ cartId }}</option>
-      </select> -->
       <select [(ngModel)]="selectedCartId" (change)="onChange()">
         <option *ngFor="let cart of carts" [value]="cart.id">{{ cart.id }}. {{ cart.cartName }}</option>
       </select>
@@ -32,7 +28,7 @@
           <th dir="rtl">بيع ديلر</th>
           <th dir="rtl">بيع ديلر جمله</th>
           <th dir="rtl">الكمية</th>
-          <th dir="rtl">تاريخ الشراء</th>
+          <th dir="rtl">حالة المنتج</th>
         </tr>
       </thead>
       <tbody dir="rtl" *ngIf="isSearched">
@@ -44,11 +40,11 @@
           <td dir="rtl">{{ product.deallerSellingPrice }}</td>
           <td dir="rtl">{{ product.deallerSellingPriceAll }}</td>
           <td dir="rtl">{{ product.quantity }}</td>   
-          <td dir="rtl">{{ product.purchasedate }}</td>
+          <td dir="rtl">{{ product.status }}</td>
           <td><a mat-button (click)="addToCart(product)">Add to Cart</a></td>
-          <!-- <td>
-            <a mat-button [routerLink]="['/devices', product._id, 'edit']">تعديل</a>
-          </td> -->
+          <td>
+            <a mat-button [routerLink]="['/addProduct', product._id, 'edit']">تحديث</a>
+          </td>
         </tr>
       </tbody>
       <tbody dir="rtl" [hidden]="isSearched">
@@ -60,11 +56,11 @@
           <td dir="rtl">{{ product.deallerSellingPrice }}</td>
           <td dir="rtl">{{ product.deallerSellingPriceAll }}</td>
           <td dir="rtl">{{ product.quantity }}</td>   
-          <td dir="rtl">{{ product.purchasedate }}</td>
+          <td dir="rtl">{{ product.status }}</td>
           <td><a mat-button (click)="addToCart(product)">Add to Cart</a></td>
-          <!-- <td>
-            <a mat-button [routerLink]="['/devices', product._id, 'edit']">تعديل</a>
-          </td> -->
+          <td>
+            <a mat-button [routerLink]="['/addProduct', product._id, 'edit']">تحديث</a>
+          </td>
         </tr>
       </tbody>
   </table>  

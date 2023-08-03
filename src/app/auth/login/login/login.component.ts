@@ -4,7 +4,7 @@ import { AuthService } from '../../auth.service';
 import { User } from '../../user';
 import { map, catchError } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
-
+import { adminPassword } from 'src/app/shared/information';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -72,7 +72,7 @@ export class LoginComponent implements OnInit {
 
   submit(): void {
     this.loginAttempted = true;
-    if (this.email == 'admin' && this.password == "alert('admin007')") {
+    if (this.email == 'admin' && this.password == adminPassword) {
       this.router.navigate(['/admin']);
     } else {
       this.authService.login(this.email, this.password).subscribe({
@@ -80,7 +80,6 @@ export class LoginComponent implements OnInit {
           this.loginAttempted = false;
           this.authService.setToken(data.token);
           this.whichUser(data.token).subscribe((page) => {
-            console.log('Navigating to', page);
             this.router.navigate([page]);
           });
           this.email = '';

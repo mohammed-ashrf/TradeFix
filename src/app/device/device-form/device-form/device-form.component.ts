@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Receive,ClientSelection,DeviceType, product } from 'src/app/shared/recieve';
-import { Section } from 'src/app/shared/information';
+import { Section,Dealer } from 'src/app/shared/information';
 import { Product } from 'src/app/shared/products';
 import { ProductsService } from 'src/app/services/products.service';
 import { DeviceService } from '../../device.service';
@@ -23,7 +23,7 @@ export class DeviceFormComponent implements OnInit {
     telnum: '',
     deviceType: '',
     section: '',
-    clientSelection: 'user',
+    clientSelection: 'User',
     complain: '',
     repair: '',
     notes: '',
@@ -73,6 +73,7 @@ export class DeviceFormComponent implements OnInit {
   clientSelection = ClientSelection;
   deviceType = DeviceType;
   sections: Section[] = [];
+  dealers: Dealer[] = [];
   users:any;
   currentUser: any;
   user!: User;
@@ -88,6 +89,8 @@ export class DeviceFormComponent implements OnInit {
   searchTerm!: string;
   productPrice: number = 0;
   dollarPrice: number = 1;
+  selectedDealer!: Dealer;
+  isDealer!: boolean;
   constructor(
     private deviceService: DeviceService,
     private productService: ProductsService,
@@ -102,8 +105,10 @@ export class DeviceFormComponent implements OnInit {
     this.receive.products = [];
     this.token = localStorage.getItem('token');
     this.preLocation = localStorage.getItem('location');
-    this.currentUser = localStorage.getItem('user'); 
-    this.user = JSON.parse(this.currentUser);
+    this.currentUser = localStorage.getItem('user');
+    if (this.currentUser) {
+      this.user = JSON.parse(this.currentUser);
+    }
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.isNew = false;
@@ -111,12 +116,15 @@ export class DeviceFormComponent implements OnInit {
         this.receive = device;
         this.recieptId = device._id.slice(-7);
         this.date = device.receivingDate;
+        if(device.clientSelection === 'Dealer'){
+          this.selectedDealer.name = device.clientName;
+        }
       });
     }
     this.getInformations();
     this.date = this.getDate();
     this.today = this.getDate();
-
+    this.getUsers();
     if (this.user.role == 'technition') {
       this.disabled = true;
       if (this.receive.repaired) {
@@ -139,6 +147,7 @@ export class DeviceFormComponent implements OnInit {
     this.productService.getAll().subscribe(
       (products) => {
         this.products = products;
+        console.log(this.products);
       }
     );
   }
@@ -149,6 +158,11 @@ export class DeviceFormComponent implements OnInit {
         this.sections = sections;
       }
     );
+    this.informationService.getDealers().subscribe(
+      (dealers) => {
+        this.dealers = dealers;
+      }
+    );
     this.informationService.getDollatPrice().subscribe(
       (dollar) => {
         let index = 'price';
@@ -156,6 +170,24 @@ export class DeviceFormComponent implements OnInit {
         console.log(this.dollarPrice);
       }
     );
+  }
+
+  getUsers() {
+    this.authService.getUsers().subscribe(
+      (users) => {
+        this.users = users;
+      }
+    )
+  }
+
+  updateTelnum(dealer: Dealer) {
+    console.log(dealer);
+    // const selectedDealer = this.dealers.find(dealer => dealer.name === selectedDealerName);
+    if (this.receive.clientSelection === 'Dealer') {
+      this.receive.telnum = dealer.phone;
+    } else {
+      this.receive.telnum = '';
+    }
   }
 
   searchProducts(products: any[], userInput: string) {
@@ -179,6 +211,7 @@ export class DeviceFormComponent implements OnInit {
 
   onSearch() {
       this.searchResult = this.searchProducts(this.products, this.searchTerm);
+      console.log(this.searchResult);
       this.isSearched = true;
   }
 
@@ -204,7 +237,10 @@ export class DeviceFormComponent implements OnInit {
 
   onDelete(key: string) {
     this.receive['products'].forEach((value,index)=>{
-        if(value.productId == key) this.receive['products'].splice(index,1);
+        if(value.productId == key) {
+          this.receive['products'].splice(index,1);
+          this.receive.fees -= value.productPrice * this.dollarPrice;
+        }
     });
   } 
 

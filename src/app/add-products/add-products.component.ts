@@ -1,6 +1,6 @@
 import { Component,OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Product } from '../shared/products';
+import { Product, Supplier } from '../shared/products';
 import { ProductsService } from '../services/products.service';
 import { InformationService } from '../services/information.service';
 import { Location } from '@angular/common';
@@ -14,42 +14,41 @@ import { ProductSection } from '../shared/information';
   styleUrls: ['./add-products.component.scss']
 })
 export class AddProductsComponent implements OnInit{
-  // buyer!: Buyer;
+  supplier:Supplier = {
+    name: '',
+    quantity: 0,
+    purchasePrice: 0,
+    purchasedate: '',
+    whatIsPaid: 0,
+    oweing: 0,
+  };
   product: Product = {
     name: '',
     description: '',
-    purchasePrice: 0,
     deallerSellingPrice: 0,
     deallerSellingPriceAll: 0,
     userSellingPrice: 0,
     category: '',
+    status: '',
     quantity: 0,
-    purchasedate: '',
     sellingdate: '',
     _id: '',
-    supplier: '',
-    whatIsPaid: 0,
-    oweing: 0,
+    suppliers: [],
     quantitySold: 0,
-    // buyers: [this.buyer],
   };
   print: Product = {
     name: '',
     description: '',
-    purchasePrice: 0,
     deallerSellingPrice: 0,
     deallerSellingPriceAll: 0,
     userSellingPrice: 0,
     category: '',
+    status: '',
     quantity: 0,
-    purchasedate: '',
     sellingdate: '',
     _id: '',
-    supplier: '',
-    whatIsPaid: 0,
-    oweing: 0,
+    suppliers: [],
     quantitySold:0,
-    // buyers: [this.buyer],
   };
   submited: boolean = false;
   updating: boolean = false;
@@ -73,6 +72,9 @@ export class AddProductsComponent implements OnInit{
   sameEng = false;
   preLocation!: any;
   productSections!: ProductSection[];
+  totalQuantity!:number;
+  suppliers!: Supplier[];
+  dollarPrice: any;
   constructor(
     private productsService: ProductsService,
     private informationService: InformationService,
@@ -91,7 +93,7 @@ export class AddProductsComponent implements OnInit{
       this.productsService.getOne(id).subscribe((product) => {
         this.product = product;
         this.recieptId = product._id.slice(-7);
-        this.date = product.purchasedate;
+        // this.date = product.purchasedate;
       });
     }
     this.getInformations();
@@ -99,14 +101,63 @@ export class AddProductsComponent implements OnInit{
     this.today = this.getDate();
     this.getUsers();
     if (this.isNew) {
+      this.addSupplier();
       console.log('isNew');
     }else {
       this.updating = true;
     }
+    this.calTotalQuantity();
   }
 
-  determineOweing() {
-    this.product.oweing = (this.product.quantity * this.product.purchasePrice) - this.product.whatIsPaid;
+  // addSupplier() {
+  //   if (this.product.suppliers.length > 0) {
+  //     // Get the last supplier in the array
+  //     const lastSupplier = this.product.suppliers[this.product.suppliers.length - 1];
+  //     // Create a new supplier object with the same date as the last supplier
+  //     const newSupplier = {
+  //       name: '',
+  //       quantity: 0,
+  //       purchasePrice: 0,
+  //       purchasedate: lastSupplier.purchasedate,
+  //       whatIsPaid: 0,
+  //       oweing: 0,
+  //     };
+  //     // Add the new supplier to the end of the array
+  //     this.product.suppliers.push(newSupplier);
+  //   } else {
+  //     // If there are no existing suppliers, create a new supplier with the current date
+  //     const newSupplier = {
+  //       name: '',
+  //       quantity: 0,
+  //       purchasePrice: 0,
+  //       purchasedate: this.date,
+  //       whatIsPaid: 0,
+  //       oweing: 0,
+  //     };
+  //     // Add the new supplier to the suppliers array
+  //     this.product.suppliers.push(newSupplier);
+  //   }
+  // }
+
+  addSupplier() {
+    const lastSupplier = this.product.suppliers[this.product.suppliers.length - 1];
+    const newSupplier = {
+      name: '',
+      quantity: 0,
+      purchasePrice: 0,
+      purchasedate: lastSupplier ? lastSupplier.purchasedate : this.date,
+      whatIsPaid: 0,
+      oweing: 0,
+    };
+    this.product.suppliers.push(newSupplier);
+  }
+
+  deleteSupplier(index: number) {
+    this.product.suppliers.splice(index, 1);
+  }  
+
+  determineOweing(supplier : Supplier) {
+    supplier.oweing = (supplier.quantity * supplier.purchasePrice) - supplier.whatIsPaid;
   }
 
   getInformations(){
@@ -119,7 +170,25 @@ export class AddProductsComponent implements OnInit{
       (productSections) => {
         this.productSections = productSections;
       }
+    );
+    this.informationService.getDollatPrice().subscribe(
+      (dollar) => {
+        let index = 'price';
+        this.dollarPrice = dollar[index as keyof typeof dollar];
+        console.log(this.dollarPrice);
+      }
     )
+  }
+
+  calTotalQuantity() {
+    if (this.product['suppliers'].length === 0) {
+      this.totalQuantity = 0;
+    }else {
+      for(let i = 0; i<= this.product['suppliers'].length; i++) {
+        this.totalQuantity += this.product['suppliers'][i].quantity;
+      }
+    }
+    this.product.quantity = this.totalQuantity;
   }
 
   goBack(deviceForm: NgForm): void {
@@ -153,20 +222,6 @@ export class AddProductsComponent implements OnInit{
     const day = date.getDate().toString().padStart(2, '0');
     return `${year}-${month}-${day}`;
   }
-
-  // determinFees() {
-  //   if (this.product.section == "laptop" || this.product.section == "MB") {
-  //     this.product.fees = 75;
-  //   }else if (this.product.section == "soft"){
-  //     this.product.fees = 25;
-  //   }else if (this.product.section == "cs3"){
-  //     this.product.fees = 50;
-  //   }else if (this.product.section == "Monitor"){
-  //     this.product.fees = 40;
-  //   }else if (this.product.section == "hdd") {
-  //     this.product.fees = 75;
-  //   }
-  // }
 
   copyToClipboard() {
     navigator.clipboard.writeText(this.recieptId).then(() => {
@@ -231,8 +286,11 @@ export class AddProductsComponent implements OnInit{
     }
   }
   submit(form : NgForm): void {
+    this.product.userSellingPrice = this.product.userSellingPrice / this.dollarPrice;
+    this.product.deallerSellingPrice = this.product.deallerSellingPrice / this.dollarPrice;
+    this.product.deallerSellingPriceAll = this.product.deallerSellingPriceAll / this.dollarPrice;
     if (this.isNew) {
-      this.product.purchasedate = this.getDate();
+      // this.product.purchasedate = this.getDate();
       this.updating = false;
       this.productsService.create(this.product).subscribe(
         (data) => {
@@ -242,16 +300,15 @@ export class AddProductsComponent implements OnInit{
           this.edited = true;
           this.recieptId = data._id.slice(-12);
           window.alert(`Success saving product ${data._id}. You can print now.`);
-          navigator.clipboard.writeText(data._id);
-          this.copyToClipboard();
+          // navigator.clipboard.writeText(data._id);
           this.submited = true;
           if (this.notBack){
             form.resetForm();
           }
         },
         (error) => {
-          console.error('Error creating device:', error);
-          window.alert('Error creating device. Please try again later.');
+          console.error('Error creating product:', error);
+          window.alert(`Error creating product. ${JSON.stringify(error)}`);
         }
       );
       console.log(this.product._id);
@@ -264,8 +321,8 @@ export class AddProductsComponent implements OnInit{
           }
         },
         (error) => {
-          console.error('Error updating device:', JSON.stringify(error));
-          window.alert(`Error updating device: ${JSON.stringify(error)}. Please try again later.`);
+          console.error('Error updating product:', JSON.stringify(error));
+          window.alert(`Error updating product: ${JSON.stringify(error)}. Please try again later.`);
         }
       );
     }

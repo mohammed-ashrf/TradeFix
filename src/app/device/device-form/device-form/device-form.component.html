@@ -4,9 +4,17 @@
     <h2>{{ isNew ? 'جهاز جديد' : 'تعديل جهاز' }}</h2>
   </div>
   <form (ngSubmit)="submit(deviceForm)" #deviceForm="ngForm" class="deviceForm" id="form">
+    <div class="form-group" fxLayout="row" fxLayoutAlign="center center" dir="rtl">
+      <mat-select placeholder="نوع العميل" id="clientSelection" name="clientSelection" [(ngModel)]="receive.clientSelection" [disabled]="disabled" required>
+          <mat-option class="option" *ngFor="let ctype of clientSelection" [value]="ctype" selected>{{ ctype }}</mat-option>
+      </mat-select>
+    </div>
     <div fxLayout="row" fxLayoutAlign="space-between center" dir="rtl">
       <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
-        <input type="text" id="clientName" placeholder="اسم العميل" name="clientName" [(ngModel)]="receive.clientName" [disabled]="disabled" required>
+        <input type="text" id="clientName" placeholder="اسم العميل" name="clientName" [(ngModel)]="receive.clientName" [disabled]="disabled" *ngIf="receive.clientSelection === 'User'" required>
+        <mat-select style="width: 200px;" placeholder="الديلر" id="section" name="section" [(ngModel)]="receive.clientName" [disabled]="disabled" *ngIf="receive.clientSelection === 'Dealer'" required>
+          <mat-option class="option" *ngFor="let dealer of dealers" [value]="dealer.name" (ngModelChange)="updateTelnum(dealer)">{{ dealer.name }}</mat-option>
+        </mat-select>
       </div>
       <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
         <input type="text" id="telnum" placeholder="رقم التليفون" name="telnum" [(ngModel)]="receive.telnum" [disabled]="disabled" required>
@@ -14,11 +22,6 @@
     </div>
     <div class="form-group" fxLayout="row" fxLayoutAlign="center center" dir="rtl">
       <input type="text" id="deviceType" placeholder="نوع الجهاز" name="deviceType" [(ngModel)]="receive.deviceType" [disabled]="disabled" required autocomplete="on">
-    </div>
-    <div class="form-group" fxLayout="row" fxLayoutAlign="center center" dir="rtl">
-      <mat-select placeholder="نوع العميل" id="clientSelection" name="clientSelection" [(ngModel)]="receive.clientSelection" [disabled]="disabled" required>
-          <mat-option class="option" *ngFor="let ctype of clientSelection" [value]="ctype" selected>{{ ctype }}</mat-option>
-      </mat-select>
     </div>
     <div class="form-group" fxLayout="row" fxLayoutAlign="center center" dir="rtl">
       <mat-select placeholder="القسم" id="section" name="section" [(ngModel)]="receive.section" (selectionChange)="determinFees()" [disabled]="disabled" required>
@@ -47,15 +50,25 @@
       <input type="number" name="Price" id="price" value="{{product.productPrice}}" style="margin-left: 5px; line-height: 1.5; padding: 10px;" disabled>
       <button (click)="onDelete(product.productId)" style="line-height: 1.5; padding: 10px;">delete</button>
     </div>
-    <div class="form-group" fxLayout="column" fxLayoutAlign="center center">
-      <div class="form-group" fxLayout="row" fxLayoutAlign="center center" dir="rtl" style="width: 100%;">
-        <input type="text" id="searchProduct" placeholder="ابحث عن قطع غيار" name="searchProduct" [(ngModel)]="searchTerm" (keyup)="onSearch()">
+    <div class="search-container form-group" fxLayout="column" fxLayoutAlign="center center">
+      <div class="search-input form-group" fxLayout="row" fxLayoutAlign="center center" dir="rtl" style="width: 100%">
+        <input type="text" id="searchProduct" placeholder="إبحث عن قطع الغيار" name="searchProduct" [(ngModel)]="searchTerm" (keyup)="onSearch()">
+        <i class="fas fa-search"></i>
       </div>
-      <ul class="list" *ngIf="isSearched">
-        <li *ngFor="let product of searchResult" (click)="onSelect(product)">
-          {{ product.name }} - {{ receive.clientSelection == 'User' ? product.userSellingPrice * dollarPrice : product.deallerSellingPrice * dollarPrice}}
-        </li>
-      </ul>
+      <table class="search-results" *ngIf="isSearched">
+        <thead>
+          <tr>
+            <th>Product Name</th>
+            <th>Price</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let product of searchResult" (click)="onSelect(product)">
+            <td>{{ product.name }}</td>
+            <td>{{ receive.clientSelection == 'User' ? product.userSellingPrice * dollarPrice : product.deallerSellingPrice * dollarPrice}}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
     <div class="form-group" fxLayout="row" fxLayoutAlign="center center" dir="rtl">
       <textarea matInput placeholder="الملاحظات" lang="ar" dir="auto" id="notes" name="notes" cols="30" rows="2" [(ngModel)]="receive.notes" [disabled]="!sameEng"></textarea>
