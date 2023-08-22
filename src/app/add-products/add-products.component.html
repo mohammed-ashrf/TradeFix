@@ -1,3 +1,4 @@
+<app-toolbar></app-toolbar>
 <div class="container">
     <div class="header">
       <button (click)="goBack(productForm)">{{preLocation}}</button>
@@ -9,7 +10,7 @@
       </div>
       <div *ngFor="let sup of product.suppliers; let i = index">
         <div class="form-group" fxLayout="row" fxLayoutAlign="center center" dir="rtl">
-          <mat-select placeholder="المورد" id="supplier" name="supplier" [(ngModel)]="sup.name"  required>
+          <mat-select placeholder="المورد" id="supplier" name="supplier" [(ngModel)]="sup.name" required>
             <mat-option class="option" *ngFor="let supplier of allSuppliers" [value]="supplier.name" selected>{{ supplier.name }}</mat-option>
           </mat-select>
         </div>
@@ -36,9 +37,39 @@
         <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
           <input type="text" id="purchasedate" name="purchasedate" [(ngModel)]="sup.purchasedate" placeholder={{date}} value={{date}} disabled>
         </div>
-        <a mat-button (click)="deleteSupplier(i)">حذف</a>
+        <a mat-button id="delete-button" (click)="deleteSupplier(i)">حذف</a>
       </div>
-      <a mat-button (click)="addSupplier()">إضافة مورد</a>
+      <form class="supplierInput" #supplierForm="ngForm">
+        <div class="form-group" fxLayout="row" fxLayoutAlign="center center" dir="rtl">
+          <mat-select placeholder="المورد" id="supplier" name="supplier" [(ngModel)]="supplier.name" required>
+            <mat-option class="option" *ngFor="let supp of allSuppliers" [value]="supp.name" (onSelectionChange)="getSelectedSupplierId(supp)" selected>{{ supp.name }}</mat-option>
+          </mat-select>
+        </div>
+        <div fxLayout="row" fxLayoutAlign="space-between center" dir="rtl">
+          <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
+              <label for="quantity" class="gray">الكمية: </label>
+              <input type="number" id="quantity" placeholder="الكمية" name="quantity" [(ngModel)]="supplier.quantity" (ngModelChange)="determineOweing(supplier)" required>
+          </div>
+          <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
+              <label for="purchasePrice" class="gray">سعر الشراء القطعة: </label>
+              <input type="number" id="purchasePrice" name="purchasePrice" [(ngModel)]="supplier.purchasePrice" (ngModelChange)="determineOweing(supplier)" required>
+          </div>
+        </div>
+        <div fxLayout="row" fxLayoutAlign="space-between center" dir="rtl">
+          <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
+            <label for="paidPrice" class="gray"> كاش : </label>
+            <input type="number" id="paidPrice" name="paidPrice" [(ngModel)]="supplier.whatIsPaid" (ngModelChange)="determineOweing(supplier)" required>
+          </div>
+          <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
+              <label for="oweing" class="gray"> آجل: </label>
+              <input type="number" id="oweing" name="oweing" [(ngModel)]="supplier.oweing" required>
+          </div>
+        </div>
+        <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
+          <input type="text" id="purchasedate" name="purchasedate" [(ngModel)]="supplier.purchasedate" placeholder={{date}} value={{date}} disabled>
+        </div>
+        <button mat-button id="add-supplier" (click)="addSupplier()" [disabled]="supplierForm.invalid">إضافة</button>
+      </form>
       <div class="form-group" fxLayout="row" fxLayoutAlign="center center" dir="rtl">
         <mat-select placeholder="القسم" id="category" name="category" [(ngModel)]="product.category" required>
             <mat-option class="option" *ngFor="let sec of productSections" [value]="sec.name">{{ sec.name }}</mat-option>
@@ -63,15 +94,15 @@
       </div>
       <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="10px" dir="rtl">
         <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
-            <label for="deallerSellingPrice" class="gray">بيع قطعة ديلر: </label>
+            <label for="deallerSellingPrice" class="gray">بيع قطعة تاجر: </label>
             <input type="number" id="deallerSellingPrice" name="deallerSellingPrice" [(ngModel)]="product.deallerSellingPrice" required>
         </div>
         <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
-            <label for="deallerSellingPriceAll" class="gray">بيع قطعه جمله ديلر: </label>
+            <label for="deallerSellingPriceAll" class="gray">بيع قطعه جمله تاجر: </label>
           <input type="number" id="deallerSellingPriceAll" name="deallerSellingPriceAll" [(ngModel)]="product.deallerSellingPriceAll" required>
         </div>
       </div>
-      <button class="btn btn-primary" id="submit" type="submit" [disabled]="productForm.invalid">Save</button>
+      <button mat-button class="btn btn-primary" id="submit" type="submit" [disabled]="productForm.invalid">Save</button>
     </form>
   </div>
   

@@ -4,7 +4,7 @@ import { Observable, throwError, catchError } from 'rxjs';
 
 
 import { environment } from '../../environments/environment';
-import { Product, SoldProduct,PurchasedProduct } from '../shared/products';
+import { Product, SoldProduct,PurchasedProduct, ProductsQuery } from '../shared/products';
 @Injectable({
   providedIn: 'root'
 })
@@ -73,5 +73,29 @@ export class ProductsService {
     // Return an observable with a user-facing error message.
     return throwError(
       'Something bad happened; please try again later.');
+  }
+
+  filterProducts(Products: Product[], query: ProductsQuery): Product[] {
+    return Products.filter(product => {
+      const now = new Date();
+      const oneWeekAgo = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 7);
+      const deviceReceivingDate = new Date(product.suppliers[0].purchasedate);
+  
+      // Check if the device's receiving date is within the specified date range
+      const isWithinDateRange =
+        (!query.startDate || deviceReceivingDate >= new Date(query.startDate)) &&
+        (!query.endDate || deviceReceivingDate <= new Date(query.endDate));
+  
+      return (
+        isWithinDateRange &&
+        (!query.category || product.category === query.category) &&
+        (!query.status || product.status === query.status) &&
+        (!query.thisWeek || deviceReceivingDate >= oneWeekAgo) &&
+        (!query.today || deviceReceivingDate.toDateString() === new Date().toDateString()) &&
+        (!query.thisMonth || deviceReceivingDate.getMonth() === new Date().getMonth()) &&
+        (!query.thisYear || deviceReceivingDate.getFullYear() === new Date().getFullYear()) &&
+        (!query.specificYear || deviceReceivingDate.getFullYear() === parseInt(query.specificYear))
+      );
+    });
   }
 }

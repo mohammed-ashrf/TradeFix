@@ -671,22 +671,19 @@
                   <td>{{item.product.name}}</td>
                   <td>{{item.product.description}}</td>
                   <td>{{item.quantity}}</td>
-                  <td>{{item.product.userSellingPrice}}</td>
-                  <td>{{item.totalPrice}}</td>
+                  <td>{{item.product.userSellingPrice * dollarPrice}}</td>
+                  <td>{{item.totalPrice * dollarPrice}}</td>
                 </tr>
               </table>
         </div>
     </div>
-    <div class="footer" fxLayout="column">
-        <div fxLayout="row" fxLayoutAlign="space-around center">
-            <div class="remarks">
-                <p>Remarks</p>
-            </div>
-            <div class="money">
+    <div class="footer" fxLayout="column" dir="rtl">
+        <div fxLayout="row" fxLayoutAlign="space-between center">
+            <div class="money" dir="ltr">
                 <table class="payment">
                     <tr>
                       <td>TOTAL INVOICE</td>
-                      <td>{{cart.totalPrice}}</td>
+                      <td>{{cart.totalPrice * dollarPrice}}</td>
                     </tr>
                     <tr>
                       <td>DISCOUNT</td>
@@ -694,7 +691,7 @@
                     </tr>
                     <tr>
                       <td>TOTAL</td>
-                      <td>{{cart.total}}</td>
+                      <td>{{cart.total * dollarPrice}}</td>
                     </tr>
                     <tr>
                       <td>PAID</td>
@@ -706,19 +703,19 @@
                     </tr>
                 </table>
             </div>
-        </div>
-        <div class="informations">
-            <div class="rules">
-                <h3>شروط الضمان</h3>
-                <p>الضمان هو إستبدال المنتج الذي به عطل ما باخر جديد مثله علي ان يكون من نفس موديل المرتجع</p>
-                <p>لا يمكن استرجاع المنتج الا بحالته الاصليه قبل الشراء (الحروق والقطع والكسر خارج الضمان)</p>
-                <p>يعتبر الضمان لاغي إذا حدثت أي محاولة لتعديل أو إزاله إستيكر الضمان الملصق علي المنتج</p>
-                <p>ضمان الوقت الفعلي للبطاريه أول أسبوعين , باقي أشهر الضمان علي عيوب الصناعه</p>
-                <p>الضمان غير ساري علي كابلات الباور والاكسسوارات</p>
-                <h3>شروط اضافية خاصة باجهزة اللابتوب</h3>
-                <p>ضمان البطارية اسبوع واحد فقط , بشرط ان تقل عن ساعه فيديو</p>
-                <p>في حالة الرغبة في استرجاع الجهاز يتم خصم مبلغ 400 ج بشرط ان لا تزيد المدة عن 10 ايام</p>
-                <p>في حالة الرغبة في استرجاع الجهاز بعد مدة تزيد عن 10 ايام يتم خصم مبلغ 600 ج</p>
+            <div class="informations">
+                <div class="rules">
+                    <h3>شروط الضمان</h3>
+                    <p>الضمان هو إستبدال المنتج الذي به عطل ما باخر جديد مثله علي ان يكون من نفس موديل المرتجع</p>
+                    <p>لا يمكن استرجاع المنتج الا بحالته الاصليه قبل الشراء (الحروق والقطع والكسر خارج الضمان)</p>
+                    <p>يعتبر الضمان لاغي إذا حدثت أي محاولة لتعديل أو إزاله إستيكر الضمان الملصق علي المنتج</p>
+                    <p>ضمان الوقت الفعلي للبطاريه أول أسبوعين , باقي أشهر الضمان علي عيوب الصناعه</p>
+                    <p>الضمان غير ساري علي كابلات الباور والاكسسوارات</p>
+                    <h3>شروط اضافية خاصة باجهزة اللابتوب</h3>
+                    <p>ضمان البطارية اسبوع واحد فقط , بشرط ان تقل عن ساعه فيديو</p>
+                    <p>في حالة الرغبة في استرجاع الجهاز يتم خصم مبلغ 400 ج بشرط ان لا تزيد المدة عن 10 ايام</p>
+                    <p>في حالة الرغبة في استرجاع الجهاز بعد مدة تزيد عن 10 ايام يتم خصم مبلغ 600 ج</p>
+                </div>
             </div>
         </div>
     </div>

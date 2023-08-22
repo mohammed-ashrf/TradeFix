@@ -16,7 +16,8 @@ import { AddProductsComponent } from './add-products/add-products.component';
 import { SellComponent } from './sell/sell.component';
 import { AddInformationsComponent } from './add-informations/add-informations.component';
 import { GetInformationsComponent } from './get-informations/get-informations.component';
-// import { SoldCartsComponent } from './sold-carts/sold-carts.component';
+import { SoldCartsComponent } from './sold-carts/sold-carts.component';
+import { StatsComponent } from './stats/stats.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -39,8 +40,9 @@ const routes: Routes = [
   { path: 'addInformation', component: AddInformationsComponent},
   { path: 'addInformation/:id/edit', component: AddInformationsComponent },
   { path: 'informations', component: GetInformationsComponent},
-  // { path: 'soldCarts', component: SoldCartsComponent},
+  { path: 'soldCarts', component: SoldCartsComponent},
   { path: 'soldCarts/:id/edit', component: SellComponent},
+  { path: 'stats', component: StatsComponent},
 ];
 
 @NgModule({

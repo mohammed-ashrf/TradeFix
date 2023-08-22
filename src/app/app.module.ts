@@ -28,6 +28,7 @@ import { RegisterComponent } from './auth/register/register/register.component';
 import { DeviceListComponent } from './device/device-list/device-list/device-list.component';
 import { DeviceFormComponent } from './device/device-form/device-form/device-form.component';
 import { NgxPrintModule } from 'ngx-print';
+import { ModalModule } from 'ngx-bootstrap/modal';
 import { SearchComponent } from './search/search.component';
 import { PrintLayoutComponent } from './print-layout/print-layout.component';
 import { AdminPageComponent } from './admin-page/admin-page.component';
@@ -41,6 +42,10 @@ import { GetInformationsComponent } from './get-informations/get-informations.co
 import { GetUsersComponent } from './get-users/get-users.component';
 import { SoldCartsComponent } from './sold-carts/sold-carts.component';
 import { CartDialogComponent } from './cart-dialog/cart-dialog.component';
+import { ConfirmationModalComponent } from './confirmation-modal/confirmation-modal.component';
+import { AlertModalComponent } from './alert-modal/alert-modal.component';
+import { ToolbarComponent } from './toolbar/toolbar.component';
+import { StatsComponent } from './stats/stats.component';
 
 
 @NgModule({
@@ -63,6 +68,10 @@ import { CartDialogComponent } from './cart-dialog/cart-dialog.component';
     GetUsersComponent,
     SoldCartsComponent,
     CartDialogComponent,
+    ConfirmationModalComponent,
+    AlertModalComponent,
+    ToolbarComponent,
+    StatsComponent,
   ],
   imports: [
     BrowserModule,
@@ -90,6 +99,7 @@ import { CartDialogComponent } from './cart-dialog/cart-dialog.component';
     NgxPrintModule,
     MatIconModule,
     MatTableModule,
+    ModalModule.forRoot(),
   ],
   providers: [],
   bootstrap: [AppComponent]

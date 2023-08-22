@@ -35,4 +35,6 @@ export class PrintLayoutComponent {
   products!: CartItem[];
   @Input()
   cart!: Cart;
+  @Input()
+  dollarPrice!: number;
 }

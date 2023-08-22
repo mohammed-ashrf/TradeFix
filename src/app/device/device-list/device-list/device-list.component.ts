@@ -13,11 +13,11 @@ export class DeviceListComponent implements OnInit {
   devices: Receive[] = [];
   allDevices: Receive[] = [];
   query: Query = {
-    repaired : false,
-    paidAdmissionFees : false,
-    delivered : false,
-    returned : false,
-    inProgress : true,
+    repaired: false,
+    paidAdmissionFees: false,
+    delivered: false,
+    returned: false,
+    inProgress: true,
     newDevices: false,
     today: false,
     thisMonth: true,
@@ -25,6 +25,8 @@ export class DeviceListComponent implements OnInit {
     specificYear: '',
     engineer: '',
     priority: '',
+    startDate: '',
+    endDate: ''
   }
   users:any;
   currentUser: any;
@@ -74,6 +76,8 @@ export class DeviceListComponent implements OnInit {
       thisMonth: this.query.thisMonth,
       thisYear: this.query.thisYear,
       specificYear: this.query.specificYear,
+      startDate: this.query.startDate,
+      endDate: this.query.endDate
     };
     const devices = this.deviceService.filterDevices(this.allDevices, filterCriteria);
     this.devices = devices;
@@ -94,15 +98,13 @@ export class DeviceListComponent implements OnInit {
       specificYear: '',
       engineer: '',
       priority: '',
+      startDate: '',
+      endDate: ''
     }
 
     this.filterDevices();
   }
 
-  logout(){
-    this.authService.logout();
-    this.router.navigate(['/']);
-  }
 
   isPriorityHigh(priority: string): boolean {
     return priority === 'high';

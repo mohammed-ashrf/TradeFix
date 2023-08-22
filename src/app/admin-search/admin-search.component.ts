@@ -16,11 +16,11 @@ export class AdminSearchComponent implements OnInit {
   searchResult!:any[];
   allDevices: Receive[] = [];
   query:Query = {
-    repaired : false,
-    paidAdmissionFees : false,
-    delivered : false,
-    returned : false,
-    inProgress : false,
+    repaired: false,
+    paidAdmissionFees: false,
+    delivered: false,
+    returned: false,
+    inProgress: false,
     newDevices: false,
     today: false,
     thisMonth: false,
@@ -28,6 +28,8 @@ export class AdminSearchComponent implements OnInit {
     specificYear: '',
     engineer: '',
     priority: '',
+    startDate: '',
+    endDate: ''
   }
   users:any;
   constructor(private deviceService: DeviceService,
@@ -106,6 +108,8 @@ export class AdminSearchComponent implements OnInit {
       specificYear: this.query.specificYear,
       engineer: this.query.engineer,
       priority: this.query.priority,
+      startDate: this.query.startDate,
+      endDate: this.query.endDate
     };
     const devices = this.deviceService.filterDevices(this.allDevices, filterCriteria);
     this.devices = devices;

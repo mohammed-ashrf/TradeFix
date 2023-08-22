@@ -1,8 +1,9 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { CartService } from '../services/cart.service';
-import { Buyer } from '../services/cart.service';
-import { Cart } from '../services/cart.service';
-
+import { Component, OnInit } from '@angular/core';
+import { CartService, Buyer, Cart } from '../services/cart.service';
+import { ProductsQuery } from '../shared/products';
+import { InformationService } from '../services/information.service';
+import { ProductSection } from '../shared/information';
+import { Location } from '@angular/common';
 @Component({
   selector: 'app-sold-carts',
   templateUrl: './sold-carts.component.html',
@@ -12,126 +13,134 @@ export class SoldCartsComponent implements OnInit {
 
   buyers: Buyer[] = [];
   moneyEarned: number = 0;
-  
-  timePeriods = [
-    { value: 'today', label: 'Today' },
-    { value: 'this_week', label: 'This Week' },
-    { value: 'this_month', label: 'This Month' },
-    { value: 'this_year', label: 'This Year' },
-    { value: 'specific_year', label: 'Specific Year' },
-  ];
-
-
+  allBuyers: Buyer[] = [];
+  productSections: ProductSection[] = [];
   selectedTimePeriod: string = 'today';
   specificYear: number = new Date().getFullYear();
-
-  constructor(private cartService: CartService){
-
+  cartsQuery: ProductsQuery = {
+    category: '',
+    payType: '',
+    buyerType: '',
+    sellerName: '',
+    today: false,
+    thisMonth: false,
+    thisYear: false,
+    specificYear: '',
+    status: '',
+    startDate: '',
+    endDate: '',
+    thisWeek: false
   }
+  isSearched!: boolean;
+  searchResult: any;
+  searchTerm!: string;
+  
+  constructor(private cartService: CartService,
+    private informationService: InformationService,
+    private location:Location) { }
 
   ngOnInit(): void {
+    this.getInformations();
     this.getBuyers();
   }
 
   getBuyers() {
     this.cartService.getBuyers().subscribe(
       (buyers) => {
+        this.allBuyers = buyers;
         this.buyers = buyers;
+        this.filterCarts();
       }
     );
   }
 
-  getMoneyEarned() {
-    switch (this.selectedTimePeriod) {
-      case 'today':
-        this.moneyEarned = this.buyers.reduce((total, buyer) => {
-          return total + buyer.carts.reduce((subtotal, cart) => {
-            if (this.isToday(cart.date)) {
-              return subtotal + cart.paid;
-            } else {
-              return subtotal;
+  getInformations() {
+    this.informationService.getProductSections().subscribe(
+      (productSections) => {
+        this.productSections = productSections;
+      }
+    )
+  }
+  goBack() {
+      this.location.back()
+  }
+  searchBuyers(devices: any[], userInput: any) {
+    try {
+      if (typeof userInput !== 'string') {
+        console.log('User input must be a string');
+        throw new Error('User input must be a string');
+      }
+      userInput = userInput.toLowerCase();
+      return devices.filter(buyer => {
+        for (let key in buyer) {
+          if (buyer.hasOwnProperty(key) && buyer[key]?.toString().toLowerCase().includes(userInput.toLowerCase())) {
+            const value = buyer[key].toString().toLowerCase();
+            if (value.includes(userInput)) {
+              this.isSearched = true;
+              return true;
             }
-          }, 0);
-        }, 0);
-        break;
-      case 'this_week':
-        this.moneyEarned = this.buyers.reduce((total, buyer) => {
-          return total + buyer.carts.reduce((subtotal, cart) => {
-            if (this.isThisWeek(cart.date)) {
-              return subtotal + cart.paid;
-            } else {
-              return subtotal;
-            }
-          }, 0);
-        }, 0);
-        break;
-      case 'this_month':
-        this.moneyEarned = this.buyers.reduce((total, buyer) => {
-          return total + buyer.carts.reduce((subtotal, cart) => {
-            if (this.isThisMonth(cart.date)) {
-              return subtotal + cart.paid;
-            } else {
-              return subtotal;
-            }
-          }, 0);
-        }, 0);
-        break;
-      case 'this_year':
-        this.moneyEarned = this.buyers.reduce((total, buyer) => {
-          return total + buyer.carts.reduce((subtotal, cart) => {
-            if (this.isThisYear(cart.date)) {
-              return subtotal + cart.paid;
-            } else {
-              return subtotal;
-            }
-          }, 0);
-        }, 0);
-        break;
-      case 'specific_year':
-        this.moneyEarned = this.buyers.reduce((total, buyer) => {
-          return total + buyer.carts.reduce((subtotal, cart) => {
-            if (this.isSpecificYear(cart.date, this.specificYear)) {
-              return subtotal + cart.paid;
-            } else {
-              return subtotal;
-            }
-          }, 0);
-        }, 0);
-        break;
+            break;
+          }
+        }
+        return false;
+      });
+    } catch (error) {
+      console.error(error);
+      return [];
     }
   }
-  
-  isToday(date: Date): boolean {
-    const today = new Date();
-    // const cartDate = new Date(date);
-    return date.getFullYear() === today.getFullYear() &&
-           date.getMonth() === today.getMonth() &&
-           date.getDate() === today.getDate();
+
+  testInput(str: string) {
+    return /[A-Za-z0-9\s\S]+/.test(str);
   }
-  
-  isThisWeek(date: Date): boolean {
-    const today = new Date();
-    // const cartDate = new Date(date);
-    const firstDayOfWeek = new Date(today.setDate(today.getDate() - today.getDay()));
-    const lastDayOfWeek = new Date(today.setDate(today.getDate() - today.getDay() + 6));
-    return date >= firstDayOfWeek && date <= lastDayOfWeek;
+
+  search() {
+      this.searchResult = this.searchBuyers(this.buyers, this.searchTerm);
+      console.log(this.searchResult);
   }
-  
-  isThisMonth(date: Date): boolean {
-    const today = new Date();
-    // const cartDate = new Date(date);
-    return date.getFullYear() === today.getFullYear() &&
-           date.getMonth() === today.getMonth();
+
+
+  filterCarts() {
+    this.buyers = this.allBuyers;
+    const filterCriteria = {
+      category: this.cartsQuery.category,
+      payType: this.cartsQuery.payType,
+      buyerType: this.cartsQuery.buyerType,
+      sellerName: this.cartsQuery.sellerName,
+      status: this.cartsQuery.status,
+      today: this.cartsQuery.today,
+      thisWeek: this.cartsQuery.thisWeek,
+      thisMonth: this.cartsQuery.thisMonth,
+      thisYear: this.cartsQuery.thisYear,
+      specificYear: this.cartsQuery.specificYear,
+      startDate: this.cartsQuery.startDate,
+      endDate: this.cartsQuery.endDate
+    };
+    const buyers = this.cartService.filterSoldCarts(this.allBuyers, filterCriteria);
+    this.buyers = buyers;
+    this.moneyEarned = buyers.reduce((total, buyer) => {
+      return total + buyer.carts.reduce((subtotal, cart) => {
+        return subtotal + cart.paid;
+      }, 0);
+    }, 0);
   }
-  
-  isThisYear(date: Date): boolean {
-    const today = new Date();
-    // const cartDate = new Date(date);
-    return date.getFullYear() === today.getFullYear();
-  }
-  
-  isSpecificYear(date: Date, year: number): boolean {
-    // const cartDate = new Date(date);
-    return date.getFullYear() === year;
+
+  resetFilter():void {
+    this.cartsQuery = {
+      category: '',
+      payType: '',
+      buyerType: '',
+      sellerName: '',
+      today: false,
+      thisMonth: false,
+      thisYear: false,
+      thisWeek: false,
+      specificYear: '',
+      status: '',
+      startDate: '',
+      endDate: ''
+    }
+
+    this.filterCarts();
   }
 }

@@ -25,51 +25,47 @@
 
 <h2 class="centered">Device List</h2>
 
-<div class="filtterQuerry">
+<div class="filtterQuerry" dir="rtl">
   <div class="query">
-    <label for="week">This Week:</label>
+    <label for="week">الأسبوع الحالي:</label>
     <input type="checkbox" id="week" [(ngModel)]="query.newDevices" (change)="filterDevices()">
   </div>
   <div class="query">
-    <label for="today">Today:</label>
+    <label for="today">اليوم:</label>
     <input type="checkbox" id="today" [(ngModel)]="query.today" (change)="filterDevices()">
   </div>
   <div class="query">
-    <label for="thisMonth">This Month:</label>
+    <label for="thisMonth">الشهر الحالي:</label>
     <input type="checkbox" id="thisMonth" [(ngModel)]="query.thisMonth" (change)="filterDevices()">
   </div>
   <div class="query">
-    <label for="thisYear">This Year:</label>
+    <label for="thisYear">السنة الحالية:</label>
     <input type="checkbox" id="thisYear" [(ngModel)]="query.thisYear" (change)="filterDevices()">
   </div>
   <div class="query">
-    <label for="inProgress">In Progress:</label>
+    <label for="inProgress">قيد الصيانة:</label>
     <input type="checkbox" id="inProgress" [(ngModel)]="query.inProgress" (change)="filterDevices()">
   </div>
   <div class="query">
-    <label for="repaired">Repaired:</label>
+    <label for="repaired">تم صيانتة:</label>
     <input type="checkbox" id="repaired" [(ngModel)]="query.repaired" (change)="filterDevices()">
   </div>
   <div class="query">
-    <label for="paidAdmissionFees">Paid Admission Fees:</label>
-    <input type="checkbox" id="paidAdmissionFees" [(ngModel)]="query.paidAdmissionFees" (change)="filterDevices()">
-  </div>
-  <div class="query">
-    <label for="delivered">Delivered:</label>
-    <input type="checkbox" id="delivered" [(ngModel)]="query.delivered" (change)="filterDevices()">
-  </div>
-  <div class="query">
-    <label for="returned">Returned:</label>
-    <input type="checkbox" id="returned" [(ngModel)]="query.returned" (change)="filterDevices()">
-  </div>
-  <div class="query">
-    <label for="specificYear">Specific Year:</label>
+    <label for="specificYear">السنة:</label>
     <input type="number" id="specificYear" lang="ar" dir="auto" [(ngModel)]="query.specificYear" (change)="filterDevices()">
+  </div>
+  <div class="query">
+    <label for="startDate">من:</label>
+    <input type="date" id="startDate" [(ngModel)]="query.startDate" placeholder="تاريخ البدء" lang="ar" (change)="filterDevices()">
+  </div>
+  <div class="query">
+    <label for="endDate">إلي:</label>
+    <input type="date" id="endDate" [(ngModel)]="query.endDate" placeholder="تاريخ الانتهاء" lang="ar" (change)="filterDevices()">
   </div>
   <div class="query" dir="rtl">
     <mat-select placeholder="الأهميه" id="priority" name="priority" [(ngModel)]="query.priority" (selectionChange)="filterDevices()" required>
-      <mat-option class="option"  value="normal">عادي</mat-option>
-      <mat-option class="option"  value="high">مستعجل</mat-option>
+        <mat-option class="option"  value="normal">عادي</mat-option>
+        <mat-option class="option"  value="high">مستعجل</mat-option>
     </mat-select>
   </div>
   <button (click)="filterDevices()" class="Button">Filter</button>

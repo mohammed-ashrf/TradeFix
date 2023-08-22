@@ -1,122 +1,226 @@
+.container {
+  margin-top: 60px;
+}
 .Bar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f2f2f2;
+  height: 150px; 
+  // position: fixed; 
+  // top: 0;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  width: 100%;
+
+  .back {
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    font-size: 16px;
+    color: #333;
+    text-decoration: none;
+    margin-right: 10px;
+    margin-left: 10px;
+  }
+  .filtterQuerry {
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-    background-color: #f2f2f2;
-    height: 150px; 
-    position: fixed; 
-    top: 0;
-    width: 100%;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    // margin-top: 3.5rem;
+  }
   
-    .back {
+  .query {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  label {
+    color: #000000e5;
+  }
+  
+  input[type="checkbox"] {
+    margin-right: 0.5rem;
+  }
+  
+  #specificYear {
+    border: none;
+    font-size: 16px;
+    border-radius: 4px;
+    padding: 5px;
+    &:focus {
+      outline: none;
+    }
+  }
+  #eng {
+    width : 200px;
+  }
+  #eng .option {
+    width: 200px;
+  }
+
+  #priority {
+    width : 200px;
+  }
+  #priority .option {
+    width: 200px;
+  }
+
+  .searchBar {
+    display: flex;
+    max-width: 400px;
+    margin: auto;
+    align-items: center;
+    background-color: white;
+    border-radius: 4px;
+    padding: 5px;
+
+    input[type="text"] {
       border: none;
-      background-color: transparent;
+      flex: 1;
+      padding: 5px;
+      font-size: 16px;
+
+      &:focus {
+        outline: none;
+      }
+    }
+
+    button {
+      border: none;
+      background-color: blue;
+      color: white;
+      padding: 5px 10px;
       cursor: pointer;
       font-size: 16px;
-      color: #333;
-      text-decoration: none;
-      margin-right: 10px;
-      margin-left: 10px;
-    }
-    
-    .searchBar {
-      display: flex;
-      max-width: 400px;
-      margin: auto;
-      align-items: center;
-      background-color: white;
       border-radius: 4px;
-      padding: 5px;
-  
-      input[type="text"] {
-        border: none;
-        flex: 1;
-        padding: 5px;
-        font-size: 16px;
-  
-        &:focus {
-          outline: none;
-        }
-      }
-  
-      button {
-        border: none;
-        background-color: blue;
-        color: white;
-        padding: 5px 10px;
-        cursor: pointer;
-        font-size: 16px;
-        border-radius: 4px;
-        margin-left: 5px;
-      }
+      margin-left: 5px;
     }
   }
+}
+.table {
+  width: 100%;
+  max-width: 100%;
+  border-collapse: collapse;
+  // margin-top: 9.4rem;
+}
+
+th {
+  background-color: #f2f2f2;
+  text-align: right;
+  padding: 10px;
+}
+
+td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+a {
+  color: blue;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: none;
+}
+
+#spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50vh;
+}
+.table-container {
+  max-height: calc(100vh - 9.4rem - 60px); /* Adjust the height as needed */
+  overflow-y: auto;
+  // margin-top: 9.4rem; /* Adjust the top margin to accommodate the fixed header */
+}
+tbody {
+  max-height: 60vh;
+  overflow-y: auto;
+}
+thead {
+  position: sticky;
+  top: 0;
+  background-color: white;
+  z-index: 1;
+}
+
+.cart-selection {
+  margin-top: 20px;
+}
+
+.cart-selection label {
+  font-size: 16px;
+  font-weight: bold;
+  color: #000000e5; /* Use the color you prefer */
+}
+
+.cart-selection select {
+  padding: 8px 12px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #f8f8f8;
+  color: #333;
+  width: 100%;
+  min-width: 60px;
+  max-width: max-content;
+  transition: border-color 0.3s ease;
+}
+
+.cart-selection select:focus {
+  outline: none;
+  border-color: #2196f3; /* Use the color you prefer */
+}
+
+.cart-selection select option {
+  font-size: 16px;
+}
+@media (max-width: 767px) {
+  /* adjust the table style for small screens */
   .table {
-    width: 100%;
-    max-width: 100%;
-    border-collapse: collapse;
-    margin-top: 9.4rem;
+    margin-top: 9.3rem;
+    font-size: 12px;
   }
-  
-  th {
-    background-color: #f2f2f2;
-    text-align: right;
-    padding: 10px;
-  }
-  
+
+  th,
   td {
-    border: 1px solid #ddd;
-    padding: 10px;
-    white-space: pre-wrap;
-    word-wrap: break-word;
+    padding: 5px;
   }
-  
-  a {
-    color: blue;
-    text-decoration: none;
+
+}
+
+@media screen and (min-width: 767px) and (max-width: 997px){
+  .table {
+    margin-top: 9.3rem;
+    font-size: 12px;
   }
-  
-  a:hover {
-    text-decoration: none;
+  th,
+  td {
+    padding: 5px;
   }
-  
-  @media (max-width: 767px) {
-    /* adjust the table style for small screens */
-    .table {
-      margin-top: 9.3rem;
-      font-size: 12px;
-    }
-  
-    th,
-    td {
-      padding: 5px;
-    }
-  
+}
+
+@media (min-width: 768px) {
+  /* adjust the table style for medium screens */
+  td {
+    max-width: 300px; /* set a maximum width for the table cells */
+    height: 50px; /* set the cell height for medium screens */
   }
-  
-  @media screen and (min-width: 767px) and (max-width: 997px){
-    .table {
-      margin-top: 9.3rem;
-      font-size: 12px;
-    }
-    th,
-    td {
-      padding: 5px;
-    }
+}
+
+@media (min-width: 992px) {
+  /* adjust the table style for large screens */
+  td {
+    max-width: 400px; /* set a maximum width for the table cells */
+    height: 80px; /* set the cell height for large screens */
   }
-  
-  @media (min-width: 768px) {
-    /* adjust the table style for medium screens */
-    td {
-      max-width: 300px; /* set a maximum width for the table cells */
-      height: 50px; /* set the cell height for medium screens */
-    }
-  }
-  
-  @media (min-width: 992px) {
-    /* adjust the table style for large screens */
-    td {
-      max-width: 400px; /* set a maximum width for the table cells */
-      height: 80px; /* set the cell height for large screens */
-    }
-  }
+}

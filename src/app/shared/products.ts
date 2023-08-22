@@ -1,3 +1,4 @@
+import { Supplier } from "./information";
 export interface Product {
     _id: string;
     name: string,
@@ -10,9 +11,10 @@ export interface Product {
     quantity: number,
     quantitySold:number,
     sellingdate: string,
-    suppliers: Supplier[],
+    suppliers: ProductSupplier[],
 }
-export interface Supplier {
+export interface ProductSupplier {
+    id: string,
     name: string,
     quantity: number,
     purchasePrice: number,
@@ -30,19 +32,19 @@ export interface Supplier {
 //     Owing: number,
 // }
 
-export interface Query {
-    repaired: boolean,
-    paidAdmissionFees: boolean,
-    delivered: boolean,
-    returned: boolean,
-    inProgress: boolean,
-    newDevices: boolean,
+export interface ProductsQuery {
+    category: string,
+    status: string,
+    buyerType: string,
+    payType: string,
     today: boolean,
+    thisWeek: boolean,
     thisMonth: boolean,
     thisYear: boolean,
     specificYear: string,
-    engineer: string,
-    priority: string,
+    sellerName: string,
+    startDate: string,
+    endDate: string,
 }
 
 export interface SoldProduct {

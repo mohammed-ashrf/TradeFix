@@ -27,7 +27,7 @@ p {
 
 .content {
     display: flex;
-    margin: 82px auto 32px;
+    margin: 10px auto 32px;
     padding: 0 16px;
     max-width: 960px;
     flex-direction: column;
@@ -157,17 +157,6 @@ input[type="checkbox"] {
 
 #logout:hover {
   transform: translateY(0px);
-}
-
-svg#rocket {
-    width: 80px;
-    height: 80px;
-    position: absolute;
-    left: -10px;
-    top: -24px;
-    border-radius: 100px;
-    border: 3px solid #fff;
-    background-color: #000000e5;
 }
 
 a,
@@ -335,6 +324,19 @@ a {
 }
 .high-priority {
   border: 3px solid red;
+}
+.toolbar-container {
+  position: relative;
+  height: 100%;
+}
+.devices-container {
+  position: relative;
+  top: 25px;
+}
+.cards-container {
+  max-height: 77.4vh;
+  min-height: 600px;
+  overflow-y: auto;
 }
 @keyframes cardEnterAnimation {
   from {

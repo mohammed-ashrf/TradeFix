@@ -1,20 +1,21 @@
 import { Component,OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Product, Supplier } from '../shared/products';
+import { Product, ProductSupplier } from '../shared/products';
 import { ProductsService } from '../services/products.service';
 import { InformationService } from '../services/information.service';
 import { Location } from '@angular/common';
 import { AuthService } from 'src/app/auth/auth.service';
 import { NgForm } from '@angular/forms';
 import { User } from 'src/app/auth/user';
-import { ProductSection } from '../shared/information';
+import { ProductSection, SupplierProducts, Supplier } from '../shared/information';
 @Component({
   selector: 'app-add-products',
   templateUrl: './add-products.component.html',
   styleUrls: ['./add-products.component.scss']
 })
 export class AddProductsComponent implements OnInit{
-  supplier:Supplier = {
+  supplier:ProductSupplier = {
+    id: '',
     name: '',
     quantity: 0,
     purchasePrice: 0,
@@ -50,11 +51,14 @@ export class AddProductsComponent implements OnInit{
     suppliers: [],
     quantitySold:0,
   };
+
+  supplierProducts: SupplierProducts[] = [];
   submited: boolean = false;
   updating: boolean = false;
   isNew = true;
 
-  allSuppliers:any;
+  allSuppliers:Supplier[] = [];
+  selectedSupplierId: string = '';
   edited:boolean = false;
   recieptId:any;
   date:any;
@@ -73,7 +77,7 @@ export class AddProductsComponent implements OnInit{
   preLocation!: any;
   productSections!: ProductSection[];
   totalQuantity!:number;
-  suppliers!: Supplier[];
+  suppliers!: ProductSupplier[];
   dollarPrice: any;
   constructor(
     private productsService: ProductsService,
@@ -88,76 +92,52 @@ export class AddProductsComponent implements OnInit{
     this.token = localStorage.getItem('token');
     this.preLocation = localStorage.getItem('location'); 
     const id = this.route.snapshot.paramMap.get('id');
+    this.getInformations();
     if (id) {
       this.isNew = false;
       this.productsService.getOne(id).subscribe((product) => {
+        product.userSellingPrice *= this.dollarPrice;
+        product.deallerSellingPrice *= this.dollarPrice;
+        product.deallerSellingPriceAll *= this.dollarPrice;
         this.product = product;
         this.recieptId = product._id.slice(-7);
+        this.calTotalQuantity();
         // this.date = product.purchasedate;
       });
     }
-    this.getInformations();
     this.date = this.getDate();
     this.today = this.getDate();
     this.getUsers();
     if (this.isNew) {
-      this.addSupplier();
       console.log('isNew');
     }else {
       this.updating = true;
     }
-    this.calTotalQuantity();
   }
 
-  // addSupplier() {
-  //   if (this.product.suppliers.length > 0) {
-  //     // Get the last supplier in the array
-  //     const lastSupplier = this.product.suppliers[this.product.suppliers.length - 1];
-  //     // Create a new supplier object with the same date as the last supplier
-  //     const newSupplier = {
-  //       name: '',
-  //       quantity: 0,
-  //       purchasePrice: 0,
-  //       purchasedate: lastSupplier.purchasedate,
-  //       whatIsPaid: 0,
-  //       oweing: 0,
-  //     };
-  //     // Add the new supplier to the end of the array
-  //     this.product.suppliers.push(newSupplier);
-  //   } else {
-  //     // If there are no existing suppliers, create a new supplier with the current date
-  //     const newSupplier = {
-  //       name: '',
-  //       quantity: 0,
-  //       purchasePrice: 0,
-  //       purchasedate: this.date,
-  //       whatIsPaid: 0,
-  //       oweing: 0,
-  //     };
-  //     // Add the new supplier to the suppliers array
-  //     this.product.suppliers.push(newSupplier);
-  //   }
-  // }
-
-  addSupplier() {
-    const lastSupplier = this.product.suppliers[this.product.suppliers.length - 1];
-    const newSupplier = {
+  addSupplier(){
+    this.supplier.purchasedate = this.date;
+    this.supplier.id = this.selectedSupplierId;
+    this.product.suppliers.push(this.supplier);
+    this.calTotalQuantity();
+    this.supplier = {
+      id: '',
       name: '',
       quantity: 0,
       purchasePrice: 0,
-      purchasedate: lastSupplier ? lastSupplier.purchasedate : this.date,
+      purchasedate: '',
       whatIsPaid: 0,
       oweing: 0,
     };
-    this.product.suppliers.push(newSupplier);
   }
 
   deleteSupplier(index: number) {
     this.product.suppliers.splice(index, 1);
   }  
 
-  determineOweing(supplier : Supplier) {
+  determineOweing(supplier : ProductSupplier) {
     supplier.oweing = (supplier.quantity * supplier.purchasePrice) - supplier.whatIsPaid;
+    this.calTotalQuantity();
   }
 
   getInformations(){
@@ -180,15 +160,20 @@ export class AddProductsComponent implements OnInit{
     )
   }
 
+  getSelectedSupplierId(supplier: Supplier){
+    console.log(supplier._id);
+    this.selectedSupplierId = supplier._id;
+    this.supplier.id = supplier._id;
+  }
+
   calTotalQuantity() {
     if (this.product['suppliers'].length === 0) {
-      this.totalQuantity = 0;
+      this.product.quantity = 0;
     }else {
-      for(let i = 0; i<= this.product['suppliers'].length; i++) {
-        this.totalQuantity += this.product['suppliers'][i].quantity;
-      }
+      this.product.quantity = this.product['suppliers'].reduce((total, supplier)=> {
+        return total + supplier.quantity;
+      },0);
     }
-    this.product.quantity = this.totalQuantity;
   }
 
   goBack(deviceForm: NgForm): void {
@@ -285,6 +270,44 @@ export class AddProductsComponent implements OnInit{
       // }
     }
   }
+  addSupplierProduct(productId: string) {
+    if(this.isNew){
+      console.log("isNew");
+      let supplierProduct: SupplierProducts = {
+        id: productId,
+        name: this.product.name,
+        quantity: this.product.quantity,
+        purchasePrice: 0,
+        purchasedate: '',
+        whatIsPaid: 0,
+        oweing: 0
+      }
+      for (let i = 0; i < this.product.suppliers.length; i++) {
+        supplierProduct.purchasePrice = this.product.suppliers[i].purchasePrice;
+        supplierProduct.purchasedate = this.product.suppliers[i].purchasedate;
+        supplierProduct.whatIsPaid = this.product.suppliers[i].whatIsPaid;
+        supplierProduct.oweing = this.product.suppliers[i].oweing;
+        this.informationService.updateSupplierProducts(this.product.suppliers[i].id, this.product._id, supplierProduct);
+      }
+    }else {
+      let supplierProduct: SupplierProducts = {
+        id: this.product._id,
+        name: this.product.name,
+        quantity: this.product.quantity,
+        purchasePrice: 0,
+        purchasedate: '',
+        whatIsPaid: 0,
+        oweing: 0
+      }
+      for (let i = 0; i < this.product.suppliers.length; i++) {
+        supplierProduct.purchasePrice = this.product.suppliers[i].purchasePrice;
+        supplierProduct.purchasedate = this.product.suppliers[i].purchasedate;
+        supplierProduct.whatIsPaid = this.product.suppliers[i].whatIsPaid;
+        supplierProduct.oweing = this.product.suppliers[i].oweing;
+        this.informationService.updateSupplierProducts(this.product.suppliers[i].id, this.product._id, supplierProduct);
+      }
+    }
+  }
   submit(form : NgForm): void {
     this.product.userSellingPrice = this.product.userSellingPrice / this.dollarPrice;
     this.product.deallerSellingPrice = this.product.deallerSellingPrice / this.dollarPrice;
@@ -293,8 +316,9 @@ export class AddProductsComponent implements OnInit{
       // this.product.purchasedate = this.getDate();
       this.updating = false;
       this.productsService.create(this.product).subscribe(
-        (data) => {
+        async (data) => {
           this.print = data;
+          await this.addSupplierProduct(data._id);
           console.log(data._id);
           console.log(data);
           this.edited = true;
@@ -304,6 +328,7 @@ export class AddProductsComponent implements OnInit{
           this.submited = true;
           if (this.notBack){
             form.resetForm();
+            this.product.suppliers = [];
           }
         },
         (error) => {
@@ -314,7 +339,8 @@ export class AddProductsComponent implements OnInit{
       console.log(this.product._id);
     } else {
       this.productsService.update(this.product._id, this.product).subscribe(
-        () => {
+        async () => {
+          await this.addSupplierProduct(this.product._id);
           // this.submited = true;
           if (this.notBack){
            this.location.back();

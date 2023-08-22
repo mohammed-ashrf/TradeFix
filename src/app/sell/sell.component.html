@@ -1,6 +1,6 @@
+<app-toolbar></app-toolbar>
 <div class="cart-container">
   <div class="cart-sidebar">
-    <button mat-button (click)="goBack()">Back</button>
     <h3>فاتورة</h3>
     <select [(ngModel)]="cartId" (change)="onCartChange(cartId)">
       <option *ngFor="let cart of carts" [value]="cart.id">{{ cart.id }}. {{ cart.cartName }}</option>
@@ -34,11 +34,13 @@
     <label for="paid">كاش</label>
     <input type="number" name="paid" id="paid" [(ngModel)]="paid" (ngModelChange)="updateCartInformation()">
 
-    <button mat-button (click)="createNewCart()" style="margin-top: 10px;">New Cart</button>
-    <button mat-button (click)="deleteCart()">cancel cart</button>
+    <button mat-button (click)="createNewCart()" style="margin-top: 10px;">فاتورة جديدة</button>
+    <button mat-button (click)="deleteCart()">حذف الفاتورة</button>
 
   </div>
   <div class="cart-items" *ngIf="products">
+    <!-- <button mat-button (click)="goBack()">Back</button> -->
+    <!-- <button mat-button routerLink="/products">المنتجات</button> -->
     <h3>Items in Cart</h3>
     <table>
       <thead>
@@ -62,7 +64,7 @@
           <td *ngIf="userType === 'dealer' && item.quantity >= 3">{{ (item.product.deallerSellingPriceAll * dollarPrice) * item.quantity | currency }}</td>
           <!-- <td>{{ userType === 'user' ? item.product.userSellingPrice : item.quantity >= 3 ? item.product.deallerSellingPriceAll : item.product.deallerSellingPrice }}</td>
           <td>{{ (userType === 'user' ? item.product.userSellingPrice : item.quantity >= 3 ? item.product.deallerSellingPriceAll : item.product.deallerSellingPrice) * item.quantity }}</td> -->
-          <td><button (click)="deleteCartItem(item)">Delete</button></td>
+          <td><button (click)="deleteCartItem(item)">حذف</button></td>
         </tr>
       </tbody>
     </table>
@@ -73,23 +75,23 @@
       <p>المدفوع: {{paid}}</p>
       <P> اﻵجل: {{owing}}</P>
     </div>
-    <button mat-button (click)="updateCartInformation()" style="margin-bottom: 10px;">Update Information</button>
+    <button mat-button (click)="updateCartInformation()" style="margin-bottom: 10px;">تحديث المعلومات</button>
     <button mat-button style="margin-bottom: 10px;" (click)="sellCart()">بيع</button>
-    <app-print-layout [cart]="currentCart" [products]="currentCart.products"></app-print-layout>
+    <app-print-layout [cart]="currentCart" [products]="currentCart.products" [dollarPrice]="dollarPrice"></app-print-layout>
     <button mat-button ngxPrint printSectionId="invoice" [printStyle]="{
       p: {'line-height': '75%', 'font-weight': 'bold', 'font-size': '11px'},
       svg: {'width': '100px', 'height': '100px'},
       table: {'border-collapse': 'collapse', 'width': '100%',  'margin-bottom': '20px'},
       'table th': {'border': '2px solid #ddd', 'background-color': '#f2f2f2'},
       'table td': {'border': '2px solid #ddd', 'padding': '8px', 'text-align': 'left'},
-      '.remarks': {'border': '2px solid #ddd', 'padding': '10px', 'width': '30%','height': '160px'},
-      '.remarks p': {'text-align': 'center'},
       '.informations': { 'position': 'absolute','bottom': '0','width': '100%','text-align': 'right'},
-      '.rules': {'float': 'right', 'width': '56%', 'font-size': '12px', 'text-align': 'right', 'margin-right' :'10px'},
+      '.money': {'float': 'right', 'margin-right': '15px'},
+      '.rules': {'float': 'left', 'width': '56%', 'font-size': '12px', 'text-align': 'right', 'margin-right' :'10px'},
       '.rules h3': {'text-align' : 'center'},
       '.payment': {'width': '200px'},
       '.payment td': {'border': '2px solid #ddd','padding': '8px',' text-align': 'center','width':'50%'},
-      '.branches h3': {'text-align': 'center'}
-    }">Print Invoice</button>
+      '.branches h3': {'text-align': 'center'},
+      '.footer': {'position': 'absolute','bottom': '0','width': '100%','text-align': 'right'}
+    }" dir="rtl">طباعة الفاتورة</button>
   </div>
 </div>

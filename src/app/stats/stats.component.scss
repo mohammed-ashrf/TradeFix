@@ -1,0 +1,137 @@
+.container {
+    margin-top: 60px;
+    margin-right: 10px;
+    margin-left: 10px;
+}
+.repair-header{
+    text-align: center;
+}  
+.sells-header {
+    text-align: center;
+}  
+
+.filtterDevicesQuerry {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+.filtterCartsQuerry {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+  
+.query {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+mat-select {
+    width: 10VW;
+}
+
+label {
+    font-weight: bold;
+}
+
+input[type="checkbox"] {
+    margin-right: 0.5rem;
+}
+
+.Button {
+    padding: 0.5rem 1rem;
+    background-color: #000000e5;
+    color: #fff;
+    border: 3px solid #1976d2;
+    border-radius: 1.5rem;
+    cursor: pointer;
+}
+
+.Button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 17px rgba(0, 0, 0, 0.35);
+}
+.table {
+    width: 100%;
+    max-width: 100%;
+    border-collapse: collapse;
+    margin-top: 9.4rem;
+}
+  
+th {
+    background-color: #f2f2f2;
+    text-align: right;
+    padding: 10px;
+}
+  
+td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.chart {
+    width: 30vw;
+}
+
+.expenses-input {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+  
+.input {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.input label {
+    font-weight: bold;
+    width: 100px;
+}
+
+.input input {
+    width: 200px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.addInput {
+    width: 15vw;
+    border-radius: 5px;
+    border-color: #ccc;
+    border-style: solid;
+    border-width: 2px;
+    padding: 10px;
+}
+.addInput input {
+    width: 96%;
+}
+.addInput button {
+    width: 100%;
+    padding: 0.5rem 1rem;
+    background-color: #000000e5;
+    color: #fff;
+    border: 3px solid #1976d2;
+    border-radius: 1.5rem;
+    cursor: pointer;
+}
+
+.sellingsTable, .repairsTable {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    // height: 50vh;
+}

@@ -22,6 +22,14 @@ export class GetInformationsComponent implements OnInit{
   searchTerm:string = '';
   searchResult:any;
   notHidden:boolean = true;
+  suppliersMoneyTotal: number = 0;
+  suppliersMoneyPaid: number = 0;
+  suppliersMonayOwing: number = 0;
+  showData: boolean =false;
+  paid: number = 0;
+  owing: number = 0;
+  total: number = 0;
+  selectedSupplierId: string = '';
   constructor(private informationService: InformationService,
     private location: Location){}
   
@@ -73,6 +81,33 @@ export class GetInformationsComponent implements OnInit{
         }
       );
     }
+  }
+
+  calSuppliersMoney(){
+    this.suppliersMoneyTotal = this.suppliers.reduce((total, supplier) => {
+      return total + supplier.products.reduce((subTotal, product)=> {
+        return subTotal + (product.purchasePrice * product.quantity);
+      },0);
+    },0);
+    this.suppliersMoneyPaid = this.suppliers.reduce((total, supplier) => {
+      return total + supplier.products.reduce((subTotal, product)=> {
+        return subTotal + product.whatIsPaid
+      },0);
+    },0);
+    this.suppliersMonayOwing = this.suppliersMoneyTotal - this.suppliersMoneyPaid;
+  }
+
+  calSupplierMoney(supplier : Supplier, supplierId: string) {
+    this.paid = supplier.products.reduce((total,product) => {
+      return total + product.whatIsPaid;
+    },0);
+
+    this.owing = supplier.products.reduce((total,product) => {
+      return total + product.oweing;
+    },0);
+    console.log(supplier.products);
+    this.showData = true;
+    this.selectedSupplierId = supplierId;
   }
 
   searchProducts(products: any[], userInput: any) {

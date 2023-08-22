@@ -18,26 +18,33 @@ export class DeviceService {
   }
 
   filterDevices(devices: Receive[], query: Query): Receive[] {
-   return devices.filter(device => {
-        const now = new Date();
-        const oneWeekAgo = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 7);
-        const deviceReceivingDate = new Date(device.receivingDate);
-        return (
-          (!query.repaired || device.repaired === query.repaired) &&
-          (!query.paidAdmissionFees || device.paidAdmissionFees === query.paidAdmissionFees) &&
-          (!query.delivered || device.delivered === query.delivered) &&
-          (!query.returned || device.returned === query.returned) &&
-          (!query.inProgress || device.repaired === false) &&
-          (!query.engineer || device.engineer === query.engineer) &&
-          (!query.priority || device.priority === query.priority) &&
-          (!query.newDevices || deviceReceivingDate >= oneWeekAgo)&&
-          (!query.today || deviceReceivingDate.toDateString() === new Date().toDateString()) &&
-          (!query.thisMonth || deviceReceivingDate.getMonth() === new Date().getMonth()) &&
-          (!query.thisYear || deviceReceivingDate.getFullYear() === new Date().getFullYear()) &&
-          (!query.specificYear || deviceReceivingDate.getFullYear() === parseInt(query.specificYear))
-        );
-      });
-    };
+    return devices.filter(device => {
+      const now = new Date();
+      const oneWeekAgo = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 7);
+      const deviceReceivingDate = new Date(device.receivingDate);
+  
+      // Check if the device's receiving date is within the specified date range
+      const isWithinDateRange =
+        (!query.startDate || deviceReceivingDate >= new Date(query.startDate)) &&
+        (!query.endDate || deviceReceivingDate <= new Date(query.endDate));
+  
+      return (
+        isWithinDateRange &&
+        (!query.repaired || device.repaired === query.repaired) &&
+        (!query.paidAdmissionFees || device.paidAdmissionFees === query.paidAdmissionFees) &&
+        (!query.delivered || device.delivered === query.delivered) &&
+        (!query.returned || device.returned === query.returned) &&
+        (!query.inProgress || device.repaired === false) &&
+        (!query.engineer || device.engineer === query.engineer) &&
+        (!query.priority || device.priority === query.priority) &&
+        (!query.newDevices || deviceReceivingDate >= oneWeekAgo) &&
+        (!query.today || deviceReceivingDate.toDateString() === new Date().toDateString()) &&
+        (!query.thisMonth || deviceReceivingDate.getMonth() === new Date().getMonth()) &&
+        (!query.thisYear || deviceReceivingDate.getFullYear() === new Date().getFullYear()) &&
+        (!query.specificYear || deviceReceivingDate.getFullYear() === parseInt(query.specificYear))
+      );
+    });
+  }
 
 
   getOne(id: string): Observable<Receive> {

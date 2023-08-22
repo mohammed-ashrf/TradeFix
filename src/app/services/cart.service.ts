@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Product } from '../shared/products';
+import { Product, ProductsQuery } from '../shared/products';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
@@ -68,27 +68,7 @@ export class CartService {
     this.saveCartsToLocalStorage();
   }
 
-  // addCart(cartName: string, buyerName: string, phoneNumber: string, sellerName: string, date: Date, pastOwing: number) {
-  //   const newCart: Cart = {
-  //     id: this.carts.length + 1,
-  //     cartName,
-  //     buyerName,
-  //     phoneNumber,
-  //     totalPrice: 0,
-  //     discount:0,
-  //     pastOwing,
-  //     total:0,
-  //     paid:0,
-  //     owing: 0,
-  //     sellerName,
-  //     payType: 'cash',
-  //     buyerType: 'user',
-  //     date,
-  //     products: []
-  //   };
-  //   this.carts.push(newCart);
-  //   this.saveCartsToLocalStorage();
-  // }
+  
 
   addProduct(cartIndex: number, product: Product, quantity: number, buyerType: string) {
     const cart = this.carts[cartIndex - 1];
@@ -226,7 +206,7 @@ export class CartService {
 
   deleteCart(cartIndex: number) {
       // Remove the cart at the specified index
-      this.carts.splice(cartIndex, 1);
+      this.carts.splice(cartIndex -1 , 1);
 
       // Update the IDs of the remaining carts
       // Start at 1 and increment by 1 for each cart
@@ -331,4 +311,87 @@ export class CartService {
       return [];
     }
   }
+
+  // filterSoldCarts(buyers: Buyer[], query: Query): Cart[] {
+  //   const now = new Date();
+  //   const oneWeekAgo = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 7);
+  
+  //   // Filter the buyers and their carts
+  //   return buyers.reduce((filteredCarts: Cart[], buyer: Buyer) => {
+  //     const filteredBuyerCarts = buyer.carts.filter((cart: Cart) => {
+  //       const deviceReceivingDate = new Date(cart.date);
+  //       return (
+  //         (!query.category || cart.products.every((item) => item.product.category === query.category)) &&
+  //         (!query.status || cart.products.every((item) => item.product.status === query.status)) &&
+  //         (!query.payType || cart.payType === query.payType) &&
+  //         (!query.buyerType || cart.buyerType === query.buyerType) &&
+  //         (!query.sellerName || cart.sellerName === query.sellerName) &&
+  //         (!query.today || deviceReceivingDate.toDateString() === now.toDateString()) &&
+  //         (!query.thisMonth || deviceReceivingDate.getMonth() === now.getMonth()) &&
+  //         (!query.thisYear || deviceReceivingDate.getFullYear() === now.getFullYear()) &&
+  //         (!query.specificYear || deviceReceivingDate.getFullYear() === parseInt(query.specificYear))
+  //       );
+  //     });
+  
+  //     // Append the filtered carts of the buyer to the overall filtered carts
+  //     return filteredCarts.concat(filteredBuyerCarts);
+  //   }, []);
+  // }
+  // filterSoldCarts(buyers: Buyer[], query: ProductsQuery): Buyer[] {
+  //   const now = new Date();
+  //   const oneWeekAgo = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 7);
+  
+  //   // Filter the buyers and their carts
+  //   return buyers.filter((buyer: Buyer) => {
+  //     const filteredBuyerCarts = buyer.carts.filter((cart: Cart) => {
+  //       const deviceReceivingDate = new Date(cart.date);
+  //       return (
+  //         (!query.category || cart.products.every((item) => item.product.category === query.category)) &&
+  //         (!query.status || cart.products.every((item) => item.product.status === query.status)) &&
+  //         (!query.payType || cart.payType === query.payType) &&
+  //         (!query.buyerType || cart.buyerType === query.buyerType) &&
+  //         (!query.sellerName || cart.sellerName === query.sellerName) &&
+  //         (!query.today || deviceReceivingDate.toDateString() === now.toDateString()) &&
+  //         (!query.thisMonth || deviceReceivingDate.getMonth() === now.getMonth()) &&
+  //         (!query.thisYear || deviceReceivingDate.getFullYear() === now.getFullYear()) &&
+  //         (!query.specificYear || deviceReceivingDate.getFullYear() === parseInt(query.specificYear))
+  //       );
+  //     });
+  
+  //     // Return the buyer if there are filtered carts for the buyer
+  //     return filteredBuyerCarts.length > 0;
+  //   });
+  // }
+  filterSoldCarts(buyers: Buyer[], query: ProductsQuery): Buyer[] {
+    const now = new Date();
+    const oneWeekAgo = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 7);
+    
+    // Filter the buyers and their carts
+    return buyers.filter((buyer: Buyer) => {
+      const filteredBuyerCarts = buyer.carts.filter((cart: Cart) => {
+        const deviceReceivingDate = new Date(cart.date);
+  
+        // Check if the cart falls within the given date range (startDate to endDate)
+        const isWithinDateRange =
+          (!query.startDate || deviceReceivingDate >= new Date(query.startDate)) &&
+          (!query.endDate || deviceReceivingDate <= new Date(query.endDate));
+  
+        return (
+          isWithinDateRange &&
+          (!query.category || cart.products.every((item) => item.product.category === query.category)) &&
+          (!query.status || cart.products.every((item) => item.product.status === query.status)) &&
+          (!query.payType || cart.payType === query.payType) &&
+          (!query.buyerType || cart.buyerType === query.buyerType) &&
+          (!query.sellerName || cart.sellerName === query.sellerName) &&
+          (!query.today || deviceReceivingDate.toDateString() === now.toDateString()) &&
+          (!query.thisMonth || deviceReceivingDate.getMonth() === now.getMonth()) &&
+          (!query.thisYear || deviceReceivingDate.getFullYear() === now.getFullYear()) &&
+          (!query.specificYear || deviceReceivingDate.getFullYear() === parseInt(query.specificYear))
+        );
+      });
+  
+      // Return the buyer if there are filtered carts for the buyer
+      return filteredBuyerCarts.length > 0;
+    });
+  } 
 }

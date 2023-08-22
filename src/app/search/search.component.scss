@@ -1,11 +1,14 @@
+.container {
+  margin-top: 60px;
+}
 .Bar {
   display: flex;
   justify-content: center;
   align-items: center;
   background-color: #f2f2f2;
   height: 150px; 
-  position: fixed; 
-  top: 0;
+  // position: fixed; 
+  // top: 0;
   width: 100%;
 
   .back {
@@ -101,7 +104,7 @@
   width: 100%;
   max-width: 100%;
   border-collapse: collapse;
-  margin-top: 9.4rem;
+  // margin-top: 9.4rem;
 }
 
 th {
@@ -125,7 +128,20 @@ a {
 a:hover {
   text-decoration: none;
 }
-
+.table-container {
+  max-height: calc(100vh - 9.4rem - 60px); /* Adjust the height as needed */
+  overflow-y: auto;
+}
+tbody {
+  max-height: 60vh;
+  overflow-y: auto;
+}
+thead {
+  position: sticky;
+  top: 0;
+  background-color: white;
+  z-index: 1;
+}
 @media (max-width: 767px) {
   /* adjust the table style for small screens */
   .table {

@@ -5,7 +5,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin-top: 2rem;
+    margin-top: 3rem;
   }
   
   .cart-sidebar {
@@ -112,7 +112,7 @@
   .cart-items button {
     font-size: 1rem;
     padding: 0.5rem 1rem;
-    background-color: #dc3545;
+    background-color: #007bff;
     color: #fff;
     border: none;
     border-radius: 0.5rem;
@@ -121,7 +121,7 @@
   }
   
   .cart-items button:hover {
-    background-color: #c82333;
+    background-color: #0062cc;
   }
   
 //   .total-price {

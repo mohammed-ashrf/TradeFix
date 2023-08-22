@@ -200,13 +200,12 @@ export class SellComponent implements OnInit {
     )
   }
 
-  sellCart(){
+  async sellCart(){
     this.updateCartInformation();
     const cart = this.cartService.getCart(this.cartId);
-    this.cartService.sellCart(cart).subscribe(
+    await this.cartService.sellCart(cart).subscribe(
       (soldCart) => {
         console.log(soldCart);
-        this.deleteCart();
       }
     )
   }

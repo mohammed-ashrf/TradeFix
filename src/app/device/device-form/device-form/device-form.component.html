@@ -1,3 +1,4 @@
+<app-toolbar></app-toolbar>
 <div class="container">
   <div class="header">
     <button (click)="goBack(deviceForm)">Back</button>
@@ -50,26 +51,14 @@
       <input type="number" name="Price" id="price" value="{{product.productPrice}}" style="margin-left: 5px; line-height: 1.5; padding: 10px;" disabled>
       <button (click)="onDelete(product.productId)" style="line-height: 1.5; padding: 10px;">delete</button>
     </div>
-    <div class="search-container form-group" fxLayout="column" fxLayoutAlign="center center">
-      <div class="search-input form-group" fxLayout="row" fxLayoutAlign="center center" dir="rtl" style="width: 100%">
-        <input type="text" id="searchProduct" placeholder="إبحث عن قطع الغيار" name="searchProduct" [(ngModel)]="searchTerm" (keyup)="onSearch()">
-        <i class="fas fa-search"></i>
-      </div>
-      <table class="search-results" *ngIf="isSearched">
-        <thead>
-          <tr>
-            <th>Product Name</th>
-            <th>Price</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let product of searchResult" (click)="onSelect(product)">
-            <td>{{ product.name }}</td>
-            <td>{{ receive.clientSelection == 'User' ? product.userSellingPrice * dollarPrice : product.deallerSellingPrice * dollarPrice}}</td>
-          </tr>
-        </tbody>
-      </table>
+    <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
+      <input type="text" id="searchProduct" placeholder="البحث عن المنتج" name="searchProduct" [(ngModel)]="searchTerm" (keyup)="onSearch()" dir="rtl">
     </div>
+    <ul *ngIf="isSearched">
+      <li *ngFor="let product of searchResult" (click)="onSelect(product, 1)">
+        {{ product.name }} - {{ receive.clientSelection == 'User' ? product.userSellingPrice * dollarPrice : product.deallerSellingPrice * dollarPrice}}
+      </li>
+    </ul>
     <div class="form-group" fxLayout="row" fxLayoutAlign="center center" dir="rtl">
       <textarea matInput placeholder="الملاحظات" lang="ar" dir="auto" id="notes" name="notes" cols="30" rows="2" [(ngModel)]="receive.notes" [disabled]="!sameEng"></textarea>
     </div>

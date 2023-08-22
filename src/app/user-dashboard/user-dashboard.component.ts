@@ -16,11 +16,11 @@ export class UserDashboardComponent implements OnInit {
   devices: Receive[] = [];
   allDevices: Receive[] = [];
   query: Query = {
-    repaired : false,
-    paidAdmissionFees : false,
-    delivered : false,
-    returned : false,
-    inProgress : true,
+    repaired: false,
+    paidAdmissionFees: false,
+    delivered: false,
+    returned: false,
+    inProgress: true,
     newDevices: false,
     today: false,
     thisMonth: true,
@@ -28,6 +28,8 @@ export class UserDashboardComponent implements OnInit {
     specificYear: '',
     engineer: '',
     priority: '',
+    startDate: '',
+    endDate: ''
   };
   users: any;
   currentUser: any;
@@ -38,6 +40,7 @@ export class UserDashboardComponent implements OnInit {
   inProgressCount: number = 0;
   completedCount: number = 0;
   returnedCount: number = 0;
+  deliveredCount: number = 0;
 
   constructor(
     private deviceService: DeviceService,
@@ -76,6 +79,8 @@ export class UserDashboardComponent implements OnInit {
       thisMonth: this.query.thisMonth,
       thisYear: this.query.thisYear,
       specificYear: this.query.specificYear,
+      startDate: this.query.startDate,
+      endDate: this.query.endDate
     };
     const devices = this.deviceService.filterDevices(this.allDevices, filterCriteria);
     this.devices = devices;
@@ -94,6 +99,8 @@ export class UserDashboardComponent implements OnInit {
       specificYear: '',
       engineer: this.username,
       priority: '',
+      startDate: '',
+      endDate: ''
     }
 
     this.filterDevices();
@@ -106,10 +113,12 @@ export class UserDashboardComponent implements OnInit {
       const date = new Date(device.receivingDate);
       const month = date.getMonth();
       if (month === currentMonth) {
-        if (device.repaired && device.delivered) {
+        if (device.repaired) {
           this.completedCount++;
         } else if (device.returned) {
           this.returnedCount++;
+        }else if(device.delivered){
+          this.deliveredCount++;
         } else {
           this.inProgressCount++;
         }

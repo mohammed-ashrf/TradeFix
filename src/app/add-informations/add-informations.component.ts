@@ -4,6 +4,8 @@ import { Section, ProductSection, Supplier,Dealer, DollarPrice } from '../shared
 import { ActivatedRoute } from '@angular/router';
 import { InformationService } from '../services/information.service';
 import { Location } from '@angular/common';
+import { MatDialog } from '@angular/material/dialog';
+import { AlertModalComponent } from '../alert-modal/alert-modal.component';
 @Component({
   selector: 'app-add-informations',
   templateUrl: './add-informations.component.html',
@@ -27,6 +29,7 @@ export class AddInformationsComponent implements OnInit {
     companyName: '',
     phone: '',
     notes: '',
+    products: [],
     _id: '',
   }
 
@@ -56,6 +59,7 @@ export class AddInformationsComponent implements OnInit {
     private informationService: InformationService,
     private route: ActivatedRoute,
     private location: Location,
+    private dialog: MatDialog,
   ) {}
 
   ngOnInit(): void {
@@ -100,24 +104,35 @@ export class AddInformationsComponent implements OnInit {
     this.location.back();
   }
 
+  async showAlert(message: string): Promise<void> {
+    const dialogRef = this.dialog.open(AlertModalComponent, {
+      width: '400px',
+      data: { message: message },
+    });
+  
+    await dialogRef.afterClosed().toPromise();
+  }
+
   submitSection(form: NgForm) {
     if (this.isNew) {
       this.informationService.addSection(this.section).subscribe(
         (section) => {
-          window.alert(`Success saving section ${section.name}.`);
+          let message = `Success saving section ${section.name}.`;
+          this.showAlert(message);
           form.resetForm();
         },(error) => {
           console.error('Error creating section:', error);
-          window.alert('Error creating section. Please try again later.');
+          this.showAlert('Error creating section. Please try again later.');
         }
       )
     }else {
       this.informationService.updateSection(this.section._id, this.section).subscribe(
         () => {
-          window.alert(`Section Updated`);
+          let message = `Section Updated`;
+          this.showAlert(message);
         }, (error) => {
           console.error('Error updating section:', JSON.stringify(error));
-          window.alert(`Error updating section: ${JSON.stringify(error)}. Please try again later.`);
+          this.showAlert(`Error updating section: ${JSON.stringify(error)}. Please try again later.`);
         }
       )
     }
@@ -127,20 +142,22 @@ export class AddInformationsComponent implements OnInit {
     if (this.isNew) {
       this.informationService.addProductSection(this.productSection).subscribe(
         (productSection) => {
-          window.alert(`Success saving Product Section ${productSection.name}.`);
+          let message = `Success saving Product Section ${productSection.name}.`;
+          this.showAlert(message);
           form.resetForm();
         },(error) => {
           console.error('Error creating Product Section:', error);
-          window.alert('Error creating Product Section. Please try again later.');
+          this.showAlert('Error creating Product Section. Please try again later.');
         }
       )
     }else {
       this.informationService.updateProductSection(this.productSection._id, this.productSection).subscribe(
         () => {
-          window.alert(`Product Section Updated`);
+          let message = `Product Section Updated`;
+          this.showAlert(message);
         }, (error) => {
           console.error('Error updating Product Section:', JSON.stringify(error));
-          window.alert(`Error updating Product Section: ${JSON.stringify(error)}. Please try again later.`);
+          this.showAlert(`Error updating Product Section: ${JSON.stringify(error)}. Please try again later.`);
         }
       )
     }
@@ -150,11 +167,12 @@ export class AddInformationsComponent implements OnInit {
     if (this.isNew) {
       this.informationService.addSupplier(this.supplier).subscribe(
         (supplier) => {
-          window.alert(`Success saving supplier ${supplier.name}.`);
+          let message = `Success saving supplier ${supplier.name}.`;
+          this.showAlert(message);
           form.resetForm();
         },(error) => {
           console.error('Error creating supplier:', error);
-          window.alert('Error creating supplier. Please try again later.');        }
+          this.showAlert('Error creating supplier. Please try again later.');        }
       )
     }else {
       this.informationService.updateSupplier(this.supplier._id, this.supplier).subscribe(
@@ -162,7 +180,7 @@ export class AddInformationsComponent implements OnInit {
           window.alert('Supplier Updated');
         }, (error) => {
           console.error('Error updating supplier:', JSON.stringify(error));
-          window.alert(`Error updating supplier: ${JSON.stringify(error)}. Please try again later.`);
+          this.showAlert(`Error updating supplier: ${JSON.stringify(error)}. Please try again later.`);
         }
       )
     }
@@ -171,20 +189,21 @@ export class AddInformationsComponent implements OnInit {
   submintDealer(form: NgForm) {
     if (this.isNew) {
       this.informationService.addDealer(this.dealer).subscribe(
-        (dealer) => {
-          window.alert(`Success saving dealer ${dealer.name}.`);
+        async (dealer) => {
+          let message = `Success saving dealer ${dealer.name}.`;
+          await this.showAlert(message);
           form.resetForm();
         },(error) => {
           console.error('Error creating dealer:', error);
-          window.alert('Error creating dealer. Please try again later.');        }
+          this.showAlert('Error creating dealer. Please try again later.');        }
       )
     }else {
       this.informationService.updateDealer(this.dealer._id, this.dealer).subscribe(
-        () => {
-          window.alert('Dealer Updated');
+        async () => {
+         await this.showAlert('Dealer Updated');
         }, (error) => {
           console.error('Error updating dealer:', JSON.stringify(error));
-          window.alert(`Error updating dealer: ${JSON.stringify(error)}. Please try again later.`);
+          this.showAlert(`Error updating dealer: ${JSON.stringify(error)}. Please try again later.`);
         }
       )
     }
@@ -194,20 +213,22 @@ export class AddInformationsComponent implements OnInit {
     if(this.isNew) {
       this.informationService.addDollarPrice(this.dollarPrice).subscribe(
         (dollarPrice) => {
-          window.alert(`Success saving dollar price ${dollarPrice.price}`);
+          let message = `Success saving dollar price ${dollarPrice.price}`
+          this.showAlert(message);
           form.resetForm();
         },(error) => {
           console.error('Error creating dollar price:', error);
-          window.alert('Error creating dollar price. Please try again later.'); 
+          this.showAlert('Error creating dollar price. Please try again later.'); 
         }
       )
     }else {
       this.informationService.updateDollatPrice(this.dollarPrice._id, this.dollarPrice).subscribe(
         () => {
-          window.alert('dollar price updated');
+          let message = 'dollar price updated';
+          this.showAlert(message);
         }, (error) => {
           console.error('Error creating dollar price:', error);
-          window.alert('Error creating dollar price. Please try again later.');
+          this.showAlert('Error creating dollar price. Please try again later.');
         }
       )
     }

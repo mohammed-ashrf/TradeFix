@@ -1,66 +1,104 @@
-<div class="Bar">
+<app-toolbar></app-toolbar>
+<div class="container">
+  <div class="Bar">
     <div fxLayout="column">
+      <div class="filtterQuerry" dir="rtl">
+        <div class="query">
+          <label for="today">اليوم الحالي:</label>
+          <input type="checkbox" id="today" [(ngModel)]="productsQuery.today" (change)="filterProducts()">
+        </div>
+        <div class="query">
+          <label for="thisMonth">الشهر الحالي:</label>
+          <input type="checkbox" id="thisMonth" [(ngModel)]="productsQuery.thisMonth" (change)="filterProducts()">
+        </div>
+        <div class="query">
+          <label for="thisYear">السنة الحالية:</label>
+          <input type="checkbox" id="thisYear" [(ngModel)]="productsQuery.thisYear" (change)="filterProducts()">
+        </div>  
+        <div class="query">
+          <label for="specificYear">السنة:</label>
+          <input type="number" id="specificYear" lang="ar" dir="auto" [(ngModel)]="productsQuery.specificYear" (change)="filterProducts()">
+        </div>
+        <div class="query" dir="rtl">
+          <mat-select placeholder="قسم المنتج" id="category" name="category" [(ngModel)]="productsQuery.category" (selectionChange)="filterProducts()" required>
+            <mat-option class="option" *ngFor="let sec of productSections" [value]="sec.name">{{ sec.name }}</mat-option>
+          </mat-select>
+        </div>
+        <div class="query">
+          <label for="startDate">من:</label>
+          <input type="date" id="startDate" [(ngModel)]="productsQuery.startDate" placeholder="تاريخ البدء" lang="ar" (change)="filterProducts()">
+        </div>
+        <div class="query">
+          <label for="endDate">إلي:</label>
+          <input type="date" id="endDate" [(ngModel)]="productsQuery.endDate" placeholder="تاريخ الانتهاء" lang="ar" (change)="filterProducts()">
+        </div>
+      </div>
       <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="10px">
-        <button mat-button (click)="goBack()" class="back">back</button>
         <div class="searchBar">
+          <button mat-button (click)="goBack()" class="back">back</button>
           <input type="text" lang="ar" dir="auto" [(ngModel)]="searchTerm" placeholder="Search..." (keyup.enter)="search()" (keyup)="search()">
           <button (click)="search()">Search</button>
         </div>
       </div>
-      <label for="cart-id">Choose a cart ID:</label>
-      <select [(ngModel)]="selectedCartId" (change)="onChange()">
-        <option *ngFor="let cart of carts" [value]="cart.id">{{ cart.id }}. {{ cart.cartName }}</option>
-      </select>
+      <div class="cart-selection" fxLayout="row" fxLayoutAlign="center center" dir="rtl" fxLayoutGap="10px">
+        <label for="cart-id" dir="rtl">إختار الفاتورة:</label>
+        <select [(ngModel)]="selectedCartId" (change)="onChange()">
+          <option *ngFor="let cart of carts" [value]="cart.id">{{ cart.id }}. {{ cart.cartName }}</option>
+        </select>
+      </div>
     </div>
-    
   </div>
   
+  <div class="table-container">
+    <table class="table" dir="rtl">
+        <thead dir="rtl">
+          <tr dir="rtl">
+            <th dir="rtl">الكود</th>
+            <th dir="rtl">الفئه</th>
+            <th dir="rtl">اﻷسم</th>
+            <th dir="rtl">بيع عميل</th>
+            <th dir="rtl">بيع تاجر</th>
+            <th dir="rtl">بيع تاجر جمله</th>
+            <th dir="rtl">الكمية</th>
+            <th dir="rtl">حالة المنتج</th>
+          </tr>
+        </thead>
+        <tbody dir="rtl" *ngIf="isSearched">
+          <tr *ngFor="let product of searchResult" dir="rtl">
+            <td dir="rtl">{{ product._id }}</td>
+            <td dir="rtl">{{ product.category }}</td>
+            <td dir="rtl">{{ product.name }}</td>
+            <td dir="rtl">{{ (product.userSellingPrice * dollarPrice) }}</td>
+            <td dir="rtl">{{ (product.deallerSellingPrice * dollarPrice) }}</td>
+            <td dir="rtl">{{ (product.deallerSellingPriceAll * dollarPrice) }}</td>
+            <td dir="rtl">{{ product.quantity }}</td>   
+            <td dir="rtl">{{ product.status }}</td>
+            <td><a mat-button (click)="addToCart(product)">إضافة للفاتورة</a></td>
+            <td *ngIf="isAdmin">
+              <a mat-button [routerLink]="['/addProduct', product._id, 'edit']">تحديث</a>
+            </td>
+          </tr>
+        </tbody>
+        <tbody dir="rtl" [hidden]="isSearched">
+          <tr *ngFor="let product of products" dir="rtl">
+            <td dir="rtl">{{ product._id }}</td>
+            <td dir="rtl">{{ product.category }}</td>
+            <td dir="rtl">{{ product.name }}</td>
+            <td dir="rtl">{{ (product.userSellingPrice * dollarPrice) }}</td>
+            <td dir="rtl">{{ (product.deallerSellingPrice * dollarPrice)  }}</td>
+            <td dir="rtl">{{ (product.deallerSellingPriceAll * dollarPrice) }}</td>
+            <td dir="rtl">{{ product.quantity }}</td>   
+            <td dir="rtl">{{ product.status }}</td>
+            <td><a mat-button (click)="addToCart(product)">إضافة للفاتورة</a></td>
+            <td *ngIf="isAdmin">
+              <a mat-button [routerLink]="['/addProduct', product._id, 'edit']">تحديث</a>
+            </td>
+          </tr>
+        </tbody>
+    </table>
+  </div>
   
-  
-  
-  <table class="table" dir="rtl">
-      <thead dir="rtl">
-        <tr dir="rtl">
-          <th dir="rtl">الكود</th>
-          <th dir="rtl">الفئه</th>
-          <th dir="rtl">اﻷسم</th>
-          <th dir="rtl">بيع عميل</th>
-          <th dir="rtl">بيع ديلر</th>
-          <th dir="rtl">بيع ديلر جمله</th>
-          <th dir="rtl">الكمية</th>
-          <th dir="rtl">حالة المنتج</th>
-        </tr>
-      </thead>
-      <tbody dir="rtl" *ngIf="isSearched">
-        <tr *ngFor="let product of searchResult" dir="rtl">
-          <td dir="rtl">{{ product._id }}</td>
-          <td dir="rtl">{{ product.category }}</td>
-          <td dir="rtl">{{ product.name }}</td>
-          <td dir="rtl">{{ product.userSellingPrice }}</td>
-          <td dir="rtl">{{ product.deallerSellingPrice }}</td>
-          <td dir="rtl">{{ product.deallerSellingPriceAll }}</td>
-          <td dir="rtl">{{ product.quantity }}</td>   
-          <td dir="rtl">{{ product.status }}</td>
-          <td><a mat-button (click)="addToCart(product)">Add to Cart</a></td>
-          <td>
-            <a mat-button [routerLink]="['/addProduct', product._id, 'edit']">تحديث</a>
-          </td>
-        </tr>
-      </tbody>
-      <tbody dir="rtl" [hidden]="isSearched">
-        <tr *ngFor="let product of products" dir="rtl">
-          <td dir="rtl">{{ product._id }}</td>
-          <td dir="rtl">{{ product.category }}</td>
-          <td dir="rtl">{{ product.name }}</td>
-          <td dir="rtl">{{ product.userSellingPrice }}</td>
-          <td dir="rtl">{{ product.deallerSellingPrice }}</td>
-          <td dir="rtl">{{ product.deallerSellingPriceAll }}</td>
-          <td dir="rtl">{{ product.quantity }}</td>   
-          <td dir="rtl">{{ product.status }}</td>
-          <td><a mat-button (click)="addToCart(product)">Add to Cart</a></td>
-          <td>
-            <a mat-button [routerLink]="['/addProduct', product._id, 'edit']">تحديث</a>
-          </td>
-        </tr>
-      </tbody>
-  </table>  
+  <div id="spinner" *ngIf="!isProducts">
+    <mat-spinner></mat-spinner> <h4>Loading . . . Please Wait!</h4>
+  </div>
+</div>

@@ -1,3 +1,4 @@
+<app-toolbar></app-toolbar>
 <div class="container">
     <div class="controller">
       <button (click)="goBack()">back</button>
@@ -6,7 +7,7 @@
           <option value="sections">الأقسام</option>
           <option value="product-sections">أقسام المنتجات</option>
           <option value="suppliers">الموردين</option>
-          <option value="dealers">الديلر</option>
+          <option value="dealers">التجار</option>
           <option value="dollarPrice">سعر الدولار</option>
       </select>
     </div>
@@ -80,9 +81,15 @@
                         <div class="data-column">
                             <p><strong>Notes:</strong> {{ supplier.notes }}</p>
                         </div>
+                        <div class="data-column" fxLayout="row" fxLayoutAlign="space-around center" *ngIf="showData && (supplier._id === selectedSupplierId)">
+                          <p dir="rtl"><strong>إجمالي:</strong> {{ paid + owing }}</p>
+                          <p dir="rtl"><strong>كاش:</strong> {{ paid }}</p>
+                          <p dir="rtl"><strong>أجل:</strong> {{ owing }}</p>
+                        </div>
                       </div>
                     </div>
-                    <button class="editButton" mat-button [routerLink]="['/addInformation', supplier._id, 'edit']">Edit</button>
+                    <button class="editButton" mat-button (click)="calSupplierMoney(supplier, supplier._id)">حساب المورد</button>
+                    <button class="editButton" mat-button [routerLink]="['/addInformation', supplier._id, 'edit']">تحديث</button>
                   </mat-card-content>
                 </mat-card>
             </div>

@@ -17,11 +17,11 @@ export class SearchComponent implements OnInit {
   searchResult!:any[];
   allDevices: Receive[] = [];
   query:Query = {
-    repaired : false,
-    paidAdmissionFees : false,
-    delivered : false,
-    returned : false,
-    inProgress : false,
+    repaired: false,
+    paidAdmissionFees: false,
+    delivered: false,
+    returned: false,
+    inProgress: false,
     newDevices: false,
     today: false,
     thisMonth: false,
@@ -29,6 +29,8 @@ export class SearchComponent implements OnInit {
     specificYear: '',
     engineer: '',
     priority: '',
+    startDate: '',
+    endDate: ''
   }
   users:any;
   user: any;
@@ -55,8 +57,9 @@ export class SearchComponent implements OnInit {
       this.router.navigate(['/devices']);
     } else if (user.role === 'technition') {
       this.router.navigate(['/userDashboard']);
+    }else {
+      this.location.back()
     }
-    // this.location.back();
   }
   searchDevice(devices: any[], userInput: any) {
     try {
@@ -123,6 +126,8 @@ export class SearchComponent implements OnInit {
       specificYear: this.query.specificYear,
       engineer: this.query.engineer,
       priority: this.query.priority,
+      startDate: this.query.startDate,
+      endDate: this.query.endDate
     };
     const devices = this.deviceService.filterDevices(this.allDevices, filterCriteria);
     this.devices = devices;

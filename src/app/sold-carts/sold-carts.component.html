@@ -1,43 +1,115 @@
-<h2>Buyers</h2>
-
-<table>
-  <thead>
-    <tr>
-      <th>Buyer Name</th>
-      <th>Phone Number</th>
-      <th>Cart Name</th>
-      <th>Total Price</th>
-      <th>Paid</th>
-      <th>Owing</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let buyer of buyers">
-      <td>{{ buyer.buyerName }}</td>
-      <td>{{ buyer.phoneNumber }}</td>
-      <td>{{ buyer.carts[0].cartName }}</td>
-      <td>{{ buyer.carts[0].totalPrice }}</td>
-      <td>{{ buyer.carts[0].paid }}</td>
-      <td>{{ buyer.carts[0].totalPrice - buyer.carts[0].paid }}</td>
-    </tr>
-  </tbody>
-  <tfoot>
-    <tr>
-      <th colspan="4">Total Money Earned</th>
-      <td>{{ moneyEarned }}</td>
-      <td></td>
-    </tr>
-  </tfoot>
-</table>
-
-<div>
-  <label for="time-period">Select time period:</label>
-  <select id="time-period" [(ngModel)]="selectedTimePeriod" (change)="getMoneyEarned()">
-    <option *ngFor="let timePeriod of timePeriods" [value]="timePeriod.value">{{ timePeriod.label }}</option>
-  </select>
-
-  <div *ngIf="selectedTimePeriod === 'specific_year'">
-    <label for="specific-year">Select year:</label>
-    <input type="number" id="specific-year" [(ngModel)]="specificYear" (change)="getMoneyEarned()" />
+<app-toolbar></app-toolbar>
+<div class="container">
+  <div class="Bar">
+    <div fxLayout="column">
+    <div class="filtterQuerry" dir="rtl">
+      <div class="query">
+        <label for="today">اليوم الحالي:</label>
+        <input type="checkbox" id="today" [(ngModel)]="cartsQuery.today" (change)="filterCarts()">
+      </div>
+      <div class="query">
+        <label for="thisMonth">الشهر الحالي:</label>
+        <input type="checkbox" id="thisMonth" [(ngModel)]="cartsQuery.thisMonth" (change)="filterCarts()">
+      </div>
+      <div class="query">
+        <label for="thisYear">السنة الحالية:</label>
+        <input type="checkbox" id="thisYear" [(ngModel)]="cartsQuery.thisYear" (change)="filterCarts()">
+      </div>  
+      <div class="query">
+        <label for="specificYear">السنة:</label>
+        <input type="number" id="specificYear" lang="ar" dir="auto" [(ngModel)]="cartsQuery.specificYear" (change)="filterCarts()">
+      </div>
+      <div class="query" dir="rtl">
+        <mat-select placeholder="قسم المنتج" id="category" name="category" [(ngModel)]="cartsQuery.category" (selectionChange)="filterCarts()" required>
+          <mat-option class="option" *ngFor="let sec of productSections" [value]="sec.name">{{ sec.name }}</mat-option>
+        </mat-select>
+      </div>
+      <div class="query">
+        <label for="startDate">من:</label>
+        <input type="date" id="startDate" [(ngModel)]="cartsQuery.startDate" placeholder="تاريخ البدء" lang="ar" (change)="filterCarts()">
+      </div>
+      <div class="query">
+        <label for="endDate">إلي:</label>
+        <input type="date" id="endDate" [(ngModel)]="cartsQuery.endDate" placeholder="تاريخ الانتهاء" lang="ar" (change)="filterCarts()">
+      </div>
+      <div class="query" dir="rtl">
+        <mat-select placeholder="نوعية الدفع" id="payType" name="payType" [(ngModel)]="cartsQuery.payType" (selectionChange)="filterCarts()" required>
+          <mat-option class="option"  value="cash">كاش</mat-option>
+          <mat-option class="option"  value="vodafone-cash">فودافون كاش</mat-option>
+          <mat-option class="option"  value="bank">بنك</mat-option>
+        </mat-select>
+      </div>
+      <div class="query" dir="ltr">
+        <mat-select placeholder="نوع العميل" id="buyerType" name="buyerType" [(ngModel)]="cartsQuery.buyerType" (selectionChange)="filterCarts()" required>
+          <mat-option class="option"  value="user">User</mat-option>
+          <mat-option class="option"  value="dealer">Dealer</mat-option>
+        </mat-select>
+      </div>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="10px">
+      <div class="searchBar">
+        <button mat-button (click)="goBack()" class="back">back</button>
+        <input type="text" lang="ar" dir="auto" [(ngModel)]="searchTerm" placeholder="Search..." (keyup.enter)="search()" (keyup)="search()">
+        <button (click)="search()">Search</button>
+        <!-- <button (click)="filterDevices()" class="Button" id="filterButton">Filter</button> -->
+        <button (click)="resetFilter()" class="Button" id="resetButton">reset</button>
+      </div>
+    </div>
+    </div>
+  </div>
+  
+  <div class="table-container">
+    <table class="table" dir="rtl">
+      <thead>
+        <tr>
+          <th>إسم المشتري</th>
+          <th>رقم التليفون</th>
+          <th>اسم الفاتورة</th>
+          <th>قيمة الفاتورة</th>
+          <th>خصم</th>
+          <th>إجمالي</th>
+          <th>كاش</th>
+          <th>أجل</th>
+        </tr>
+      </thead>
+      <tbody *ngIf="isSearched">
+        <ng-container *ngFor="let buyer of searchResult">
+          <tr *ngFor="let cart of buyer.carts">
+            <td>{{ buyer.buyerName }}</td>
+            <td>{{ buyer.phoneNumber }}</td>
+            <td>{{ cart.cartName }}</td>
+            <td>{{ cart.totalPrice }}</td>
+            <td>{{ cart.discount }}</td>
+            <td>{{ cart.total }}</td>
+            <td>{{ cart.paid }}</td>
+            <td>{{ cart.owing }}</td>
+          </tr>
+        </ng-container>
+      </tbody>
+      <tbody *ngIf="!isSearched">
+        <ng-container class="buyer" *ngFor="let buyer of buyers">
+          <tr *ngFor="let cart of buyer.carts">
+            <td>{{ buyer.buyerName }}</td>
+            <td>{{ buyer.phoneNumber }}</td>
+            <td>{{ cart.cartName }}</td>
+            <td>{{ cart.totalPrice }}</td>
+            <td>{{ cart.discount }}</td>
+            <td>{{ cart.total }}</td>
+            <td>{{ cart.paid }}</td>
+            <td>{{ cart.owing }}</td>
+          </tr>
+        </ng-container>
+      </tbody>
+      <tfoot>
+        <tr>
+          <th colspan="5">إجمالي الدخل</th>
+          <td>{{ moneyEarned }}</td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+  
+  <div id="spinner" *ngIf="!buyers">
+    <mat-spinner></mat-spinner> <h4>Loading . . . Please Wait!</h4>
   </div>
 </div>

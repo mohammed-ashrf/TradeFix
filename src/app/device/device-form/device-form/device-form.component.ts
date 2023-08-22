@@ -10,6 +10,8 @@ import { Location } from '@angular/common';
 import { AuthService } from 'src/app/auth/auth.service';
 import { NgForm } from '@angular/forms';
 import { User } from 'src/app/auth/user';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmationModalComponent } from 'src/app/confirmation-modal/confirmation-modal.component';
 @Component({
   selector: 'app-device-form',
   templateUrl: './device-form.component.html',
@@ -99,6 +101,7 @@ export class DeviceFormComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private location: Location,
+    private dialog: MatDialog,
   ) {}
 
   ngOnInit(): void {
@@ -107,7 +110,13 @@ export class DeviceFormComponent implements OnInit {
     this.preLocation = localStorage.getItem('location');
     this.currentUser = localStorage.getItem('user');
     if (this.currentUser) {
+      console.log("current user");
       this.user = JSON.parse(this.currentUser);
+      if (this.user.role == 'receiver') {
+        this.sameEng = true;
+      }else if (this.user.role == 'admin') {
+        this.sameEng = true;
+      };
     }
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
@@ -119,25 +128,24 @@ export class DeviceFormComponent implements OnInit {
         if(device.clientSelection === 'Dealer'){
           this.selectedDealer.name = device.clientName;
         }
+        if (this.user.role == 'technition') {
+          console.log(this.user.username);
+          console.log(this.receive.engineer);
+          this.disabled = true;
+          if (this.receive.repaired) {
+            this.repairdone = true;
+          }
+          if (this.user.username == this.receive.engineer){
+            this.sameEng = true;
+          }
+        }
       });
     }
+
     this.getInformations();
     this.date = this.getDate();
     this.today = this.getDate();
     this.getUsers();
-    if (this.user.role == 'technition') {
-      this.disabled = true;
-      if (this.receive.repaired) {
-        this.repairdone = true;
-      }
-      if (this.user.username == this.receive.engineer){
-        this.sameEng = true;
-      }
-    }else if (this.user.role == 'receiver') {
-      this.sameEng = true;
-    }else {
-      this.sameEng = true;
-    };
     
     if (this.isNew) {
       console.log('isNew');
@@ -182,7 +190,6 @@ export class DeviceFormComponent implements OnInit {
 
   updateTelnum(dealer: Dealer) {
     console.log(dealer);
-    // const selectedDealer = this.dealers.find(dealer => dealer.name === selectedDealerName);
     if (this.receive.clientSelection === 'Dealer') {
       this.receive.telnum = dealer.phone;
     } else {
@@ -214,56 +221,70 @@ export class DeviceFormComponent implements OnInit {
       console.log(this.searchResult);
       this.isSearched = true;
   }
-
-  onSelect(item: Product) {
-    if (this.receive['clientSelection'] === 'User') {
-      this.productPrice = item.userSellingPrice * this.dollarPrice;
-    }else if (this.receive['clientSelection'] === 'Dealer'){
-      this.productPrice = item.deallerSellingPrice * this.dollarPrice;
+// this need to be fixed
+  onSelect(item: Product, quantity:number) {
+    if(item.quantity <= 0) {
+      throw new Error(`Not enough stock for ${item.name}. Available stock: ${item.quantity}`);
+    }else {
+      this.product = {
+        productId: item._id,
+        productName: item.name,
+        productPrice: this.productPrice,
+        quantity: quantity,        
+      }
+      this.receive['products'].push(this.product);
+      item.quantity -= quantity;
+      this.productService.update(item._id, item);
+      console.log(this.product);
+      this.receive.fees += item.userSellingPrice;
+      this.product = { productId: '', productName: '', productPrice: 0, quantity: 0};
+      this.searchTerm = '';
+      this.isSearched = false;
     }
-    this.product = {
-      productId: item._id,
-      productName: item.name,
-      productPrice: this.productPrice,
-    };
-    console.log(this.receive['products']);
-    this.receive['products'].push(this.product);
-    console.log(this.product);
-    this.receive.fees += item.userSellingPrice;
-    this.product = { productId: '', productName: '', productPrice: 0};
-    this.searchTerm = '';
-    this.isSearched = false;
   }
 
   onDelete(key: string) {
-    this.receive['products'].forEach((value,index)=>{
-        if(value.productId == key) {
+    this.receive['products'].forEach((product,index)=>{
+        if(product.productId == key) {
           this.receive['products'].splice(index,1);
-          this.receive.fees -= value.productPrice * this.dollarPrice;
+          this.receive.fees -= (product.productPrice * this.dollarPrice);
+          this.productService.getOne(product.productId).subscribe(
+            (item) => {
+              item.quantity += product.quantity;
+              this.productService.update(item._id, item);
+            }
+          )
         }
     });
   } 
 
+
   goBack(deviceForm: NgForm): void {
     this.notBack = false;
-    if (this.submited){
+    if (this.submited) {
       this.router.navigate([`/${this.preLocation}`]);
-      // this.location.back();
-    }else {
-      if(deviceForm.valid) {
-        if (confirm('Do you want to save?')) {
-          this.submit(deviceForm);
+    } else {
+      if (deviceForm.valid) {
+        this.showConfirmationModal().then(result => {
+          if (result) {
+            this.submit(deviceForm);
+          }
           this.router.navigate([`/${this.preLocation}`]);
-          // this.location.back();
-        }else {
-          this.router.navigate([`/${this.preLocation}`]);
-          // this.location.back();
-        }
-      }else {
+        });
+      } else {
         this.router.navigate([`/${this.preLocation}`]);
-        // this.location.back();
       }
     }
+  }
+
+  async showConfirmationModal(): Promise<boolean> {
+    const dialogRef = this.dialog.open(ConfirmationModalComponent, {
+      width: '400px',
+    });
+
+    return dialogRef.afterClosed().toPromise().then((result: boolean) => {
+      return result || false;
+    });
   }
   
 

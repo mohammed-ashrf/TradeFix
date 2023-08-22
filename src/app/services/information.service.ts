@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { environment } from 'src/environments/environment';
-import { Section, ProductSection,Supplier,Dealer, DollarPrice } from '../shared/information';  
+import { Section, ProductSection,Supplier,Dealer, DollarPrice, SupplierProducts } from '../shared/information';  
 @Injectable({
   providedIn: 'root'
 })
@@ -65,6 +65,14 @@ export class InformationService {
 
   updateSupplier(id: string, supplier: Supplier): Observable<Supplier> {
     return this.http.put<Supplier>(`${this.apiUrl}/suppliers/${id}`, supplier);
+  }
+  updateSupplierProducts(id: string, productId: string, product: SupplierProducts): Observable<Supplier> {
+    const requestBody = {
+      productId: productId,
+      product: product
+    };
+  
+    return this.http.put<Supplier>(`${this.apiUrl}/suppliers/${id}`, requestBody);
   }
 
   deleteSupplier(id: string): Observable<any> {

@@ -73,6 +73,13 @@ export class LoginComponent implements OnInit {
   submit(): void {
     this.loginAttempted = true;
     if (this.email == 'admin' && this.password == adminPassword) {
+      const logedUser = {
+        _id: "1",
+        username: "Admin",
+        email: "admin",
+        role: "admin"
+      };
+      localStorage.setItem("user", JSON.stringify(logedUser));
       this.router.navigate(['/admin']);
     } else {
       this.authService.login(this.email, this.password).subscribe({

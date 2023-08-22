@@ -13,11 +13,11 @@ export class AdminPageComponent implements OnInit {
   allDevices: Receive[] = [];
   DevicesCount!:number;
   query:Query = {
-    repaired : false,
-    paidAdmissionFees : false,
-    delivered : false,
-    returned : false,
-    inProgress : true,
+    repaired: false,
+    paidAdmissionFees: false,
+    delivered: false,
+    returned: false,
+    inProgress: true,
     newDevices: false,
     today: false,
     thisMonth: false,
@@ -25,6 +25,8 @@ export class AdminPageComponent implements OnInit {
     specificYear: '',
     engineer: '',
     priority: '',
+    startDate: '',
+    endDate: ''
   }
   users:any;
   constructor(private deviceService: DeviceService, private router: Router, private authService: AuthService) {}
@@ -62,6 +64,8 @@ export class AdminPageComponent implements OnInit {
       specificYear: this.query.specificYear,
       engineer: this.query.engineer,
       priority: this.query.priority,
+      startDate: this.query.startDate,
+      endDate: this.query.endDate
     };
     const devices = this.deviceService.filterDevices(this.allDevices, filterCriteria);
     this.devices = devices;
@@ -81,6 +85,8 @@ export class AdminPageComponent implements OnInit {
       specificYear: '',
       engineer: '',
       priority: '',
+      startDate: '',
+      endDate: ''
     }
 
     this.filterDevices();

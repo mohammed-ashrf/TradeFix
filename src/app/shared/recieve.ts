@@ -23,6 +23,7 @@ export interface product {
   productId: string,
   productName: string,
   productPrice: number,
+  quantity: number,
 }
 export interface Query {
     repaired: boolean,
@@ -37,6 +38,8 @@ export interface Query {
     specificYear: string,
     engineer: string,
     priority: string,
+    startDate: string,
+    endDate: string
 }
 
 export const ClientSelection = ['User','Dealer'];
