@@ -2,11 +2,18 @@
 <div class="container">
   <div class="Bar">
     <div fxLayout="column">
-      <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="10px">
+      <div class="search" fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="10px">
         <div class="searchBar">
           <button (click)="goBack()" class="back">back</button>
-          <input type="text" lang="ar" dir="auto" [(ngModel)]="searchTerm" placeholder="Search..." (keyup.enter)="search()" (keyup)="search()">
+          <input type="text" lang="ar" dir="auto" [(ngModel)]="searchTerm" placeholder="Search..." (keyup.enter)="search()" (keyup)="search()" autofocus>
           <button (click)="search()" class="search-button">Search</button>
+        </div>
+        <div class="search-properity" dir="rtl">
+          <mat-select placeholder="البحث ب" id="searchProperity" name="searchProperity" [(ngModel)]="searchProperty" required>
+            <mat-option class="option"  value="_id">الكود</mat-option>
+            <mat-option class="option"  value="username">الإسم</mat-option>
+            <mat-option class="option"  value="email">الإيميل</mat-option>
+          </mat-select>
         </div>
       </div>
     </div>
@@ -28,11 +35,7 @@
         <td dir="rtl">{{ user.role }}</td>
         <td>
           <a mat-button [routerLink]="['/register', user._id, 'edit']">تعديل</a>
-          <!-- <a mat-button (click)="onDelete(device._id)">حذف</a> -->
         </td>
-        <!-- <td>
-          <a mat-button [routerLink]="['/devices', product._id, 'edit']">تعديل</a>
-        </td> -->
       </tr>
     </tbody>
     <tbody dir="rtl" [hidden]="isSearched">
@@ -43,11 +46,7 @@
         <td dir="rtl">{{ user.role }}</td>
         <td>
           <a mat-button [routerLink]="['/register', user._id, 'edit']">تعديل</a>
-          <!-- <a mat-button (click)="onDelete(device._id)">حذف</a> -->
         </td>
-        <!-- <td>
-          <a mat-button [routerLink]="['/devices', product._id, 'edit']">تعديل</a>
-        </td> -->
       </tr>
     </tbody>
   </table>

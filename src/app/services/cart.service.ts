@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Product, ProductsQuery } from '../shared/products';
+import { ProductsService } from './products.service';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
@@ -42,7 +43,8 @@ export class CartService {
   private apiUrl = `${environment.apiUrl}/api/sold-carts`;
   private apiUrl2 = `${environment.apiUrl}/api/buyers`;
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient,
+    private productsService: ProductsService) {
     this.loadCartsFromLocalStorage();
   }
 
@@ -108,56 +110,14 @@ export class CartService {
       product.quantitySold += quantity; // update the quantity sold of the product
     }
     cart.totalPrice += price * quantity;
-    // const lastCart = this.carts.slice().reverse().find(c => c.phoneNumber === cart.phoneNumber && c.id !== cart.id);
-    // const pastOwing = lastCart ? lastCart.owing : 0;
-    cart.pastOwing = 0;
-    cart.total = (cart.totalPrice - cart.discount) + cart.pastOwing;
+    const lastCart = this.carts.slice().reverse().find(c => c.phoneNumber === cart.phoneNumber && c.id !== cart.id);
+    const pastOwing = lastCart ? lastCart.owing : 0;
+    // cart.pastOwing = 0;
+    cart.total = (cart.totalPrice - cart.discount) + pastOwing;
     cart.owing = cart.total - cart.paid;
+    this.productsService.update(product._id, product);
     this.saveCartsToLocalStorage();
   }
-
-  // addProduct(cartIndex: number, product: Product, quantity: number, buyerType: string) {
-  //   const cart = this.carts[cartIndex - 1];
-  //   const existingCartItem = cart.products.find(item => item.product._id === product._id);
-  //   let price = product.userSellingPrice;
-
-  //   // Apply pricing rules based on buyer type and quantity
-  //   if (buyerType === 'dealer') {
-  //     price = product.deallerSellingPrice;
-  //     if (quantity >= 3) {
-  //       price = product.deallerSellingPriceAll;
-  //     }
-  //   } else if (buyerType === 'user') {
-  //     price = product.userSellingPrice;
-  //   }
-
-  //   if (existingCartItem) {
-  //     const newQuantity = existingCartItem.quantity + quantity;
-  //     if (newQuantity > existingCartItem.product.quantity) {
-  //       throw new Error(`Not enough stock for ${existingCartItem.product.name}. Available stock: ${existingCartItem.product.quantity}`);
-  //     }
-  //     existingCartItem.quantity = newQuantity;
-  //     existingCartItem.totalPrice += price * quantity;
-  //     existingCartItem.product.quantity -= quantity; // update the current quantity of the product
-  //     existingCartItem.product.quantitySold += quantity; // update the quantity sold of the product
-  //   } else {
-  //     if (quantity > product.quantity) {
-  //       throw new Error(`Not enough stock for ${product.name}. Available stock: ${product.quantity}`);
-  //     }
-  //     const newCartItem: CartItem = {
-  //       product,
-  //       quantity,
-  //       totalPrice: price * quantity
-  //     };
-  //     cart.products.push(newCartItem);
-  //     product.quantity -= quantity;
-  //     product.quantitySold += quantity; // update the quantity sold of the product
-  //   }
-  //   cart.totalPrice += price * quantity;
-  //   cart.total = (cart.totalPrice - cart.discount) + cart.pastOwing;
-  //   cart.owing = cart.total - cart.paid;
-  //   this.saveCartsToLocalStorage();
-  // }
 
   updateProductQuantity(cartIndex: number, productIndex: number, quantity: number, buyerType: string) {
     const cart = this.carts[cartIndex];
@@ -184,6 +144,7 @@ export class CartService {
     const product = cartItem.product;
     product.quantity -= quantity - oldQuantity; // update the current quantity of the product
     product.quantitySold += quantity - oldQuantity; // update the quantity sold of the product
+    this.productsService.update(product._id, product);
     this.saveCartsToLocalStorage();
   }
 
@@ -201,6 +162,7 @@ export class CartService {
     const product = deletedProduct.product;
     product.quantity += deletedProduct.quantity;
     product.quantitySold -= deletedProduct.quantity; // subtract the sold quantity from the quantity sold of the product
+    this.productsService.update(product._id, product);
     this.saveCartsToLocalStorage();
   }
 
@@ -312,56 +274,6 @@ export class CartService {
     }
   }
 
-  // filterSoldCarts(buyers: Buyer[], query: Query): Cart[] {
-  //   const now = new Date();
-  //   const oneWeekAgo = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 7);
-  
-  //   // Filter the buyers and their carts
-  //   return buyers.reduce((filteredCarts: Cart[], buyer: Buyer) => {
-  //     const filteredBuyerCarts = buyer.carts.filter((cart: Cart) => {
-  //       const deviceReceivingDate = new Date(cart.date);
-  //       return (
-  //         (!query.category || cart.products.every((item) => item.product.category === query.category)) &&
-  //         (!query.status || cart.products.every((item) => item.product.status === query.status)) &&
-  //         (!query.payType || cart.payType === query.payType) &&
-  //         (!query.buyerType || cart.buyerType === query.buyerType) &&
-  //         (!query.sellerName || cart.sellerName === query.sellerName) &&
-  //         (!query.today || deviceReceivingDate.toDateString() === now.toDateString()) &&
-  //         (!query.thisMonth || deviceReceivingDate.getMonth() === now.getMonth()) &&
-  //         (!query.thisYear || deviceReceivingDate.getFullYear() === now.getFullYear()) &&
-  //         (!query.specificYear || deviceReceivingDate.getFullYear() === parseInt(query.specificYear))
-  //       );
-  //     });
-  
-  //     // Append the filtered carts of the buyer to the overall filtered carts
-  //     return filteredCarts.concat(filteredBuyerCarts);
-  //   }, []);
-  // }
-  // filterSoldCarts(buyers: Buyer[], query: ProductsQuery): Buyer[] {
-  //   const now = new Date();
-  //   const oneWeekAgo = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 7);
-  
-  //   // Filter the buyers and their carts
-  //   return buyers.filter((buyer: Buyer) => {
-  //     const filteredBuyerCarts = buyer.carts.filter((cart: Cart) => {
-  //       const deviceReceivingDate = new Date(cart.date);
-  //       return (
-  //         (!query.category || cart.products.every((item) => item.product.category === query.category)) &&
-  //         (!query.status || cart.products.every((item) => item.product.status === query.status)) &&
-  //         (!query.payType || cart.payType === query.payType) &&
-  //         (!query.buyerType || cart.buyerType === query.buyerType) &&
-  //         (!query.sellerName || cart.sellerName === query.sellerName) &&
-  //         (!query.today || deviceReceivingDate.toDateString() === now.toDateString()) &&
-  //         (!query.thisMonth || deviceReceivingDate.getMonth() === now.getMonth()) &&
-  //         (!query.thisYear || deviceReceivingDate.getFullYear() === now.getFullYear()) &&
-  //         (!query.specificYear || deviceReceivingDate.getFullYear() === parseInt(query.specificYear))
-  //       );
-  //     });
-  
-  //     // Return the buyer if there are filtered carts for the buyer
-  //     return filteredBuyerCarts.length > 0;
-  //   });
-  // }
   filterSoldCarts(buyers: Buyer[], query: ProductsQuery): Buyer[] {
     const now = new Date();
     const oneWeekAgo = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 7);

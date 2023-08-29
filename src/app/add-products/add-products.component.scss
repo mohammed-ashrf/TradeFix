@@ -249,3 +249,29 @@ mat-option {
   border-width: 2px;
   padding: 10px;
 }
+.searchProduct-Input {
+  max-width: 800px;
+  margin: auto;
+}
+ul {
+  list-style: none;
+  border-radius: 5px;
+  border-style: dashed;
+  border-color: #007bff;
+  margin: 0 auto;
+  margin-top: 10px;
+  padding: 0;
+  max-width: 800px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+li {
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+}
+
+li:hover {
+  background-color: #eee;
+  cursor: pointer;
+}

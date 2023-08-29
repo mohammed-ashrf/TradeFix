@@ -68,6 +68,11 @@
     width: 200px;
   }
 
+  .search{
+    max-width: 1000px;
+    margin: auto;
+  }
+
   .searchBar {
     display: flex;
     max-width: 400px;
@@ -99,6 +104,11 @@
       margin-left: 5px;
     }
   }
+
+}
+
+.search-properity {
+  width: 400px;
 }
 .table {
   width: 100%;
@@ -128,7 +138,7 @@ a {
 a:hover {
   text-decoration: none;
 }
-.table-container {
+#table-container {
   max-height: calc(100vh - 9.4rem - 60px); /* Adjust the height as needed */
   overflow-y: auto;
 }
@@ -145,7 +155,6 @@ thead {
 @media (max-width: 767px) {
   /* adjust the table style for small screens */
   .table {
-    margin-top: 16.5rem;
     font-size: 12px;
   }
 
@@ -158,7 +167,6 @@ thead {
 
 @media screen and (min-width: 767px) and (max-width: 997px){
   .table {
-    margin-top: 17rem;
     font-size: 12px;
   }
   th,

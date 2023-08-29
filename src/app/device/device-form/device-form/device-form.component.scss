@@ -47,6 +47,7 @@ label {
 
 input[type="text"],
 input[type="number"],
+input[type="date"],
 textarea {
     display: block;
     width: 100%;
@@ -245,4 +246,16 @@ mat-option {
   
   li:hover {
     background-color: #eee;
+  }
+
+  .buttons-group{
+    max-width: 800px;
+    margin: auto;
+  }
+
+  .buttons-group button {
+    width: 100%;
+    max-width: 800px;
+    color: #fff;
+    margin-top: 10px;
   }

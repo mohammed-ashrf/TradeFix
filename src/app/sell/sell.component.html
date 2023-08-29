@@ -5,43 +5,51 @@
     <select [(ngModel)]="cartId" (change)="onCartChange(cartId)">
       <option *ngFor="let cart of carts" [value]="cart.id">{{ cart.id }}. {{ cart.cartName }}</option>
     </select>
-    <h4>Buyer Information</h4>
-    <label for="buyerName">{{userType === 'user' ? 'عميل' : 'ديلر'}} </label>
+    <h4 *ngIf="products">Buyer Information</h4>
+    <label for="buyerName" *ngIf="products">{{userType === 'user' ? 'عميل' : 'ديلر'}} </label>
     <input type="text" name="buyerName" [(ngModel)]="buyerName" (ngModelChange)="updateCartInformation()" *ngIf="userType === 'user'">
     <select [(ngModel)]="buyerName" (ngModelChange)="updateCartInformation()" *ngIf="userType === 'dealer'">
       <option *ngFor="let dealer of dealers" [value]="dealer.name">{{dealer.name}}</option>
     </select>
 
-    <label for="buyerPhoneNumber">رقم التليفون </label>
-    <input type="text" name="buyerPhoneNumber" [(ngModel)]="buyerPhoneNumber" (ngModelChange)="updateCartInformation()">
+    <label for="buyerPhoneNumber" *ngIf="products">رقم التليفون </label>
+    <input type="text" name="buyerPhoneNumber" [(ngModel)]="buyerPhoneNumber" (ngModelChange)="updateCartInformation()" *ngIf="products">
 
-    <label for="userType">نوع العميل </label>
-    <select [(ngModel)]="userType" (ngModelChange)="updateCartInformation()">
+    <label for="userType" *ngIf="products">نوع العميل </label>
+    <select [(ngModel)]="userType" (ngModelChange)="updateCartInformation()" *ngIf="products">
       <option value="user">user</option>
       <option value="dealer">dealer</option>
     </select>
 
-    <label for="payType">نوعية الدفع </label>
-    <select [(ngModel)]="payType" (ngModelChange)="updateCartInformation()">
+    <label for="payType" *ngIf="products">نوعية الدفع </label>
+    <select [(ngModel)]="payType" (ngModelChange)="updateCartInformation()" *ngIf="products">
       <option value="cash">كاش</option>
       <option value="vodafone-cash">فودافون كاش</option>
       <option value="bank">بنك</option>
     </select>
 
-    <label for="discount">خصم </label>
-    <input type="number" name="discount" id="discount" [(ngModel)]="discount" (ngModelChange)="updateCartInformation()">
+    <label for="discount" *ngIf="products">خصم </label>
+    <input type="number" name="discount" id="discount" [(ngModel)]="discount" (ngModelChange)="updateCartInformation()" *ngIf="products">
     
-    <label for="paid">كاش</label>
-    <input type="number" name="paid" id="paid" [(ngModel)]="paid" (ngModelChange)="updateCartInformation()">
+    <label for="paid" *ngIf="products">كاش</label>
+    <input type="number" name="paid" id="paid" [(ngModel)]="paid" (ngModelChange)="updateCartInformation()" *ngIf="products">
 
     <button mat-button (click)="createNewCart()" style="margin-top: 10px;">فاتورة جديدة</button>
     <button mat-button (click)="deleteCart()">حذف الفاتورة</button>
 
   </div>
   <div class="cart-items" *ngIf="products">
-    <!-- <button mat-button (click)="goBack()">Back</button> -->
-    <!-- <button mat-button routerLink="/products">المنتجات</button> -->
     <h3>Items in Cart</h3>
+    <div class="search-group">
+      <div class="searchProduct-Input" fxLayout="row" fxLayoutAlign="center center">
+        <input type="text" id="searchProduct" placeholder="البحث عن منتج" name="searchProduct" [(ngModel)]="searchTerm" (keyup)="onSearch()" dir="rtl">
+      </div>
+      <ul *ngIf="isSearched">
+        <li *ngFor="let product of searchResult" (click)="onSelect(product)">
+          {{ product.name }} 
+        </li>
+      </ul>
+    </div>
     <table>
       <thead>
         <tr>
@@ -76,9 +84,8 @@
       <P> اﻵجل: {{owing}}</P>
     </div>
     <button mat-button (click)="updateCartInformation()" style="margin-bottom: 10px;">تحديث المعلومات</button>
-    <button mat-button style="margin-bottom: 10px;" (click)="sellCart()">بيع</button>
     <app-print-layout [cart]="currentCart" [products]="currentCart.products" [dollarPrice]="dollarPrice"></app-print-layout>
-    <button mat-button ngxPrint printSectionId="invoice" [printStyle]="{
+    <button mat-button style="margin-bottom: 10px;" ngxPrint printSectionId="invoice" [printStyle]="{
       p: {'line-height': '75%', 'font-weight': 'bold', 'font-size': '11px'},
       svg: {'width': '100px', 'height': '100px'},
       table: {'border-collapse': 'collapse', 'width': '100%',  'margin-bottom': '20px'},
@@ -93,5 +100,6 @@
       '.branches h3': {'text-align': 'center'},
       '.footer': {'position': 'absolute','bottom': '0','width': '100%','text-align': 'right'}
     }" dir="rtl">طباعة الفاتورة</button>
+    <button mat-button  (click)="sellCart()">بيع</button>
   </div>
 </div>

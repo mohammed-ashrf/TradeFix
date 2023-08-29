@@ -10,11 +10,18 @@ import { Receive,Query } from '../shared/recieve';
 })
 export class DeviceService {
   private apiUrl = `${environment.apiUrl}/api/devices`;
-
+  private apiUrl2 = `${environment.apiUrl}/api/devices-delivered`;
+  private pageSize = 10;
   constructor(private http: HttpClient) {}
 
   getAll(): Observable<Receive[]> {
     return this.http.get<Receive[]>(this.apiUrl);
+  }
+
+  getDevicesByPage(page: number): Observable<Receive[]> {
+    const params = new HttpParams().set('page', String(page)).set('pageSize', String(this.pageSize));
+
+    return this.http.get<Receive[]>(`${this.apiUrl}/bypage`, { params });
   }
 
   filterDevices(devices: Receive[], query: Query): Receive[] {
@@ -62,19 +69,44 @@ export class DeviceService {
   delete(id: string): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${id}`);
   }
-  getDeviceById(id: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}/devices/${id}`);
+
+  getLastDevice() {
+    return this.http.get<Receive>(`${this.apiUrl}-lastdevice`);
   }
 
-  updateDevice(id: string, updates: Receive): Observable<any> {
-    return this.getDeviceById(id).pipe(
-      map(device => ({ ...device, ...updates })),
-      switchMap(updatedDevice => this.http.put(`${this.apiUrl}/devices/${id}`, updatedDevice))
-    );
+  moveDeviceToDelivered(deviceId: string): Observable<any> {
+    const url = `${this.apiUrl}/${deviceId}/move-to-delivered`;
+    return this.http.put(url, {});
   }
 
-  deleteDevice(id: string): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/devices/${id}`);
+  getAllDeliveredDevices(): Observable<Receive[]> {
+    return this.http.get<Receive[]>(this.apiUrl2);
+  }
+
+  getDeliveredDevicesByPage(page: number): Observable<any> {
+    const url = `${this.apiUrl2}/bypage`;
+    const params = new HttpParams().set('page', String(page)).set('pageSize', String(this.pageSize));
+
+    return this.http.get(url, { params });
+  }
+
+  getOneDeliveredDevice(id: string): Observable<Receive> {
+    return this.http.get<Receive>(`${this.apiUrl2}/${id}`);
+  }
+
+  deleteDeliveredDevice(deviceId: string): Observable<any> {
+    const url = `${this.apiUrl2}/${deviceId}`;
+    return this.http.delete(url);
+  }
+
+  updateDeliveredDevice(deviceId: string, updates: any): Observable<any> {
+    const url = `${this.apiUrl2}/${deviceId}`;
+    return this.http.put(url, updates);
+  }
+
+  returnDeviceToDevices(deviceId: string): Observable<any> {
+    const url = `${this.apiUrl2}/${deviceId}/return-to-devices`;
+    return this.http.put(url, {});
   }
   
   downloadReceipt() {

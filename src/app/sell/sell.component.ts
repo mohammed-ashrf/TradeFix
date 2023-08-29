@@ -3,9 +3,10 @@ import { InformationService } from '../services/information.service';
 import { CartService, Cart, CartItem, Buyer } from '../services/cart.service';
 import { Location } from '@angular/common';
 import { Dealer } from '../shared/information';
-import { product } from '../shared/recieve';
+import { Product } from '../shared/products';
 import { MatDialog } from '@angular/material/dialog';
 import { CartDialogComponent } from '../cart-dialog/cart-dialog.component';
+import { ProductsService } from '../services/products.service';
 @Component({
   selector: 'app-sell',
   templateUrl: './sell.component.html',
@@ -32,8 +33,13 @@ export class SellComponent implements OnInit {
   dealers: Dealer[] = [];
   user: any;
   cartName!: string;
+  searchResult!: Product[];
+  searchproducts!: Product[];
+  searchTerm!: string;
+  isSearched!: boolean;
   constructor(private cartService: CartService,
     private informationService: InformationService,
+    private productsService: ProductsService,
     private location: Location,
     private dialog: MatDialog) { }
 
@@ -55,9 +61,18 @@ export class SellComponent implements OnInit {
       this.getTotalPrice();
       this.getBuyers();
       this.getDealers();
+      this.getProducts();
       this.currentCart.sellerName = this.user.username;
       console.log(this.currentCart);
     }
+  }
+
+  getProducts() {
+    this.productsService.getAll().subscribe(
+      (products) => {
+        this.searchproducts = products;
+      }
+    );
   }
 
   createNewCart() {
@@ -198,6 +213,42 @@ export class SellComponent implements OnInit {
         console.log(this.dollarPrice);
       }
     )
+  }
+
+  searchProducts(products: any[], userInput: string) {
+    try {
+      if (typeof userInput !== 'string') {
+        console.log('User input must be a string');
+        throw new Error('User input must be a string');
+      }
+      userInput = userInput.toLowerCase();
+      return products.filter(product => {
+        return product.name.toLowerCase().includes(userInput);
+      });
+    } catch (error) {
+      console.error(error);
+      return [];
+    }
+  }
+  testInput(str: string) {
+    return /[A-Za-z0-9\s\S]+/.test(str);
+  }
+
+  onSearch() {
+      this.searchResult = this.searchProducts(this.searchproducts, this.searchTerm);
+      this.isSearched = true;
+  }
+
+  onSelect(item: Product) {
+    try {
+      this.cartService.addProduct(this.cartId,item,1, 'user');
+      console.log(`Added ${item.name} to cart`);
+      this.isSearched = false;
+      this.searchTerm = '';
+    } catch (e : any) {
+      alert(e.message);
+      console.log(e);
+    }
   }
 
   async sellCart(){

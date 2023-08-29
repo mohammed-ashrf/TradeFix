@@ -168,17 +168,15 @@
         </svg>
       </span>
       <div class="tabs">
-        <a mat-button dir="rtl" routerLinkActive='active' routerLink="/admin" *ngIf="user.role == 'admin'">الرئسية</a>
-        <a mat-button dir="rtl" routerLinkActive='active' routerLink="/devices" *ngIf="user.role == 'receiver'">الرئسية</a>
+        <a mat-button dir="rtl" routerLinkActive='active' routerLink="/admin" *ngIf="user.role == 'admin'">{{user.username}}</a>
+        <a mat-button dir="rtl" routerLinkActive='active' routerLink="/devices" *ngIf="user.role == 'receiver'">{{user.username}}</a>
         <a mat-button dir="rtl" routerLinkActive='active' routerLink="/devices/new">إستلام</a>
-        <a mat-button dir="rtl" routerLinkActive='active' routerLink="/search" *ngIf="user.role == 'receiver'">بحث</a>
-        <a mat-button dir="rtl" routerLinkActive='active' routerLink="/adminSearch" *ngIf="user.role == 'admin'">بحث</a>
+        <a mat-button dir="rtl" routerLinkActive='active' routerLink="/search" *ngIf="user.role == 'receiver' || user.role == 'admin'">بحث</a>
         <a mat-button dir="rtl" routerLinkActive='active' routerLink="/products">المنتجات</a>
         <a mat-button dir="rtl" routerLinkActive='active' routerLink="/sell">فاتورة</a>
       </div>
     </div>
     <div class="right" fxLayout="row" fxLayoutAlign="end center">
         <a mat-button class="Button" id="logout" (click)="logout()">تسجيل الخروج</a>
-        <p>{{user.username}}</p>
     </div>
 </mat-toolbar>

@@ -8,7 +8,7 @@ import { Location } from '@angular/common';
   styleUrls: ['./get-informations.component.scss']
 })
 export class GetInformationsComponent implements OnInit{
-  informationType: string = 'dealers';
+  informationType: string = 'suppliers';
   sections!: Section[];
   productSections!: ProductSection[];
   suppliers!: Supplier[];
@@ -30,16 +30,17 @@ export class GetInformationsComponent implements OnInit{
   owing: number = 0;
   total: number = 0;
   selectedSupplierId: string = '';
+  searchProperty: string = 'name';
   constructor(private informationService: InformationService,
     private location: Location){}
   
   ngOnInit(): void {
     localStorage.setItem('informationType', this.informationType);
-    this.informationService.getDealers().subscribe(
-      (dealers) => {
-        this.dealers = dealers;
+    this.informationService.getSuppliers().subscribe(
+      (suppliers) => {
+        this.suppliers = suppliers;
       }
-    )
+    );
   }
 
   whichInformation() {
@@ -110,24 +111,17 @@ export class GetInformationsComponent implements OnInit{
     this.selectedSupplierId = supplierId;
   }
 
-  searchProducts(products: any[], userInput: any) {
+  searchInformations(informations: any[], userInput: any, searchProperty:string) {
     try {
       if (typeof userInput !== 'string') {
         console.log('User input must be a string');
         throw new Error('User input must be a string');
       }
       userInput = userInput.toLowerCase();
-      return products.filter(product => {
-        for (let key in product) {
-          if (product.hasOwnProperty(key) && product[key]?.toString().toLowerCase().includes(userInput.toLowerCase())) {
-            // this.searchResults.push(device);
-            const value = product[key].toString().toLowerCase();
-            if (value.includes(userInput)) {
-              this.isSearched = true;
-              return true;
-            }
-            break;
-          }
+      return informations.filter(information => {
+        if (information.hasOwnProperty(searchProperty) && information[searchProperty]?.toString().toLowerCase().includes(userInput)) {
+          this.isSearched = true;
+          return true;
         }
         return false;
       });
@@ -143,13 +137,13 @@ export class GetInformationsComponent implements OnInit{
 
   search() {
     if (this.informationType === 'dealers'){
-      this.searchResult = this.searchProducts(this.dealers, this.searchTerm);
+      this.searchResult = this.searchInformations(this.dealers, this.searchTerm, this.searchProperty);
     }else if (this.informationType === 'sections'){
-      this.searchResult = this.searchProducts(this.sections, this.searchTerm);
+      this.searchResult = this.searchInformations(this.sections, this.searchTerm, this.searchProperty);
     }else if (this.informationType === 'product-sections'){
-      this.searchResult = this.searchProducts(this.productSections, this.searchTerm);
+      this.searchResult = this.searchInformations(this.productSections, this.searchTerm, this.searchProperty);
     }else if (this.informationType === 'suppliers') {
-      this.searchResult = this.searchProducts(this.suppliers, this.searchTerm);
+      this.searchResult = this.searchInformations(this.suppliers, this.searchTerm, this.searchProperty);
     }
     console.log(this.searchResult);
   } 

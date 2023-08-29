@@ -2,7 +2,17 @@
 <div class="container">
     <div class="header">
       <button (click)="goBack(productForm)">{{preLocation}}</button>
-      <h2>{{ isNew ? 'منتج جديد' : 'تعديل منتج' }}</h2>
+      <h2>{{ isNew ? 'منتج جديد' : 'تحديث منتج' }}</h2>
+    </div>
+    <div class="form-group">
+      <div class="searchProduct-Input" fxLayout="row" fxLayoutAlign="center center">
+        <input type="text" id="searchProduct" placeholder="البحث عن منتج موجود" name="searchProduct" [(ngModel)]="searchTerm" (keyup)="onSearch()" dir="rtl" autofocus>
+      </div>
+      <ul *ngIf="isSearched">
+        <li *ngFor="let product of searchResult" (click)="onSelect(product)">
+          {{ product.name }} - ({{product.category}})
+        </li>
+      </ul>
     </div>
     <form (ngSubmit)="submit(productForm)" #productForm="ngForm" class="deviceForm" id="form">
       <div class="form-group" fxLayout="row" fxLayoutAlign="center center" dir="rtl">
@@ -71,7 +81,7 @@
         <button mat-button id="add-supplier" (click)="addSupplier()" [disabled]="supplierForm.invalid">إضافة</button>
       </form>
       <div class="form-group" fxLayout="row" fxLayoutAlign="center center" dir="rtl">
-        <mat-select placeholder="القسم" id="category" name="category" [(ngModel)]="product.category" required>
+        <mat-select placeholder="الفئة" id="category" name="category" [(ngModel)]="product.category" required>
             <mat-option class="option" *ngFor="let sec of productSections" [value]="sec.name">{{ sec.name }}</mat-option>
         </mat-select>
         <mat-select placeholder="حالة المنتج" id="status" name="status" [(ngModel)]="product.status" required>
@@ -102,7 +112,7 @@
           <input type="number" id="deallerSellingPriceAll" name="deallerSellingPriceAll" [(ngModel)]="product.deallerSellingPriceAll" required>
         </div>
       </div>
-      <button mat-button class="btn btn-primary" id="submit" type="submit" [disabled]="productForm.invalid">Save</button>
+      <button mat-button class="btn btn-primary" id="submit" type="submit" [disabled]="productForm.invalid">{{ isNew ? 'حفظ المنتج' : 'تحديث المنتج' }}</button>
     </form>
   </div>
   

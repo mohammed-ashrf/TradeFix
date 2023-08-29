@@ -11,6 +11,7 @@ import { User,GUser } from 'src/app/auth/user';
 })
 export class DeviceListComponent implements OnInit {
   devices: Receive[] = [];
+  allFileterdDevices: Receive[] = [];
   allDevices: Receive[] = [];
   query: Query = {
     repaired: false,
@@ -34,6 +35,8 @@ export class DeviceListComponent implements OnInit {
   id:any;
   username:any;
   token:any;
+  page: number = 0;
+  itemToload: number = 0;
   constructor(private deviceService: DeviceService,
     private authService: AuthService,
     private router: Router
@@ -44,12 +47,9 @@ export class DeviceListComponent implements OnInit {
     localStorage.setItem("location", "devices");
     this.currentUser = localStorage.getItem('user'); 
     this.user = JSON.parse(this.currentUser);
-    this.deviceService.getAll().subscribe((devices) => {
-      this.devices = devices.reverse();
-      this.allDevices = this.devices;
-      this.filterDevices();
-    });
+    this.getAllDevices();
     this.getUsers()
+    this.loadOnScroll();
   }
 
   getUsers() {
@@ -60,7 +60,43 @@ export class DeviceListComponent implements OnInit {
     )
   }
 
+  loadOnScroll() {
+    const cardsContainer =  document.getElementById('cards-container');
+    if (cardsContainer) {
+      cardsContainer.addEventListener('scroll', event => {
+        const { scrollHeight, scrollTop, clientHeight } = (event.target as Element);
 
+        if (Math.abs(scrollHeight - clientHeight - scrollTop) < 1) {
+            console.log('scrolled');
+            if (this.allFileterdDevices.length > this.devices.length) {
+              this.itemToload += 10;
+              this.devices = this.allFileterdDevices.slice(0, this.itemToload);
+              console.log(' scrolling loaded');
+            }
+        }
+      });
+    }
+  }
+  getDevicesByPage() {
+    this.deviceService.getDevicesByPage(this.page).subscribe((devices) => {
+      this.devices = devices.reverse();
+      this.allDevices = this.devices;
+      this.filterDevices();
+    });
+  }
+  getAllDevices() {
+    this.deviceService.getAll().subscribe(async (devices) => {
+      console.log(devices);
+      this.devices = devices.reverse();
+      this.allDevices = this.devices;
+      await this.filterDevices();
+    });
+  }
+  loadDevices() {
+    this.itemToload = 10;
+    this.devices = this.allFileterdDevices.slice(0, this.itemToload);
+    console.log('esleLoaded');
+  }
   filterDevices() {
     this.devices = this.allDevices;
     const filterCriteria = {
@@ -80,8 +116,8 @@ export class DeviceListComponent implements OnInit {
       endDate: this.query.endDate
     };
     const devices = this.deviceService.filterDevices(this.allDevices, filterCriteria);
-    this.devices = devices;
-
+    this.allFileterdDevices = devices;
+    this.loadDevices();
   }
 
   resetFilter():void {

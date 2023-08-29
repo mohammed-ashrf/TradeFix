@@ -75,27 +75,37 @@ export class ProductsService {
       'Something bad happened; please try again later.');
   }
 
-  filterProducts(Products: Product[], query: ProductsQuery): Product[] {
-    return Products.filter(product => {
+  filterProducts(products: Product[], query: ProductsQuery): Product[] {
+    return products.filter(product => {
       const now = new Date();
       const oneWeekAgo = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 7);
-      const deviceReceivingDate = new Date(product.suppliers[0].purchasedate);
-  
+      let productReceivingDate;
+      // Check if the suppliers array is not empty and the first supplier has a valid purchase date
+      const hasPurchaseDate = product.suppliers.length > 0 && product.suppliers[0].purchasedate;
+      
+      if (hasPurchaseDate) {
+        productReceivingDate  = new Date(product.suppliers[0].purchasedate);
+      }
       // Check if the device's receiving date is within the specified date range
-      const isWithinDateRange =
-        (!query.startDate || deviceReceivingDate >= new Date(query.startDate)) &&
-        (!query.endDate || deviceReceivingDate <= new Date(query.endDate));
+      if (productReceivingDate) {
+        const isWithinDateRange =
+        (!query.startDate || productReceivingDate >= new Date(query.startDate)) &&
+        (!query.endDate || productReceivingDate <= new Date(query.endDate));
   
-      return (
-        isWithinDateRange &&
-        (!query.category || product.category === query.category) &&
-        (!query.status || product.status === query.status) &&
-        (!query.thisWeek || deviceReceivingDate >= oneWeekAgo) &&
-        (!query.today || deviceReceivingDate.toDateString() === new Date().toDateString()) &&
-        (!query.thisMonth || deviceReceivingDate.getMonth() === new Date().getMonth()) &&
-        (!query.thisYear || deviceReceivingDate.getFullYear() === new Date().getFullYear()) &&
-        (!query.specificYear || deviceReceivingDate.getFullYear() === parseInt(query.specificYear))
-      );
+        return (
+          hasPurchaseDate && // Exclude if suppliers[0].purchasedate is empty
+          isWithinDateRange &&
+          (!query.category || product.category === query.category) &&
+          (!query.status || product.status === query.status) &&
+          (!query.thisWeek || productReceivingDate >= oneWeekAgo) &&
+          (!query.today || productReceivingDate.toDateString() === new Date().toDateString()) &&
+          (!query.thisMonth || productReceivingDate.getMonth() === new Date().getMonth()) &&
+          (!query.thisYear || productReceivingDate.getFullYear() === new Date().getFullYear()) &&
+          (!query.specificYear || productReceivingDate.getFullYear() === parseInt(query.specificYear))
+        );
+      } else {
+        return false;
+      }
     });
   }
 }

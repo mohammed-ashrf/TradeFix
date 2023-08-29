@@ -9,6 +9,8 @@ export interface Receive {
   products: product[];
   notes: string;
   fees: number;
+  cash: number;
+  owing: number;
   finished: boolean;
   repaired: boolean;
   paidAdmissionFees: boolean;
@@ -17,6 +19,7 @@ export interface Receive {
   engineer: string;
   priority: string;
   receivingDate: string;
+  toDeliverDate: string;
   _id: string;
 }
 export interface product {

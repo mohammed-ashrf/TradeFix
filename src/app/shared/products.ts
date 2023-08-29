@@ -1,4 +1,3 @@
-import { Supplier } from "./information";
 export interface Product {
     _id: string;
     name: string,

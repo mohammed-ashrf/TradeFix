@@ -12,6 +12,8 @@ export class AdminPageComponent implements OnInit {
   devices: Receive[] = [];
   allDevices: Receive[] = [];
   DevicesCount!:number;
+  filteredDevicesCount !: number;
+  allFileterdDevices: Receive[] = [];
   query:Query = {
     repaired: false,
     paidAdmissionFees: false,
@@ -20,8 +22,8 @@ export class AdminPageComponent implements OnInit {
     inProgress: true,
     newDevices: false,
     today: false,
-    thisMonth: false,
-    thisYear: true,
+    thisMonth: true,
+    thisYear: false,
     specificYear: '',
     engineer: '',
     priority: '',
@@ -29,17 +31,30 @@ export class AdminPageComponent implements OnInit {
     endDate: ''
   }
   users:any;
+  page: number = 0;
+  itemToload: number = 0;
   constructor(private deviceService: DeviceService, private router: Router, private authService: AuthService) {}
 
   ngOnInit(): void {
     localStorage.setItem("location", "admin");
-    this.deviceService.getAll().subscribe((devices) => {
-      this.devices = devices.reverse();
-      this.allDevices = this.devices;
-      this.filterDevices();
-      this.DevicesCount = devices.length;
-    });
+    this.getAllDevices();
     this.getUsers();
+    const cardsContainer =  document.getElementById('cards-container');
+    if (cardsContainer) {
+      cardsContainer.addEventListener('scroll', event => {
+        const { scrollHeight, scrollTop, clientHeight } = (event.target as Element);
+
+        if (Math.abs(scrollHeight - clientHeight - scrollTop) < 1) {
+            console.log('scrolled');
+            if (this.allFileterdDevices.length > this.devices.length) {
+              this.itemToload += 10;
+              this.devices = this.allFileterdDevices.slice(0, this.itemToload);
+              console.log(' scrolling loaded');
+            }
+        }
+      });
+    }
+
   }
   getUsers() {
     this.authService.getUsers().subscribe(
@@ -47,6 +62,30 @@ export class AdminPageComponent implements OnInit {
         this.users = users;
       }
     )
+  }
+
+  getDevicesByPage() {
+    this.deviceService.getDevicesByPage(this.page).subscribe((devices) => {
+      this.devices = devices.reverse();
+      this.allDevices = this.devices;
+      this.filterDevices();
+    });
+  }
+
+  getAllDevices() {
+    this.deviceService.getAll().subscribe(async (devices) => {
+      console.log(devices);
+      this.devices = devices.reverse();
+      this.allDevices = this.devices;
+      await this.filterDevices();
+      this.DevicesCount = this.allDevices.length;
+    });
+  }
+
+  loadDevices() {
+      this.itemToload = 10;
+      this.devices = this.allFileterdDevices.slice(0, this.itemToload);
+      console.log('esleLoaded');
   }
 
   filterDevices() {
@@ -68,7 +107,9 @@ export class AdminPageComponent implements OnInit {
       endDate: this.query.endDate
     };
     const devices = this.deviceService.filterDevices(this.allDevices, filterCriteria);
-    this.devices = devices;
+    this.filteredDevicesCount = devices.length;
+    this.allFileterdDevices = devices;
+    this.loadDevices();
   }
 
   resetFilter():void {
@@ -103,10 +144,5 @@ export class AdminPageComponent implements OnInit {
 
   isPriorityHigh(priority: string): boolean {
     return priority === 'high';
-  }
-
-  logout(){
-    this.authService.logout();
-    this.router.navigate(['/']);
   }
 }

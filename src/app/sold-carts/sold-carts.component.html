@@ -39,17 +39,24 @@
           <mat-option class="option"  value="bank">بنك</mat-option>
         </mat-select>
       </div>
-      <div class="query" dir="ltr">
-        <mat-select placeholder="نوع العميل" id="buyerType" name="buyerType" [(ngModel)]="cartsQuery.buyerType" (selectionChange)="filterCarts()" required>
-          <mat-option class="option"  value="user">User</mat-option>
-          <mat-option class="option"  value="dealer">Dealer</mat-option>
+      <div class="query" dir="rtl">
+        <mat-select placeholder="المشتري" id="buyerType" name="buyerType" [(ngModel)]="cartsQuery.buyerType" (selectionChange)="filterCarts()" required>
+          <mat-option class="option"  value="user">عميل</mat-option>
+          <mat-option class="option"  value="dealer">تاجر</mat-option>
+        </mat-select>
+      </div>
+      <div class="search-properity" dir="rtl">
+        <mat-select placeholder="البحث ب" id="searchProperity" name="searchProperity" [(ngModel)]="searchProperty" required>
+          <mat-option class="option"  value="_id">الكود</mat-option>
+          <mat-option class="option"  value="buyerName">اسم المشتري</mat-option>
+          <mat-option class="option"  value="phoneNumber">رقم التليفون</mat-option>
         </mat-select>
       </div>
     </div>
     <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="10px">
       <div class="searchBar">
         <button mat-button (click)="goBack()" class="back">back</button>
-        <input type="text" lang="ar" dir="auto" [(ngModel)]="searchTerm" placeholder="Search..." (keyup.enter)="search()" (keyup)="search()">
+        <input type="text" lang="ar" dir="auto" [(ngModel)]="searchTerm" placeholder="Search..." (keyup.enter)="search()" (keyup)="search()" autofocus>
         <button (click)="search()">Search</button>
         <!-- <button (click)="filterDevices()" class="Button" id="filterButton">Filter</button> -->
         <button (click)="resetFilter()" class="Button" id="resetButton">reset</button>
@@ -64,7 +71,6 @@
         <tr>
           <th>إسم المشتري</th>
           <th>رقم التليفون</th>
-          <th>اسم الفاتورة</th>
           <th>قيمة الفاتورة</th>
           <th>خصم</th>
           <th>إجمالي</th>
@@ -77,7 +83,6 @@
           <tr *ngFor="let cart of buyer.carts">
             <td>{{ buyer.buyerName }}</td>
             <td>{{ buyer.phoneNumber }}</td>
-            <td>{{ cart.cartName }}</td>
             <td>{{ cart.totalPrice }}</td>
             <td>{{ cart.discount }}</td>
             <td>{{ cart.total }}</td>
@@ -91,7 +96,6 @@
           <tr *ngFor="let cart of buyer.carts">
             <td>{{ buyer.buyerName }}</td>
             <td>{{ buyer.phoneNumber }}</td>
-            <td>{{ cart.cartName }}</td>
             <td>{{ cart.totalPrice }}</td>
             <td>{{ cart.discount }}</td>
             <td>{{ cart.total }}</td>

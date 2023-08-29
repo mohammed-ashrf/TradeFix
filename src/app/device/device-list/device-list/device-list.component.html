@@ -73,7 +73,7 @@
     <button (click)="resetFilter()" class="Button" id="resetButton">reset</button>
   </div>
 
-  <div class="cards-container" fxLayout="column" fxLayoutGap="20px" >
+  <div id="cards-container" fxLayout="column" fxLayoutGap="20px">
     <mat-card class="deviceCard" *ngFor="let device of devices" [class.high-priority]="isPriorityHigh(device.priority)">
       <mat-card-content fxLayout="column" fxLayoutGap="10px">
         <div fxLayout="column" fxLayoutAlign="center">

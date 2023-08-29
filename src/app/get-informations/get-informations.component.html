@@ -2,10 +2,19 @@
 <div class="container">
     <div class="controller">
       <button (click)="goBack()">back</button>
-      <input *ngIf="notHidden" type="text" class="input" lang="ar" dir="auto" [(ngModel)]="searchTerm" placeholder="Search..." (keyup.enter)="search()" (keyup)="search()">
+      <div class="search" fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="10px">
+        <input *ngIf="notHidden" type="text" class="input" lang="ar" dir="auto" [(ngModel)]="searchTerm" placeholder="Search..." (keyup.enter)="search()" (keyup)="search()" autofocus>
+        <div class="search-properity" dir="rtl">
+          <mat-select placeholder="البحث ب" id="searchProperity" name="searchProperity" [(ngModel)]="searchProperty" required>
+            <mat-option class="option"  value="_id">الكود</mat-option>
+            <mat-option class="option"  value="name">الإسم</mat-option>
+            <mat-option class="option"  value="phone" *ngIf="informationType === 'suppliers' || informationType === 'dealers'">رقم التليفون</mat-option>
+          </mat-select>
+        </div>
+      </div>
       <select name="informationType" id="informationType" [(ngModel)]="informationType" (ngModelChange)="whichInformation()">
           <option value="sections">الأقسام</option>
-          <option value="product-sections">أقسام المنتجات</option>
+          <option value="product-sections">فئات المنتجات</option>
           <option value="suppliers">الموردين</option>
           <option value="dealers">التجار</option>
           <option value="dollarPrice">سعر الدولار</option>
@@ -59,7 +68,7 @@
                 </mat-card-content>
               </mat-card>
           </div>
-      </div>
+        </div>
         <div class="suppliers" *ngIf="informationType === 'suppliers'">
             <div class="cards-container" fxLayout="column" fxLayoutGap="20px" >
                 <mat-card class="deviceCard" *ngFor="let supplier of suppliers">

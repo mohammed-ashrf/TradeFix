@@ -1,5 +1,6 @@
 .container {
   margin-top: 60px;
+  max-width: 100vw;
 }
 .Bar {
     display: flex;
@@ -149,11 +150,13 @@
   .table-container {
     max-height: calc(100vh - 9.4rem - 60px); /* Adjust the height as needed */
     overflow-y: auto;
+    max-width: 100vw;
     // margin-top: 9.4rem; /* Adjust the top margin to accommodate the fixed header */
   }
   tbody {
     max-height: 60vh;
     overflow-y: auto;
+    max-width: 100vw;
   }
   thead {
     position: sticky;
@@ -167,7 +170,6 @@
   @media (max-width: 767px) {
     /* adjust the table style for small screens */
     .table {
-      margin-top: 16.5rem;
       font-size: 12px;
     }
   
@@ -180,7 +182,6 @@
   
   @media screen and (min-width: 767px) and (max-width: 997px){
     .table {
-      margin-top: 17rem;
       font-size: 12px;
     }
     th,

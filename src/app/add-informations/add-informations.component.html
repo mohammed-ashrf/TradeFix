@@ -3,8 +3,8 @@
     <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="10px">
         <button (click)="goBack()" class="btn btn-primary">back</button>
         <select name="informationType" id="informationType" [(ngModel)]="informationType">
-            <option value="sections">الأقسام</option>
-            <option value="product-sections">أقسام المنتجات</option>
+            <option value="sections">أقسام الصيانة</option>
+            <option value="product-sections">فئات المنتجات</option>
             <option value="suppliers">الموردين</option>
             <option value="dealers">التجار</option>
             <option value="dollarPrice">سعر الدولار</option>
@@ -33,7 +33,7 @@
         <form (ngSubmit)="submitProductSection(ProductSectionForm)" #ProductSectionForm="ngForm" dir="rtl" class="form">
             <div fxLayout="row" fxLayoutAlign="space-between center" dir="rtl">
                 <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
-                    <input type="text" id="productSectionName" placeholder="اسم القسم" name="productSectionName" [(ngModel)]="productSection.name" required>
+                    <input type="text" id="productSectionName" placeholder="اسم الفئة" name="productSectionName" [(ngModel)]="productSection.name" required>
                 </div>
             </div>
             <div class="form-group" fxLayout="row" fxLayoutAlign="center center">

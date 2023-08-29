@@ -12,6 +12,7 @@ import { NgForm } from '@angular/forms';
 import { User } from 'src/app/auth/user';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationModalComponent } from 'src/app/confirmation-modal/confirmation-modal.component';
+import { GetdateService } from 'src/app/services/getdate.service';
 @Component({
   selector: 'app-device-form',
   templateUrl: './device-form.component.html',
@@ -40,6 +41,9 @@ export class DeviceFormComponent implements OnInit {
     receivingDate: '',
     products: [],
     _id: '',
+    cash: 0,
+    owing: 0,
+    toDeliverDate: ''
   };
   print: Receive = {
     clientName: '',
@@ -61,6 +65,9 @@ export class DeviceFormComponent implements OnInit {
     priority: 'normal',
     receivingDate: '',
     _id: '',
+    cash: 0,
+    owing: 0,
+    toDeliverDate: ''
   };
   products: Product[] = [];
   submited: boolean = false;
@@ -93,6 +100,10 @@ export class DeviceFormComponent implements OnInit {
   dollarPrice: number = 1;
   selectedDealer!: Dealer;
   isDealer!: boolean;
+  isDevicesRoute: boolean = false;
+  currentDate!: string;
+  isDealersSearched: boolean = false;
+  dealerSearchResult: Dealer[] = [];
   constructor(
     private deviceService: DeviceService,
     private productService: ProductsService,
@@ -102,6 +113,7 @@ export class DeviceFormComponent implements OnInit {
     private route: ActivatedRoute,
     private location: Location,
     private dialog: MatDialog,
+    private dateService: GetdateService,
   ) {}
 
   ngOnInit(): void {
@@ -117,35 +129,67 @@ export class DeviceFormComponent implements OnInit {
       }else if (this.user.role == 'admin') {
         this.sameEng = true;
       };
-    }
+    }    
+    this.route.url.subscribe((routes) => {
+      // Get the current route
+      const currentRoute = routes[0];
+      // Check if the current route is the `devices` route
+      if (currentRoute.path === 'devices') {
+        this.isDevicesRoute = true;
+      }
+    });
+
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.isNew = false;
-      this.deviceService.getOne(id).subscribe((device) => {
-        this.receive = device;
-        this.recieptId = device._id.slice(-7);
-        this.date = device.receivingDate;
-        if(device.clientSelection === 'Dealer'){
-          this.selectedDealer.name = device.clientName;
-        }
-        if (this.user.role == 'technition') {
-          console.log(this.user.username);
-          console.log(this.receive.engineer);
-          this.disabled = true;
-          if (this.receive.repaired) {
-            this.repairdone = true;
+      if (this.isDevicesRoute) {
+        this.deviceService.getOne(id).subscribe((device) => {
+          this.receive = device;
+          this.recieptId = device._id.slice(-7);
+          this.date = device.receivingDate;
+          if(device.clientSelection === 'Dealer'){
+            this.selectedDealer.name = device.clientName;
           }
-          if (this.user.username == this.receive.engineer){
-            this.sameEng = true;
+          if (this.user.role == 'technition') {
+            console.log(this.user.username);
+            console.log(this.receive.engineer);
+            this.disabled = true;
+            if (this.receive.repaired) {
+              this.repairdone = true;
+            }
+            if (this.user.username == this.receive.engineer){
+              this.sameEng = true;
+            }
           }
-        }
-      });
+        });
+      }else {
+        this.deviceService.getOneDeliveredDevice(id).subscribe((device) => {
+          this.receive = device;
+          this.recieptId = device._id.slice(-7);
+          this.date = device.receivingDate;
+          if(device.clientSelection === 'Dealer'){
+            this.selectedDealer.name = device.clientName;
+          }
+          if (this.user.role == 'technition') {
+            console.log(this.user.username);
+            console.log(this.receive.engineer);
+            this.disabled = true;
+            if (this.receive.repaired) {
+              this.repairdone = true;
+            }
+            if (this.user.username == this.receive.engineer){
+              this.sameEng = true;
+            }
+          }
+        });
+      }
+      
     }
 
     this.getInformations();
-    this.date = this.getDate();
-    this.today = this.getDate();
     this.getUsers();
+    this.getDate();
+
     
     if (this.isNew) {
       console.log('isNew');
@@ -159,6 +203,7 @@ export class DeviceFormComponent implements OnInit {
       }
     );
   }
+
 
   getInformations() {
     this.informationService.getSections().subscribe(
@@ -220,6 +265,16 @@ export class DeviceFormComponent implements OnInit {
       this.searchResult = this.searchProducts(this.products, this.searchTerm);
       console.log(this.searchResult);
       this.isSearched = true;
+  }
+  searchDealers() {
+    this.dealerSearchResult = this.searchProducts(this.dealers, this.receive.clientName);
+    this.isDealersSearched = true;
+  }
+
+  onSelectDealer(item: Dealer) {
+    this.receive.clientName = item.name;
+    this.receive.telnum = item.phone;
+    this.isDealersSearched = false;
   }
 // this need to be fixed
   onSelect(item: Product, quantity:number) {
@@ -286,15 +341,31 @@ export class DeviceFormComponent implements OnInit {
       return result || false;
     });
   }
-  
-
 
   getDate() {
-    const date = new Date();
-    const year = date.getFullYear();
-    const month = (date.getMonth() + 1).toString().padStart(2, '0');
-    const day = date.getDate().toString().padStart(2, '0');
-    return `${year}-${month}-${day}`;
+    this.dateService.getCurrentDate()
+      .then(async (date) => {
+        await this.CheckDate(date);
+      })
+      .catch(error => {
+        console.error('Error retrieving current date:', error);
+      });
+  }
+
+  CheckDate(date: string) {
+    this.deviceService.getLastDevice().subscribe(
+      (lastDevice) => {
+        const lastDeviceDate = new Date(lastDevice.receivingDate);
+        const currentDate = new Date(date);
+        if (currentDate >= lastDeviceDate) {
+          this.currentDate = date;
+          this.date = date;
+          this.today = date;
+        }else {
+          window.alert("Your date is not right, fix it or connect to the internet");
+        }
+      }
+    )
   }
 
   determinFees() {
@@ -321,9 +392,51 @@ export class DeviceFormComponent implements OnInit {
       }
     }
   }
+
+  moveToDelivered(deviceId: string): void {
+    this.deviceService.moveDeviceToDelivered(deviceId).subscribe(
+      () => {
+        // Success: Device moved to delivered devices
+        console.log('delivered');
+        if (this.notBack){
+          this.location.back();
+         }
+      },
+      (error) => {
+        // Error handling
+        console.log(error);
+      }
+    );
+  }
+
+  updateDeliveredDevice(deviceId: string, updates: any): void {
+    this.deviceService.updateDeliveredDevice(deviceId, updates).subscribe(
+      (updatedDevice) => {
+        // Success: Delivered device updated
+        console.log(updatedDevice);
+      },
+      (error) => {
+        // Error handling
+        console.log(error);
+      }
+    );
+  }
+
+  returnDeliveredToDevices(deviceId: string): void {
+    this.deviceService.returnDeviceToDevices(deviceId).subscribe(
+      () => {
+        // Success: Device returned to devices
+        console.log('returned');
+      },
+      (error) => {
+        // Error handling
+        console.log(error);
+      }
+    );
+  }
   submit(form : NgForm): void {
     if (this.isNew) {
-      this.receive.receivingDate = this.getDate();
+      this.receive.receivingDate = this.currentDate;
       this.updating = false;
       this.deviceService.create(this.receive).subscribe(
         (data) => {
@@ -350,9 +463,7 @@ export class DeviceFormComponent implements OnInit {
       this.deviceService.update(this.receive._id, this.receive).subscribe(
         () => {
           // this.submited = true;
-          if (this.notBack){
-           this.location.back();
-          }
+          console.log("updated");
         },
         (error) => {
           console.error('Error updating device:', JSON.stringify(error));

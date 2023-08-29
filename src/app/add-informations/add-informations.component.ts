@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { Section, ProductSection, Supplier,Dealer, DollarPrice } from '../shared/information';
+import { Section, ProductSection, Supplier,Dealer, DollarPrice,SupplierProducts } from '../shared/information';
 import { ActivatedRoute } from '@angular/router';
 import { InformationService } from '../services/information.service';
 import { Location } from '@angular/common';
@@ -24,6 +24,9 @@ export class AddInformationsComponent implements OnInit {
     description: '',
     _id: ''
   }
+
+  supplierProducts: SupplierProducts[] = [];
+
   supplier: Supplier = {
     name: '',
     companyName: '',
@@ -32,6 +35,7 @@ export class AddInformationsComponent implements OnInit {
     products: [],
     _id: '',
   }
+
 
   dealer: Dealer = {
     name:'',
@@ -165,6 +169,7 @@ export class AddInformationsComponent implements OnInit {
 
   submintSupplier(form: NgForm) {
     if (this.isNew) {
+      this.supplier.products = this.supplierProducts;
       this.informationService.addSupplier(this.supplier).subscribe(
         (supplier) => {
           let message = `Success saving supplier ${supplier.name}.`;

@@ -16,8 +16,7 @@ export class GetUsersComponent implements OnInit{
   product: any;
   quantity = 1;
   user: any;
-  selectedCartId: number = 0;
-  
+  searchProperty: string = 'username';
   constructor(private authService: AuthService,
     private router: Router,
     private location: Location) { }
@@ -33,24 +32,18 @@ export class GetUsersComponent implements OnInit{
   goBack() {
     this.location.back();
   }
-  searchUsers(products: any[], userInput: any) {
+
+  searchUsers(users: any[], userInput: any, searchProperty: string) {
     try {
       if (typeof userInput !== 'string') {
         console.log('User input must be a string');
         throw new Error('User input must be a string');
       }
       userInput = userInput.toLowerCase();
-      return products.filter(product => {
-        for (let key in product) {
-          if (product.hasOwnProperty(key) && product[key]?.toString().toLowerCase().includes(userInput.toLowerCase())) {
-            // this.searchResults.push(device);
-            const value = product[key].toString().toLowerCase();
-            if (value.includes(userInput)) {
-              this.isSearched = true;
-              return true;
-            }
-            break;
-          }
+      return users.filter(user => {
+        if (user.hasOwnProperty(searchProperty) && user[searchProperty]?.toString().toLowerCase().includes(userInput)) {
+          this.isSearched = true;
+          return true;
         }
         return false;
       });
@@ -65,14 +58,6 @@ export class GetUsersComponent implements OnInit{
   }
 
   search() {
-      this.searchResult = this.searchUsers(this.users, this.searchTerm);
+      this.searchResult = this.searchUsers(this.users, this.searchTerm, this.searchProperty);
   }
-
-  // onDelete(id: string): void {
-  //   if (confirm('Are you sure you want to delete this device?')) {
-  //     this.authService.delete(id).subscribe(() => {
-  //       this.devices = this.devices.filter((device) => device._id !== id);
-  //     });
-  //   }
-  // }
 }

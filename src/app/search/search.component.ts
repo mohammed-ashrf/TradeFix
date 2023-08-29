@@ -13,6 +13,7 @@ export class SearchComponent implements OnInit {
   searchTerm!: any;
   searchResults!: any[];
   devices :Receive[] = [];
+  allFilteredDevices: Receive[] =[];
   isSearched:boolean = false;
   searchResult!:any[];
   allDevices: Receive[] = [];
@@ -24,7 +25,7 @@ export class SearchComponent implements OnInit {
     inProgress: false,
     newDevices: false,
     today: false,
-    thisMonth: false,
+    thisMonth: true,
     thisYear: false,
     specificYear: '',
     engineer: '',
@@ -34,6 +35,10 @@ export class SearchComponent implements OnInit {
   }
   users:any;
   user: any;
+  currentUser!: any;
+  searchProperty: string = 'clientName';
+  itemToload: number = 0;
+  searchingFor: string = 'devices';
   constructor(private deviceService: DeviceService,
     private authService: AuthService,
     private location: Location,
@@ -42,13 +47,54 @@ export class SearchComponent implements OnInit {
   ngOnInit() {
     localStorage.setItem("location", "search");
     this.user = localStorage.getItem('user');
-    console.log(this.user);
+    if (this.user) {
+      this.currentUser = JSON.parse(this.user);
+    }
+    this.getAllDevices();
+    this.getUsers();
+    this.loadDevicessOnScroll();
+  }
+  loadDevicessOnScroll() {
+    const cardsContainer =  document.getElementById('table-container');
+    if (cardsContainer) {
+      cardsContainer.addEventListener('scroll', event => {
+        const { scrollHeight, scrollTop, clientHeight } = (event.target as Element);
+
+        if (Math.abs(scrollHeight - clientHeight - scrollTop) < 1) {
+            console.log('scrolled');
+            if (this.allFilteredDevices.length > this.searchResult.length) {
+              this.itemToload += 10;
+              this.searchResult = this.allFilteredDevices.slice(0, this.itemToload);
+              console.log(' scrolling loaded');
+            }
+        }
+      });
+    }
+  }
+
+  onChange() {
+    this.isSearched = false;
+    if(this.searchingFor === "devices") {
+      this.getAllDevices();
+    }else if (this.searchingFor === "delivered") {
+      this.getDeliveredDevies();
+    }
+  }
+
+  getAllDevices() {
     this.deviceService.getAll().subscribe((devices) => {
       this.devices = devices.reverse();
       this.allDevices = this.devices;
       console.log(devices);
     });
-    // this.getUsers();
+  }
+
+  getDeliveredDevies(){
+    this.deviceService.getAllDeliveredDevices().subscribe((devices) => {
+      this.devices = devices.reverse();
+      this.allDevices = this.devices;
+      console.log(devices);
+    });
   }
 
   goBack() {
@@ -57,11 +103,13 @@ export class SearchComponent implements OnInit {
       this.router.navigate(['/devices']);
     } else if (user.role === 'technition') {
       this.router.navigate(['/userDashboard']);
-    }else {
-      this.location.back()
+    }else if (user.role === 'admin') {
+      this.router.navigate(['/admin']);
     }
   }
-  searchDevice(devices: any[], userInput: any) {
+
+
+  searchDevice(devices:  any[], userInput: any, searchProperty: string) {
     try {
       if (typeof userInput !== 'string') {
         console.log('User input must be a string');
@@ -69,16 +117,9 @@ export class SearchComponent implements OnInit {
       }
       userInput = userInput.toLowerCase();
       return devices.filter(device => {
-        for (let key in device) {
-          if (device.hasOwnProperty(key) && device[key]?.toString().toLowerCase().includes(userInput.toLowerCase())) {
-            // this.searchResults.push(device);
-            const value = device[key].toString().toLowerCase();
-            if (value.includes(userInput)) {
-              this.isSearched = true;
-              return true;
-            }
-            break;
-          }
+        if (device.hasOwnProperty(searchProperty) && device[searchProperty]?.toString().toLowerCase().includes(userInput)) {
+          this.isSearched = true;
+          return true;
         }
         return false;
       });
@@ -91,25 +132,18 @@ export class SearchComponent implements OnInit {
   testInput(str: string) {
     return /[A-Za-z0-9\s\S]+/.test(str);
   }
+  loadDevices() {
+    this.itemToload = 10;
+    this.searchResult = this.allFilteredDevices.slice(0, this.itemToload);
+    console.log('esleLoaded');
+  }
 
   search() {
-      this.searchResult = this.searchDevice(this.devices, this.searchTerm);
-      console.log(this.searchResult);
+    this.searchResult = this.searchDevice(this.devices, this.searchTerm, this.searchProperty);
+    console.log(this.searchResult.length);
+    this.allFilteredDevices = this.searchResult;
+    this.loadDevices();
   }
-  // resetSearch(){
-  //   this.deviceService.getAll().subscribe((devices) => {
-  //     this.devices = devices.reverse();
-  //     this.allDevices = this.devices;
-  //     console.log(devices);
-  //   });
-  // }
-  // getUsers() {
-  //   this.authService.getUsers().subscribe(
-  //     (users) => {
-  //       this.users = users;
-  //     }
-  //   )
-  // }
 
   filterDevices() {
     this.devices = this.allDevices;
@@ -129,8 +163,62 @@ export class SearchComponent implements OnInit {
       startDate: this.query.startDate,
       endDate: this.query.endDate
     };
-    const devices = this.deviceService.filterDevices(this.allDevices, filterCriteria);
-    this.devices = devices;
-    this.searchResult = devices;
+    const base = {
+      repaired: false,
+      paidAdmissionFees: false,
+      delivered: false,
+      returned: false,
+      inProgress: false,
+      newDevices: false,
+      today: false,
+      thisMonth: false,
+      thisYear: false,
+      specificYear: '',
+      engineer: '',
+      priority: '',
+      startDate: '',
+      endDate: ''
+    };
+    if(this.currentUser.role == 'technition') {
+      filterCriteria.engineer = this.currentUser.username;
+      base.engineer = this.currentUser.username;
+    }
+    if(filterCriteria ===  base) {
+      this.devices = this.allDevices;
+    }
+    else {
+      const devices = this.deviceService.filterDevices(this.allDevices, filterCriteria);
+      this.devices = devices;
+      this.searchResult = devices;
+    }
+  }
+
+  getUsers() {
+    this.authService.getUsers().subscribe(
+      (users) => {
+        this.users = users;
+      }
+    )
+  }
+
+  onDelete(id: string): void {
+    if (confirm('Are you sure you want to delete this device?')) {
+      this.deviceService.delete(id).subscribe(() => {
+        this.devices = this.devices.filter((device) => device._id !== id);
+      });
+    }
+  }
+
+  deleteDeliveredDevice(deviceId: string): void {
+    this.deviceService.deleteDeliveredDevice(deviceId).subscribe(
+      () => {
+        // Success: Delivered device deleted
+        console.log('delivered deleted');
+      },
+      (error) => {
+        // Error handling
+        console.log(error);
+      }
+    );
   }
 }

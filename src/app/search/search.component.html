@@ -51,7 +51,7 @@
           <label for="endDate">إلي:</label>
           <input type="date" id="endDate" [(ngModel)]="query.endDate" placeholder="تاريخ الانتهاء" lang="ar" (change)="filterDevices()">
         </div>
-        <div class="query" dir="rtl">
+        <div class="query" dir="rtl" *ngIf="currentUser.role == 'admin'">
           <mat-select placeholder="الموظف" id="eng" name="eng" [(ngModel)]="query.engineer" (selectionChange)="filterDevices()" required>
               <mat-option class="option" *ngFor="let eng of users" [value]="eng.username">{{ eng.username }}</mat-option>
           </mat-select>
@@ -63,21 +63,33 @@
           </mat-select>
         </div>
       </div>
-      <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="10px">
+      <div class="search" fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="10px">
         <div class="searchBar">
           <button mat-button (click)="goBack()" class="back">back</button>
-          <input type="text" lang="ar" dir="auto" [(ngModel)]="searchTerm" placeholder="Search..." (keyup.enter)="search()" (keyup)="search()">
+          <input type="text" lang="ar" dir="auto" [(ngModel)]="searchTerm" placeholder="Search..." (keyup.enter)="search()" (keyup)="search()" autofocus>
           <button (click)="search()">Search</button>
           <!-- <button (click)="resetSearch()">Reset</button> -->
         </div>
+        <div class="search-properity" dir="rtl" fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="10px">
+          <mat-select placeholder="البحث عن" id="searchFor" name="searchFor" [(ngModel)]="searchingFor" (ngModelChange)="onChange()">
+            <mat-option class="option"  value="devices">الموجود</mat-option>
+            <mat-option class="option"  value="delivered">تم تسليمة</mat-option>
+          </mat-select>
+
+          <mat-select placeholder="البحث ب" id="searchProperity" name="searchProperity" [(ngModel)]="searchProperty">
+            <mat-option class="option"  value="_id">الكود</mat-option>
+            <mat-option class="option"  value="clientName">الإسم</mat-option>
+            <mat-option class="option"  value="telnum">رقم التليفون</mat-option>
+            <mat-option class="option"  value="deviceType">نوع الجهاز</mat-option>
+            <mat-option class="option"  value="complain">الشكوي</mat-option>
+            <mat-option class="option"  value="notes">الملاحظات</mat-option>
+            <mat-option class="option"  value="repair">الصيانة</mat-option>
+          </mat-select>
+        </div>
       </div>
     </div>
-    
   </div>
-  
-  
-  
-  <div class="table-container">
+  <div id="table-container">
     <table class="table" *ngIf="isSearched" dir="rtl">
         <thead dir="rtl">
           <tr dir="rtl">
@@ -104,7 +116,9 @@
             <td dir="rtl">{{ device.clientSelection }}</td>
             <td dir="rtl">{{ device.receivingDate }}</td> 
             <td>
-              <a mat-button [routerLink]="['/devices', device._id, 'edit']">تعديل</a>
+              <a mat-button [routerLink]="['/devices', device._id, 'edit']" *ngIf="searchingFor == 'devices'">تعديل</a>
+              <a mat-button [routerLink]="['/devices-delivered', device._id, 'edit']" *ngIf="searchingFor == 'delivered'">تعديل</a>
+              <a mat-button (click)="onDelete(device._id)" *ngIf="currentUser.role == 'admin' && searchingFor == 'devices'">حذف</a>
             </td>
           </tr>
         </tbody>

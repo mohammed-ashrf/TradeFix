@@ -12,9 +12,9 @@ import { ProductSection } from '../shared/information';
   styleUrls: ['./products.component.scss']
 })
 export class ProductsComponent implements OnInit {
-  searchTerm!: any;
-  searchResults!: any[];
+  searchTerm!: string;
   products :Product[] = [];
+  allFileterdProducts: Product[] = [];
   isSearched:boolean = false;
   searchResult:Product[] = [];
   allProducts: Product[] = [];
@@ -35,7 +35,7 @@ export class ProductsComponent implements OnInit {
     payType: '',
     today: false,
     thisWeek: false,
-    thisMonth: true,
+    thisMonth: false,
     thisYear: false,
     specificYear: '',
     sellerName: '',
@@ -43,6 +43,8 @@ export class ProductsComponent implements OnInit {
     endDate: ''
   };
   productSections: ProductSection[] = [];
+  searchProperty: string = "name";
+  itemToload: number = 0;
   constructor(private productsService: ProductsService,
     private cartService: CartService,    
     private location: Location,
@@ -53,17 +55,42 @@ export class ProductsComponent implements OnInit {
     this.currentUser = localStorage.getItem('user');
     this.user = JSON.parse(this.currentUser);
     this.getInformations();
-    this.productsService.getAll().subscribe((products) => {
-      this.products = products.reverse();
-      this.allProducts = this.products;
-      this.isProducts = true;
-      console.log(products);
-    });
+    this.getAllProducts();
     this.carts = this.cartService.getCarts();
     if(this.user.role === 'admin'){
       this.isAdmin = true;
     }
+    this.loadProductsOnScroll();
   }
+
+  loadProductsOnScroll() {
+    const cardsContainer =  document.getElementById('table-container');
+    if (cardsContainer) {
+      cardsContainer.addEventListener('scroll', event => {
+        const { scrollHeight, scrollTop, clientHeight } = (event.target as Element);
+
+        if (Math.abs(scrollHeight - clientHeight - scrollTop) < 1) {
+            console.log('scrolled');
+            if (this.allFileterdProducts.length > this.searchResult.length) {
+              this.itemToload += 10;
+              this.searchResult = this.allFileterdProducts.slice(0, this.itemToload);
+              console.log(' scrolling loaded');
+            }
+        }
+      });
+    }
+  }
+
+  getAllProducts() {
+    this.productsService.getAll().subscribe((products) => {
+      this.products = products.reverse();
+      this.allProducts = this.products;
+      this.filterProducts();
+      this.isProducts = true;
+      console.log(products);
+    });
+  }
+  
   getInformations() {
     this.informationService.getProductSections().subscribe(
       (productSections) => {
@@ -82,7 +109,7 @@ export class ProductsComponent implements OnInit {
   goBack() {
     this.location.back();
   }
-  searchProducts(products: any[], userInput: any) {
+  searchProducts(products: any[], userInput: any, searchProperty: string) {
     try {
       if (typeof userInput !== 'string') {
         console.log('User input must be a string');
@@ -90,16 +117,9 @@ export class ProductsComponent implements OnInit {
       }
       userInput = userInput.toLowerCase();
       return products.filter(product => {
-        for (let key in product) {
-          if (product.hasOwnProperty(key) && product[key]?.toString().toLowerCase().includes(userInput.toLowerCase())) {
-            // this.searchResults.push(device);
-            const value = product[key].toString().toLowerCase();
-            if (value.includes(userInput)) {
-              this.isSearched = true;
-              return true;
-            }
-            break;
-          }
+        if (product.hasOwnProperty(searchProperty) && product[searchProperty]?.toString().toLowerCase().includes(userInput)) {
+          this.isSearched = true;
+          return true;
         }
         return false;
       });
@@ -113,8 +133,17 @@ export class ProductsComponent implements OnInit {
     return /[A-Za-z0-9\s\S]+/.test(str);
   }
 
+  loadProducts() {
+    this.itemToload = 10;
+    this.searchResult = this.allFileterdProducts.slice(0, this.itemToload);
+    console.log('esleLoaded');
+  }
+
   search() {
-      this.searchResult = this.searchProducts(this.products, this.searchTerm);
+      this.searchResult = this.searchProducts(this.products, this.searchTerm, this.searchProperty);
+      console.log(this.searchResult.length);
+      this.allFileterdProducts = this.searchResult;
+      this.loadProducts();
   }
 
   onChange(){
@@ -133,7 +162,6 @@ export class ProductsComponent implements OnInit {
   }
 
   filterProducts() {
-    this.products = this.allProducts;
     const filterCriteria = {
       category: this.productsQuery.category,
       payType: this.productsQuery.payType,
@@ -148,8 +176,27 @@ export class ProductsComponent implements OnInit {
       startDate: this.productsQuery.startDate,
       endDate: this.productsQuery.endDate
     };
-    const products = this.productsService.filterProducts(this.allProducts, filterCriteria);
-    this.products = products;
+    const base = {
+      category: '',
+      payType: '',
+      buyerType: '',
+      sellerName: '',
+      today: false,
+      thisMonth: false,
+      thisYear: false,
+      thisWeek: false,
+      specificYear: '',
+      status: '',
+      startDate: '',
+      endDate: ''
+    };
+    if (filterCriteria === base) {
+      this.products = this.allProducts;
+    }else {
+      const products = this.productsService.filterProducts(this.allProducts, filterCriteria);
+      this.products = products;
+      this.searchResult = products;
+    }
   }
 
   resetFilter():void {

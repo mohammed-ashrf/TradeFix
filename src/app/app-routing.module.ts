@@ -9,7 +9,6 @@ import { DeviceFormComponent } from './device/device-form/device-form/device-for
 import { SearchComponent } from './search/search.component';
 import { PrintLayoutComponent } from './print-layout/print-layout.component';
 import { AdminPageComponent } from './admin-page/admin-page.component';
-import { AdminSearchComponent } from './admin-search/admin-search.component';
 import { UserDashboardComponent } from './user-dashboard/user-dashboard.component';
 import { ProductsComponent } from './products/products.component';
 import { AddProductsComponent } from './add-products/add-products.component';
@@ -28,10 +27,10 @@ const routes: Routes = [
   { path: 'devices', component: DeviceListComponent },
   { path: 'devices/new', component: DeviceFormComponent },
   { path: 'devices/:id/edit', component: DeviceFormComponent },
+  { path: 'devices-delivered/:id/edit', component: DeviceFormComponent},
   { path: 'search', component: SearchComponent},
   { path: 'print',  component: PrintLayoutComponent},
   { path: 'admin', component: AdminPageComponent },
-  { path: 'adminSearch', component: AdminSearchComponent },
   { path: 'userDashboard', component: UserDashboardComponent },
   { path: 'products', component: ProductsComponent},
   { path: 'addProduct', component: AddProductsComponent},

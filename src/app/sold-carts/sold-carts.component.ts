@@ -23,7 +23,7 @@ export class SoldCartsComponent implements OnInit {
     buyerType: '',
     sellerName: '',
     today: false,
-    thisMonth: false,
+    thisMonth: true,
     thisYear: false,
     specificYear: '',
     status: '',
@@ -34,7 +34,7 @@ export class SoldCartsComponent implements OnInit {
   isSearched!: boolean;
   searchResult: any;
   searchTerm!: string;
-  
+  searchProperty: string = 'buyerName';
   constructor(private cartService: CartService,
     private informationService: InformationService,
     private location:Location) { }
@@ -64,22 +64,20 @@ export class SoldCartsComponent implements OnInit {
   goBack() {
       this.location.back()
   }
-  searchBuyers(devices: any[], userInput: any) {
+
+  searchBuyers(buyers: any[], userInput: any, searchProperty: string) {
     try {
       if (typeof userInput !== 'string') {
         console.log('User input must be a string');
         throw new Error('User input must be a string');
       }
       userInput = userInput.toLowerCase();
-      return devices.filter(buyer => {
-        for (let key in buyer) {
-          if (buyer.hasOwnProperty(key) && buyer[key]?.toString().toLowerCase().includes(userInput.toLowerCase())) {
-            const value = buyer[key].toString().toLowerCase();
-            if (value.includes(userInput)) {
-              this.isSearched = true;
-              return true;
-            }
-            break;
+      return buyers.filter(buyer => {
+        if (buyer.hasOwnProperty(searchProperty) && buyer[searchProperty]?.toString().toLowerCase().includes(userInput)) {
+          const value = buyer[searchProperty].toString().toLowerCase();
+          if (value.includes(userInput)) {
+            this.isSearched = true;
+            return true;
           }
         }
         return false;
@@ -90,13 +88,14 @@ export class SoldCartsComponent implements OnInit {
     }
   }
 
+
   testInput(str: string) {
     return /[A-Za-z0-9\s\S]+/.test(str);
   }
 
   search() {
-      this.searchResult = this.searchBuyers(this.buyers, this.searchTerm);
-      console.log(this.searchResult);
+    this.searchResult = this.searchBuyers(this.buyers, this.searchTerm, this.searchProperty);
+    console.log(this.searchResult);
   }
 
 

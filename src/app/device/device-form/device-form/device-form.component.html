@@ -12,15 +12,18 @@
     </div>
     <div fxLayout="row" fxLayoutAlign="space-between center" dir="rtl">
       <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
-        <input type="text" id="clientName" placeholder="اسم العميل" name="clientName" [(ngModel)]="receive.clientName" [disabled]="disabled" *ngIf="receive.clientSelection === 'User'" required>
-        <mat-select style="width: 200px;" placeholder="الديلر" id="section" name="section" [(ngModel)]="receive.clientName" [disabled]="disabled" *ngIf="receive.clientSelection === 'Dealer'" required>
-          <mat-option class="option" *ngFor="let dealer of dealers" [value]="dealer.name" (ngModelChange)="updateTelnum(dealer)">{{ dealer.name }}</mat-option>
-        </mat-select>
+        <input type="text" id="clientName" placeholder="اسم العميل" name="clientName" [(ngModel)]="receive.clientName" [disabled]="disabled" *ngIf="receive.clientSelection === 'User'" autofocus required>
+        <input type="text" id="searchDealers" placeholder="البحث عن التاجر" name="searchDealers" [(ngModel)]="receive.clientName" (keyup)="searchDealers()" [disabled]="disabled" *ngIf="receive.clientSelection === 'Dealer'" autofocus required>
       </div>
       <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
         <input type="text" id="telnum" placeholder="رقم التليفون" name="telnum" [(ngModel)]="receive.telnum" [disabled]="disabled" required>
       </div>
     </div>
+    <ul *ngIf="isDealersSearched && receive.clientSelection === 'Dealer' && receive.clientName !== ''">
+      <li *ngFor="let dealer of dealerSearchResult">
+        {{ dealer.name }} - {{dealer.phone}}
+      </li>
+    </ul>
     <div class="form-group" fxLayout="row" fxLayoutAlign="center center" dir="rtl">
       <input type="text" id="deviceType" placeholder="نوع الجهاز" name="deviceType" [(ngModel)]="receive.deviceType" [disabled]="disabled" required autocomplete="on">
     </div>
@@ -54,7 +57,7 @@
     <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
       <input type="text" id="searchProduct" placeholder="البحث عن المنتج" name="searchProduct" [(ngModel)]="searchTerm" (keyup)="onSearch()" dir="rtl">
     </div>
-    <ul *ngIf="isSearched">
+    <ul *ngIf="isSearched && searchTerm !== ''">
       <li *ngFor="let product of searchResult" (click)="onSelect(product, 1)">
         {{ product.name }} - {{ receive.clientSelection == 'User' ? product.userSellingPrice * dollarPrice : product.deallerSellingPrice * dollarPrice}}
       </li>
@@ -64,45 +67,62 @@
     </div>
     <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="10px" dir="rtl">
       <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
-        <input type="text" id="receivingDate" name="receivingDate" [(ngModel)]="receive.receivingDate" placeholder={{date}} value={{date}} disabled>
+        <label for="receivingDate">تاريخ الإستلام:</label>
+        <input type="text" id="receivingDate" name="receivingDate" [(ngModel)]="receive.receivingDate" placeholder={{currentDate}} value={{currentDate}} disabled>
       </div>
       <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
-        <input type="number" id="fees" name="fees" [(ngModel)]="receive.fees" required [disabled]="!sameEng">
+        <label for="toDeliverDate">معاد التسليم:</label>
+        <input type="date" id="toDeliverDate" name="toDeliverDate" [(ngModel)]="receive.toDeliverDate" placeholder="معاد التسليم" lang="ar">
       </div>
     </div>
     <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="10px" dir="rtl">
       <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
+        <label for="fees">الإجمالي:</label>
+        <input type="number" id="fees" name="fees" [(ngModel)]="receive.fees" required [disabled]="!sameEng">
+      </div>
+      <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
+        <label for="cash">كاش:</label>
+        <input type="number" id="cash" name="cash" [(ngModel)]="receive.cash" required [disabled]="!sameEng">
+      </div>
+      <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
+        <label for="owing">آجل:</label>
+        <input type="number" id="owing" name="owing" [(ngModel)]="receive.owing" required [disabled]="!sameEng">
+      </div>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="space-around center" fxLayoutGap="10px" dir="rtl">
+      <div class="form-group" fxLayout="row" fxLayoutAlign="center center" *ngIf="!isNew">
         <input type="checkbox" name="repaired" id="repaired" [(ngModel)]="receive.repaired" [disabled]="repairdone || !sameEng" (change)="repairStatus()">
         <label for="repaired"> تم الإصلاح </label><br>
       </div>
-      <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
+      <div class="form-group" style="max-width: 100%; margin:auto;" fxLayout="row" fxLayoutAlign="center center">
         <input type="checkbox" name="paidAdmissionFees" id="paidAdmissionFees" [(ngModel)]="receive.paidAdmissionFees" [disabled]="disabled">
         <label for="paidAdmissionFees"> تم دفع الرسوم </label><br>
       </div>
-      <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
-        <input type="checkbox" name="delivered" id="delivered" [(ngModel)]="receive.delivered" [disabled]="disabled">
-        <label for="delivered"> تم التسليم </label><br>
-      </div>
-      <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
-        <input type="checkbox" name="returned" id="returned" [(ngModel)]="receive.returned" [disabled]="disabled">
-        <label for="returned"> مرتجع </label><br>
-      </div>
     </div>
-    <button class="btn btn-primary" id="submit" type="submit" [disabled]="deviceForm.invalid">Save</button>
+    <button class="btn btn-primary" id="submit" type="submit" [disabled]="deviceForm.invalid" *ngIf="!receive.delivered">{{ isNew ? 'حفظ' : 'تحديث' }}</button>
   </form>
-  <div *ngIf="submited">
-    <app-print-layout [clientName]="print.clientName" [telnum]="print.telnum" [deviceType]="print.deviceType" [section]="print.section" [_id]="recieptId" [receivingDate]="date" [complain]="print.complain" [fees]="print.fees" [deliveringDate]="today" [isReturned]="print.returned" [repair]="receive.repair"></app-print-layout>
-    <button ngxPrint printSectionId="print-section" printTitle="إيصال الإستلام" [printStyle]="{p : {'line-height': '75%', 'font-weight': 'bold', 'font-size' : '11px'}, svg :{'width':'100px','height':'100px'}, span :{'padding-top': '7px'}, h3: {'padding' : '3px'}}" target="_blank" [disabled]="disabled">Print Receipt</button>
+  <div class="buttons-group" fxLayout="row" fxLayoutAlign="space-around end" fxLayoutGap="10px" *ngIf="updating">
+    <button mat-button (click)="returnDeliveredToDevices(receive._id)" *ngIf="!receive.returned && receive.delivered || (receive.returned && !receive.delivered)">مرتجع</button>
+    <button mat-button (click)="moveToDelivered(receive._id)" *ngIf="receive.repaired">تسليم</button>
+    <button mat-button (click)="updateDeliveredDevice(receive._id, receive)" *ngIf="receive.delivered">تحديث المعلومات</button>
 
-    <button ngxPrint printSectionId="barcode" [disabled]="disabled">إطبع الباركود</button>
-    <button *ngIf="receive.delivered" ngxPrint printSectionId="delivery-receipt" printTitle="إيصال التسليم" [printStyle]="{p : {'line-height': '75%', 'font-weight': 'bold', 'font-size' : '11px'}, svg :{'width':'100px','height':'100px'}, span :{'padding-top': '7px'}, h3: {'padding' : '3px'}}" target="_blank" [disabled]="disabled">إيصال التسليم</button>
   </div>
-
-  <div *ngIf="updating">
-    <app-print-layout [clientName]="receive.clientName" [telnum]="receive.telnum" [deviceType]="receive.deviceType" [section]="receive.section" [_id]="recieptId" [receivingDate]="date" [complain]="receive.complain" [fees]="receive.fees" [deliveringDate]="today" [isReturned]="receive.returned" [repair]="receive.repair"></app-print-layout>
-    <button ngxPrint printSectionId="print-section" printTitle="إيصال الإستلام" [printStyle]="{p : {'line-height': '75%', 'font-weight': 'bold', 'font-size' : '11px'}, svg :{'width':'100px','height':'100px'}, span :{'padding-top': '7px'}, h3: {'padding' : '3px'}}" target="_blank" [disabled]="disabled">Print Receipt</button>
-
-    <button ngxPrint printSectionId="barcode" [disabled]="disabled">إطبع الباركود</button>
-    <button *ngIf="receive.delivered" ngxPrint printSectionId="delivery-receipt" printTitle="إيصال التسليم" [printStyle]="{p : {'line-height': '100%', 'font-weight': 'bold', 'font-size' : '11px'}, svg :{'width':'100px','height':'100px'}, span :{'padding-top': '7px'}, h3: {'padding' : '3px'}}" target="_blank" [disabled]="disabled">إيصال التسليم</button>
+  <div class="row" fxLayout="row" fxLayoutAlign="space-around center" *ngIf="submited || updating">
+    <div *ngIf="submited" fxLayout="row" fxLayoutAlign="space-around center" fxLayoutGap="10px">
+      <app-print-layout [clientName]="print.clientName" [telnum]="print.telnum" [deviceType]="print.deviceType" [section]="print.section" [_id]="recieptId" [receivingDate]="date" [complain]="print.complain" [fees]="print.fees" [deliveringDate]="today" [isReturned]="print.returned" [repair]="receive.repair"></app-print-layout>
+      <button fxFlex style="width: 400px;" ngxPrint printSectionId="print-section" printTitle="إيصال الإستلام" [printStyle]="{p : {'line-height': '75%', 'font-weight': 'bold', 'font-size' : '11px'}, svg :{'width':'100px','height':'100px'}, span :{'padding-top': '7px'}, h3: {'padding' : '3px'}}" target="_blank" [disabled]="disabled">إيصال الإستلام</button>
+  
+      <button fxFlex style="width: 400px;" ngxPrint printSectionId="barcode" [disabled]="disabled">إطبع الباركود</button>
+      <button fxFlex style="width: 400px;" *ngIf="receive.delivered" ngxPrint printSectionId="delivery-receipt" printTitle="إيصال التسليم" [printStyle]="{p : {'line-height': '75%', 'font-weight': 'bold', 'font-size' : '11px'}, svg :{'width':'100px','height':'100px'}, span :{'padding-top': '7px'}, h3: {'padding' : '3px'}}" target="_blank" [disabled]="disabled">إيصال التسليم</button>
+    </div>
+  
+    <div *ngIf="updating" fxLayout="row" fxLayoutAlign="space-around center" fxLayoutGap="10px">
+      <app-print-layout [clientName]="receive.clientName" [telnum]="receive.telnum" [deviceType]="receive.deviceType" [section]="receive.section" [_id]="recieptId" [receivingDate]="date" [complain]="receive.complain" [fees]="receive.fees" [deliveringDate]="today" [isReturned]="receive.returned" [repair]="receive.repair"></app-print-layout>
+      <button fxFlex style="width: 400px;" ngxPrint printSectionId="print-section" printTitle="إيصال الإستلام" [printStyle]="{p : {'line-height': '75%', 'font-weight': 'bold', 'font-size' : '11px'}, svg :{'width':'100px','height':'100px'}, span :{'padding-top': '7px'}, h3: {'padding' : '3px'}}" target="_blank" [disabled]="disabled">إيصال الإستلام</button>
+  
+      <button fxFlex style="width: 400px;" ngxPrint printSectionId="barcode" [disabled]="disabled">إطبع الباركود</button>
+      <button fxFlex style="width: 400px;" *ngIf="receive.delivered" ngxPrint printSectionId="delivery-receipt" printTitle="إيصال التسليم" [printStyle]="{p : {'line-height': '100%', 'font-weight': 'bold', 'font-size' : '11px'}, svg :{'width':'100px','height':'100px'}, span :{'padding-top': '7px'}, h3: {'padding' : '3px'}}" target="_blank" [disabled]="disabled">إيصال التسليم</button>
+    </div>
   </div>
+  
 </div>

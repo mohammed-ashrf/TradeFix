@@ -78,7 +78,11 @@ export class AddProductsComponent implements OnInit{
   productSections!: ProductSection[];
   totalQuantity!:number;
   suppliers!: ProductSupplier[];
-  dollarPrice: any;
+  dollarPrice: number = 0;
+  searchResult!: Product[];
+  products!: Product[];
+  searchTerm!: string;
+  isSearched!: boolean;
   constructor(
     private productsService: ProductsService,
     private informationService: InformationService,
@@ -105,6 +109,7 @@ export class AddProductsComponent implements OnInit{
         // this.date = product.purchasedate;
       });
     }
+    this.getProducts();
     this.date = this.getDate();
     this.today = this.getDate();
     this.getUsers();
@@ -197,7 +202,47 @@ export class AddProductsComponent implements OnInit{
       }
     }
   }
+  getProducts() {
+    this.productsService.getAll().subscribe(
+      (products) => {
+        this.products = products;
+      }
+    );
+  }
   
+  searchProducts(products: any[], userInput: string) {
+    try {
+      if (typeof userInput !== 'string') {
+        console.log('User input must be a string');
+        throw new Error('User input must be a string');
+      }
+      userInput = userInput.toLowerCase();
+      return products.filter(product => {
+        return product.name.toLowerCase().includes(userInput);
+      });
+    } catch (error) {
+      console.error(error);
+      return [];
+    }
+  }
+  testInput(str: string) {
+    return /[A-Za-z0-9\s\S]+/.test(str);
+  }
+
+  onSearch() {
+      this.searchResult = this.searchProducts(this.products, this.searchTerm);
+      this.isSearched = true;
+  }
+
+  onSelect(item: Product) {
+    item.userSellingPrice *= this.dollarPrice;
+    item.deallerSellingPrice *= this.dollarPrice;
+    item.deallerSellingPriceAll *= this.dollarPrice;
+    this.product = item;
+    this.searchTerm = '';
+    this.isSearched = false;
+    this.isNew = false;
+  }
 
 
   getDate() {
