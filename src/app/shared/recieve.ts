@@ -9,6 +9,8 @@ export interface Receive {
   products: product[];
   notes: string;
   fees: number;
+  discount: number;
+  total: number;
   cash: number;
   owing: number;
   finished: boolean;

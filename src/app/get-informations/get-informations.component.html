@@ -4,7 +4,7 @@
       <button (click)="goBack()">back</button>
       <div class="search" fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="10px">
         <input *ngIf="notHidden" type="text" class="input" lang="ar" dir="auto" [(ngModel)]="searchTerm" placeholder="Search..." (keyup.enter)="search()" (keyup)="search()" autofocus>
-        <div class="search-properity" dir="rtl">
+        <div *ngIf="notHidden" class="search-properity" dir="rtl">
           <mat-select placeholder="البحث ب" id="searchProperity" name="searchProperity" [(ngModel)]="searchProperty" required>
             <mat-option class="option"  value="_id">الكود</mat-option>
             <mat-option class="option"  value="name">الإسم</mat-option>
@@ -13,7 +13,7 @@
         </div>
       </div>
       <select name="informationType" id="informationType" [(ngModel)]="informationType" (ngModelChange)="whichInformation()">
-          <option value="sections">الأقسام</option>
+          <option value="sections">أقسام الصيانة</option>
           <option value="product-sections">فئات المنتجات</option>
           <option value="suppliers">الموردين</option>
           <option value="dealers">التجار</option>
@@ -42,7 +42,8 @@
                         </div>
                       </div>
                     </div>
-                    <button class="editButton" mat-button [routerLink]="['/addInformation', section._id, 'edit']">Edit</button>
+                    <button class="editButton" mat-button [routerLink]="['/addInformation', section._id, 'edit']">تعديل / تحديث</button>
+                    <button class="editButton" mat-button (click)="onDelete(section._id)">حذف</button>
                   </mat-card-content>
                 </mat-card>
             </div>
@@ -64,7 +65,9 @@
                       </div>
                     </div>
                   </div>
-                  <button class="editButton" mat-button [routerLink]="['/addInformation', productSection._id, 'edit']">Edit</button>
+                  <button class="editButton" mat-button [routerLink]="['/addInformation', productSection._id, 'edit']">تعديل / تحديث</button>
+                  <button class="editButton" mat-button (click)="onDelete(productSection._id)">حذف</button>
+
                 </mat-card-content>
               </mat-card>
           </div>
@@ -85,7 +88,10 @@
                           <p><strong>Phone Number:</strong> {{ supplier.phone }}</p>
                         </div>
                         <div class="data-column">
-                          <p><strong>Company Name:</strong> {{ supplier.companyName }}</p>
+                          <p><strong>Whatsapp Number:</strong> {{ supplier.whatsappNumber }}</p>
+                        </div>
+                        <div class="data-column">
+                          <p><strong>Address:</strong> {{ supplier.address }}</p>
                         </div>
                         <div class="data-column">
                             <p><strong>Notes:</strong> {{ supplier.notes }}</p>
@@ -98,7 +104,8 @@
                       </div>
                     </div>
                     <button class="editButton" mat-button (click)="calSupplierMoney(supplier, supplier._id)">حساب المورد</button>
-                    <button class="editButton" mat-button [routerLink]="['/addInformation', supplier._id, 'edit']">تحديث</button>
+                    <button class="editButton" mat-button [routerLink]="['/addInformation', supplier._id, 'edit']">تعديل / تحديث</button>
+                    <button class="editButton" mat-button (click)="onDelete(supplier._id)">حذف</button>
                   </mat-card-content>
                 </mat-card>
             </div>
@@ -122,36 +129,18 @@
                           <p><strong>Email:</strong> {{ dealer.email }}</p>
                         </div>
                         <div class="data-column">
-                          <p><strong>Company Name:</strong> {{ dealer.companyName }}</p>
+                          <p><strong>Whatsapp Number:</strong> {{ dealer.whatsappNumber }}</p>
+                        </div>
+                        <div class="data-column">
+                          <p><strong>Address:</strong> {{ dealer.address }}</p>
                         </div>
                         <div class="data-column">
                           <p><strong>notes:</strong> {{ dealer.notes }}</p>
                         </div>
                       </div>
                     </div>
-                    <button class="editButton" mat-button [routerLink]="['/addInformation', dealer._id, 'edit']">Edit</button>
-                  </mat-card-content>
-                </mat-card>
-            </div>
-        </div>
-        <div class="dollarPrice" *ngIf="informationType === 'dollarPrice'">
-            <div class="cards-container" fxLayout="column" fxLayoutGap="20px" >
-                <mat-card class="deviceCard">
-                  <mat-card-content fxLayout="column" fxLayoutGap="10px">
-                    <div fxLayout="column" fxLayoutAlign="center">
-                      <div class="data-row">
-                        <div class="data-column">
-                          <p><strong>ID:</strong> {{ dollarPrice._id }}</p>
-                        </div>
-                        <div class="data-column">
-                          <p><strong>Price:</strong> {{ dollarPrice.price }}</p>
-                        </div>
-                        <div class="data-column">
-                          <p><strong>Date:</strong> {{ dollarPrice.date | date}}</p>
-                        </div>
-                      </div>
-                    </div>
-                    <button class="editButton" mat-button [routerLink]="['/addInformation', dollarPrice._id, 'edit']">Edit</button>
+                    <button class="editButton" mat-button [routerLink]="['/addInformation', dealer._id, 'edit']">تعديل / تحديث</button>
+                    <button class="editButton" mat-button (click)="onDelete(dealer._id)">حذف</button>
                   </mat-card-content>
                 </mat-card>
             </div>
@@ -179,7 +168,8 @@
                       </div>
                     </div>
                   </div>
-                  <button class="editButton" mat-button [routerLink]="['/addInformation', section._id, 'edit']">Edit</button>
+                  <button class="editButton" mat-button [routerLink]="['/addInformation', section._id, 'edit']">تعديل / تحديث</button>
+                  <button class="editButton" mat-button (click)="onDelete(section._id)">حذف</button>
                 </mat-card-content>
               </mat-card>
           </div>
@@ -207,7 +197,8 @@
                       </div>
                     </div>
                   </div>
-                  <button class="editButton" mat-button [routerLink]="['/addInformation', supplier._id, 'edit']">Edit</button>
+                  <button class="editButton" mat-button [routerLink]="['/addInformation', supplier._id, 'edit']">تعديل / تحديث</button>
+                  <button class="editButton" mat-button (click)="onDelete(supplier._id)">حذف</button>
                 </mat-card-content>
               </mat-card>
           </div>
@@ -238,32 +229,33 @@
                       </div>
                     </div>
                   </div>
-                  <button class="editButton" mat-button [routerLink]="['/addInformation', dealer._id, 'edit']">Edit</button>
+                  <button class="editButton" mat-button [routerLink]="['/addInformation', dealer._id, 'edit']">تعديل / تحديث</button>
+                  <button class="editButton" mat-button (click)="onDelete(dealer._id)">حذف</button>
                 </mat-card-content>
               </mat-card>
           </div>
       </div>
-      <div class="dollarPrice" *ngIf="informationType === 'dollarPrice'">
-          <div class="cards-container" fxLayout="column" fxLayoutGap="20px" >
-              <mat-card class="deviceCard">
-                <mat-card-content fxLayout="column" fxLayoutGap="10px">
-                  <div fxLayout="column" fxLayoutAlign="center">
-                    <div class="data-row">
-                      <div class="data-column">
-                        <p><strong>ID:</strong> {{ dollarPrice._id }}</p>
-                      </div>
-                      <div class="data-column">
-                        <p><strong>Price:</strong> {{ dollarPrice.price }}</p>
-                      </div>
-                      <div class="data-column">
-                        <p><strong>Date:</strong> {{ dollarPrice.date | date}}</p>
-                      </div>
-                    </div>
+    </div>
+    <div class="dollarPrice" *ngIf="informationType === 'dollarPrice'">
+      <div class="cards-container" fxLayout="column" fxLayoutGap="20px" >
+          <mat-card class="deviceCard">
+            <mat-card-content fxLayout="column" fxLayoutGap="10px">
+              <div fxLayout="column" fxLayoutAlign="center">
+                <div class="data-row">
+                  <div class="data-column">
+                    <p><strong>ID:</strong> {{ dollarPrice._id }}</p>
                   </div>
-                  <button class="editButton" mat-button [routerLink]="['/addInformation', dollarPrice._id, 'edit']">Edit</button>
-                </mat-card-content>
-              </mat-card>
-          </div>
+                  <div class="data-column">
+                    <p><strong>Price:</strong> {{ dollarPrice.price }}</p>
+                  </div>
+                  <div class="data-column">
+                    <p><strong>Date:</strong> {{ dollarPrice.date | date}}</p>
+                  </div>
+                </div>
+              </div>
+              <button class="editButton" mat-button [routerLink]="['/addInformation', dollarPrice._id, 'edit']">تعديل / تحديث</button>
+            </mat-card-content>
+          </mat-card>
       </div>
-  </div>
+    </div>
 </div>

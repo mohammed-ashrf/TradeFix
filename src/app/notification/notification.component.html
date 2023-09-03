@@ -1,0 +1,27 @@
+<app-toolbar></app-toolbar>
+<div class="notification-container">
+    <div class="header" fxLayout="row" fxLayoutAlign="space-around center">
+      <button mat-button (click)="showProductNotifications()" [class.active]="showingProductNotifications">Product Notifications</button>
+      <button mat-button (click)="showRepairNotifications()" [class.active]="showingRepairNotifications">Repair Notifications</button>
+    </div>
+  
+    <div class="notification-list" id="productNotifications" *ngIf="showingProductNotifications" fxLayout="column">
+      <h2>Product Notifications</h2>
+      <div class="notification" *ngFor="let notification of productNotifications">
+        <h3>{{ notification.title }}</h3>
+        <p>{{ notification.message }}</p>
+        <small>{{ notification.timestamp | date }}</small>
+        <a mat-button [routerLink]="['/addProduct', notification.id, 'edit']">تحديث</a>
+      </div>
+    </div>
+  
+    <div class="notification-list" id="repairNotifications" *ngIf="showingRepairNotifications" fxLayout="column">
+      <h2>Repair Notifications</h2>
+      <div class="notification" *ngFor="let notification of repairNotifications">
+        <h3>{{ notification.title }}</h3>
+        <p>{{ notification.message }}</p>
+        <small>{{ notification.timestamp | date }}</small>
+        <a mat-button [routerLink]="['/devices', notification.id, 'edit']">show</a>
+      </div>
+    </div>
+</div>

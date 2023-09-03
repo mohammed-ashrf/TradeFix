@@ -72,7 +72,7 @@ export class InformationService {
       product: product
     };
   
-    return this.http.put<Supplier>(`${this.apiUrl}/suppliers/${id}`, requestBody);
+    return this.http.put<Supplier>(`${this.apiUrl}/supplierProducts/${id}`, requestBody);
   }
 
   deleteSupplier(id: string): Observable<any> {

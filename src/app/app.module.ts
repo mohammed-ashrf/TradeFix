@@ -46,6 +46,7 @@ import { ConfirmationModalComponent } from './confirmation-modal/confirmation-mo
 import { AlertModalComponent } from './alert-modal/alert-modal.component';
 import { ToolbarComponent } from './toolbar/toolbar.component';
 import { StatsComponent } from './stats/stats.component';
+import { NotificationComponent } from './notification/notification.component';
 
 
 @NgModule({
@@ -72,6 +73,7 @@ import { StatsComponent } from './stats/stats.component';
     AlertModalComponent,
     ToolbarComponent,
     StatsComponent,
+    NotificationComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,0 +1,31 @@
+.notification-container {
+    max-width: 800px;
+    margin: auto;
+    margin-top: 60px;
+    // max-height: 100vh;
+}
+.header {
+    padding: 10px;
+    border: 1px solid #000;
+    border-radius: 100px;
+    margin-top: 90px;
+}
+
+.header button {
+    border-radius: 100px;
+}
+#productNotifications {
+    max-height: calc(100vh - 130px);
+    overflow-y: auto;
+}
+#repairNotifications {
+    max-height: calc(100vh - 130px);
+    overflow-y: auto;
+}
+
+.notification {
+    border: 1px solid #000;
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 10px;
+}

@@ -33,10 +33,12 @@ export class SellComponent implements OnInit {
   dealers: Dealer[] = [];
   user: any;
   cartName!: string;
-  searchResult!: Product[];
-  searchproducts!: Product[];
+  searchResult: Product[] = [];
+  searchproducts: Product[] = [];
   searchTerm!: string;
   isSearched!: boolean;
+  isDealersSearched: boolean = false;
+  dealerSearchResult: Dealer[] = [];
   constructor(private cartService: CartService,
     private informationService: InformationService,
     private productsService: ProductsService,
@@ -49,6 +51,7 @@ export class SellComponent implements OnInit {
     this.carts = this.cartService.getCarts();
     this.currentCart = this.cartService.getCart(this.cartId);
     this.getdollarPrice();
+    this.getProducts();
     if(this.currentCart){
       this.paid = this.currentCart.paid;
       this.discount = this.currentCart.discount;
@@ -61,7 +64,6 @@ export class SellComponent implements OnInit {
       this.getTotalPrice();
       this.getBuyers();
       this.getDealers();
-      this.getProducts();
       this.currentCart.sellerName = this.user.username;
       console.log(this.currentCart);
     }
@@ -237,6 +239,18 @@ export class SellComponent implements OnInit {
   onSearch() {
       this.searchResult = this.searchProducts(this.searchproducts, this.searchTerm);
       this.isSearched = true;
+  }
+
+  searchDealers() {
+    this.dealerSearchResult = this.searchProducts(this.dealers, this.buyerName);
+    this.isDealersSearched = true;
+  }
+
+  onSelectDealer(item: Dealer) {
+    this.buyerName = item.name;
+    this.buyerPhoneNumber = item.phone;
+    this.isDealersSearched = false;
+    this.updateCartInformation();
   }
 
   onSelect(item: Product) {

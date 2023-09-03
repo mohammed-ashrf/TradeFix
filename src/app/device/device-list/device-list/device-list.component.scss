@@ -124,6 +124,9 @@ svg.material-icons:not(:last-child) {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  border: 1px dotted #000;
+  border-radius: 5px;
+  padding: 10px;
 }
 
 label {
@@ -334,7 +337,7 @@ a {
   top: 25px;
 }
 #cards-container {
-  max-height: 77.4vh;
+  max-height: 70.4vh;
   min-height: 600px;
   overflow-y: auto;
 }

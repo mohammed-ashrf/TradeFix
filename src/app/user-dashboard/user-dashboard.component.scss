@@ -33,6 +33,9 @@ $background-moredark: #4527A0;
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    border: 1px solid #000;
+    border-radius: 5px;
+    padding: 10px;
 }
 
 label {
@@ -77,6 +80,10 @@ a {
     color: #fff;
     border-radius: 4px;
     text-decoration: none;
+}
+#cards-container {
+    max-height: 73vh;
+    overflow-y: auto;
 }
 
 .data-row {

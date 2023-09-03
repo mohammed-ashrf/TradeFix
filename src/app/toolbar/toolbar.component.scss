@@ -30,3 +30,15 @@ svg#rocket {
     padding-top: 5px;
     padding-left: 10px;
 }
+
+.notification-icon {
+    width: 35px;
+    height: 30px;
+    align-self: center;
+    cursor: pointer;
+    border-radius: 25px;
+}
+
+.notification-active {
+    background-color: #2196f3;
+}

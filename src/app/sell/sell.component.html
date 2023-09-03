@@ -1,42 +1,55 @@
 <app-toolbar></app-toolbar>
 <div class="cart-container">
   <div class="cart-sidebar">
-    <h3>فاتورة</h3>
-    <select [(ngModel)]="cartId" (change)="onCartChange(cartId)">
+    <select aria-placeholder="الفاتورة" [(ngModel)]="cartId" (change)="onCartChange(cartId)">
       <option *ngFor="let cart of carts" [value]="cart.id">{{ cart.id }}. {{ cart.cartName }}</option>
     </select>
-    <h4 *ngIf="products">Buyer Information</h4>
-    <label for="buyerName" *ngIf="products">{{userType === 'user' ? 'عميل' : 'ديلر'}} </label>
-    <input type="text" name="buyerName" [(ngModel)]="buyerName" (ngModelChange)="updateCartInformation()" *ngIf="userType === 'user'">
-    <select [(ngModel)]="buyerName" (ngModelChange)="updateCartInformation()" *ngIf="userType === 'dealer'">
-      <option *ngFor="let dealer of dealers" [value]="dealer.name">{{dealer.name}}</option>
+    <h4 *ngIf="products">معلومات المشتري</h4>
+    <select style="width: 100%;" [(ngModel)]="userType" (ngModelChange)="updateCartInformation()" *ngIf="products">
+      <option value="user">عميل</option>
+      <option value="dealer">تاجر</option>
     </select>
+    <label for="buyerName" *ngIf="products">{{userType === 'user' ? 'عميل' : 'تاجر'}} </label>
+    <input type="text" name="buyerName" [(ngModel)]="buyerName" (ngModelChange)="updateCartInformation()" *ngIf="userType === 'user' && products">
+    <input type="text" id="searchDealers" placeholder="البحث عن التاجر" name="searchDealers" [(ngModel)]="buyerName" (keyup)="searchDealers()"*ngIf="userType === 'dealer' && products" autofocus required>
+
+    <ul style="width: 100%;" *ngIf="isDealersSearched && userType === 'dealer' && buyerName !== ''">
+      <li *ngFor="let dealer of dealerSearchResult" (click)="onSelectDealer(dealer)">
+        {{ dealer.name }}
+      </li>
+    </ul>
 
     <label for="buyerPhoneNumber" *ngIf="products">رقم التليفون </label>
     <input type="text" name="buyerPhoneNumber" [(ngModel)]="buyerPhoneNumber" (ngModelChange)="updateCartInformation()" *ngIf="products">
 
-    <label for="userType" *ngIf="products">نوع العميل </label>
-    <select [(ngModel)]="userType" (ngModelChange)="updateCartInformation()" *ngIf="products">
-      <option value="user">user</option>
-      <option value="dealer">dealer</option>
-    </select>
+    
 
     <label for="payType" *ngIf="products">نوعية الدفع </label>
-    <select [(ngModel)]="payType" (ngModelChange)="updateCartInformation()" *ngIf="products">
+    <select style="width: 100%;" [(ngModel)]="payType" (ngModelChange)="updateCartInformation()" *ngIf="products">
       <option value="cash">كاش</option>
       <option value="vodafone-cash">فودافون كاش</option>
       <option value="bank">بنك</option>
     </select>
 
     <label for="discount" *ngIf="products">خصم </label>
-    <input type="number" name="discount" id="discount" [(ngModel)]="discount" (ngModelChange)="updateCartInformation()" *ngIf="products">
+    <input style="width: 100%;" type="number" name="discount" id="discount" [(ngModel)]="discount" (ngModelChange)="updateCartInformation()" *ngIf="products">
     
     <label for="paid" *ngIf="products">كاش</label>
-    <input type="number" name="paid" id="paid" [(ngModel)]="paid" (ngModelChange)="updateCartInformation()" *ngIf="products">
+    <input style="width: 100%;" type="number" name="paid" id="paid" [(ngModel)]="paid" (ngModelChange)="updateCartInformation()" *ngIf="products">
 
-    <button mat-button (click)="createNewCart()" style="margin-top: 10px;">فاتورة جديدة</button>
-    <button mat-button (click)="deleteCart()">حذف الفاتورة</button>
+    <button mat-button (click)="createNewCart()" style="margin-top: 10px; width: 100%;">فاتورة جديدة</button>
+    <button style="width: 100%;" mat-button (click)="deleteCart()">حذف الفاتورة</button>
 
+  </div>
+  <div class="search-group" *ngIf="!products && currentCart">
+    <div class="searchProduct-Input" fxLayout="row" fxLayoutAlign="center center">
+      <input type="text" id="searchProduct" placeholder="البحث عن منتج" name="searchProduct" [(ngModel)]="searchTerm" (keyup)="onSearch()" dir="rtl">
+    </div>
+    <ul *ngIf="isSearched && searchTerm !== ''">
+      <li *ngFor="let product of searchResult" (click)="onSelect(product)">
+        {{ product.name }} - {{product.status}}
+      </li>
+    </ul>
   </div>
   <div class="cart-items" *ngIf="products">
     <h3>Items in Cart</h3>
@@ -44,9 +57,9 @@
       <div class="searchProduct-Input" fxLayout="row" fxLayoutAlign="center center">
         <input type="text" id="searchProduct" placeholder="البحث عن منتج" name="searchProduct" [(ngModel)]="searchTerm" (keyup)="onSearch()" dir="rtl">
       </div>
-      <ul *ngIf="isSearched">
+      <ul *ngIf="isSearched && searchTerm !== ''">
         <li *ngFor="let product of searchResult" (click)="onSelect(product)">
-          {{ product.name }} 
+          {{ product.name }} - {{product.status}}
         </li>
       </ul>
     </div>
@@ -64,14 +77,12 @@
         <tr *ngFor="let item of products">
           <td>{{ item.product.name }}</td>
           <td><input type="number" [(ngModel)]="item.quantity" (ngModelChange)="updateCartItemQuantity(item)"></td>
-          <td *ngIf="userType === 'user'">{{ (item.product.userSellingPrice * dollarPrice) | currency }}</td>
-          <td *ngIf="userType === 'dealer' && item.quantity >= 0 && item.quantity < 3">{{ (item.product.deallerSellingPrice * dollarPrice) | currency }}</td>
-          <td *ngIf="userType === 'dealer' && item.quantity >= 3">{{ (item.product.deallerSellingPriceAll * dollarPrice) | currency }}</td>
-          <td *ngIf="userType === 'user'">{{ (item.product.userSellingPrice * dollarPrice) * item.quantity| currency }}</td>
-          <td *ngIf="userType === 'dealer' && item.quantity >= 0 && item.quantity < 3">{{ (item.product.deallerSellingPrice * dollarPrice) * item.quantity | currency }}</td>
-          <td *ngIf="userType === 'dealer' && item.quantity >= 3">{{ (item.product.deallerSellingPriceAll * dollarPrice) * item.quantity | currency }}</td>
-          <!-- <td>{{ userType === 'user' ? item.product.userSellingPrice : item.quantity >= 3 ? item.product.deallerSellingPriceAll : item.product.deallerSellingPrice }}</td>
-          <td>{{ (userType === 'user' ? item.product.userSellingPrice : item.quantity >= 3 ? item.product.deallerSellingPriceAll : item.product.deallerSellingPrice) * item.quantity }}</td> -->
+          <td *ngIf="userType === 'user'">{{ (item.product.userSellingPrice * dollarPrice) }} L.E</td>
+          <td *ngIf="userType === 'dealer' && item.quantity >= 0 && item.quantity < 3">{{ (item.product.deallerSellingPrice * dollarPrice) }} L.E</td>
+          <td *ngIf="userType === 'dealer' && item.quantity >= 3">{{ (item.product.deallerSellingPriceAll * dollarPrice) }} L.E</td>
+          <td *ngIf="userType === 'user'">{{ (item.product.userSellingPrice * dollarPrice) * item.quantity}} L.E</td>
+          <td *ngIf="userType === 'dealer' && item.quantity >= 0 && item.quantity < 3">{{ (item.product.deallerSellingPrice * dollarPrice) * item.quantity }} L.E</td>
+          <td *ngIf="userType === 'dealer' && item.quantity >= 3">{{ (item.product.deallerSellingPriceAll * dollarPrice) * item.quantity }} L.E</td>
           <td><button (click)="deleteCartItem(item)">حذف</button></td>
         </tr>
       </tbody>

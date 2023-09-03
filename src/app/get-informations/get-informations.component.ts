@@ -146,7 +146,38 @@ export class GetInformationsComponent implements OnInit{
       this.searchResult = this.searchInformations(this.suppliers, this.searchTerm, this.searchProperty);
     }
     console.log(this.searchResult);
-  } 
+  }
+
+  onDelete(id: string) {
+    if (this.informationType === 'dealers'){
+      this.informationService.deleteDealer(id).subscribe( () => {
+          this.dealers = this.dealers.filter((dealer) => dealer._id !== id);
+        }
+      );
+      console.log('delete button for dealers clicked');
+    }else if (this.informationType === 'sections'){
+      this.informationService.deleteSection(id).subscribe( () => {
+        this.sections = this.sections.filter((item) => item._id !== id);
+       }
+      );
+      console.log('delete button for sec clicked');
+
+    }else if (this.informationType === 'product-sections'){
+      this.informationService.deleteProductSection(id).subscribe( () => {
+        this.productSections = this.productSections.filter((item) => item._id !== id);
+       }
+      );
+      console.log('delete button for pro-sections clicked');
+
+    }else if (this.informationType === 'suppliers') {
+      this.informationService.deleteSupplier(id).subscribe( () => {
+        this.suppliers = this.suppliers.filter((item) => item._id !== id);
+       }
+      );
+      console.log('delete button for suppliers clicked');
+
+    }
+  }
 
   goBack(){
     this.location.back();

@@ -170,13 +170,33 @@
       <div class="tabs">
         <a mat-button dir="rtl" routerLinkActive='active' routerLink="/admin" *ngIf="user.role == 'admin'">{{user.username}}</a>
         <a mat-button dir="rtl" routerLinkActive='active' routerLink="/devices" *ngIf="user.role == 'receiver'">{{user.username}}</a>
-        <a mat-button dir="rtl" routerLinkActive='active' routerLink="/devices/new">إستلام</a>
+        <a mat-button dir="rtl" routerLinkActive='active' routerLink="/devices/new" *ngIf="user.role == 'receiver' || user.role == 'admin'">إستلام</a>
         <a mat-button dir="rtl" routerLinkActive='active' routerLink="/search" *ngIf="user.role == 'receiver' || user.role == 'admin'">بحث</a>
-        <a mat-button dir="rtl" routerLinkActive='active' routerLink="/products">المنتجات</a>
-        <a mat-button dir="rtl" routerLinkActive='active' routerLink="/sell">فاتورة</a>
+        <a mat-button dir="rtl" routerLinkActive='active' routerLink="/products" *ngIf="user.role == 'receiver' || user.role == 'admin'">المنتجات</a>
+        <a mat-button dir="rtl" routerLinkActive='active' routerLink="/sell" *ngIf="user.role == 'receiver' || user.role == 'admin'">فاتورة</a>
       </div>
     </div>
-    <div class="right" fxLayout="row" fxLayoutAlign="end center">
-        <a mat-button class="Button" id="logout" (click)="logout()">تسجيل الخروج</a>
+    <div class="right"  fxLayout="row" fxLayoutAlign="end center">
+      <svg *ngIf="user.role == 'receiver' || user.role == 'admin'" routerLink="/notifications" routerLinkActive='notification-active' class="notification-icon" version="1.0" xmlns="http://www.w3.org/2000/svg"
+            width="512.000000pt" height="512.000000pt" viewBox="0 0 512.000000 512.000000"
+            preserveAspectRatio="xMidYMid meet">
+
+            <g transform="translate(0.000000,512.000000) scale(0.100000,-0.100000)"
+            fill="#ffffff" stroke="none">
+            <path d="M2480 5104 c-19 -8 -48 -27 -63 -42 -55 -52 -62 -75 -67 -236 l-5
+            -149 -92 -18 c-176 -36 -367 -117 -533 -227 -117 -78 -318 -280 -399 -401
+            -106 -160 -182 -338 -224 -526 -17 -80 -20 -143 -27 -570 -8 -530 -13 -585
+            -75 -771 -76 -230 -190 -409 -378 -597 -164 -162 -182 -197 -182 -342 0 -89 3
+            -106 27 -156 53 -107 158 -186 277 -209 77 -14 3567 -14 3647 1 114 21 219
+            101 272 208 24 50 27 67 27 156 0 144 -20 182 -173 333 -130 128 -188 201
+            -258 319 -88 147 -147 308 -179 483 -15 77 -19 184 -25 575 -6 428 -9 490 -27
+            570 -67 298 -194 527 -412 746 -216 215 -463 351 -744 408 l-92 18 -5 149 c-5
+            161 -12 184 -67 236 -58 56 -151 73 -223 42z"/>
+            <path d="M1780 625 c0 -33 62 -182 104 -249 172 -274 506 -422 818 -362 219
+            42 402 164 526 351 44 66 111 220 112 258 0 16 -44 17 -780 17 -680 0 -780 -2
+            -780 -15z"/>
+            </g>
+      </svg>
+      <a mat-button class="Button" id="logout" (click)="logout()">تسجيل الخروج</a>
     </div>
 </mat-toolbar>

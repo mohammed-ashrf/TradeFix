@@ -8,8 +8,6 @@
     margin-top: 3rem;
     padding: 20px;
     max-width: 100vw;
-    max-height: 100vh;
-    overflow-y: auto;
   }
   
   .cart-sidebar {
@@ -187,6 +185,7 @@
   @media screen and (min-width: 768px) {
     .cart-container {
       flex-direction: row;
+      position: sticky;
     }
   
     .cart-sidebar {

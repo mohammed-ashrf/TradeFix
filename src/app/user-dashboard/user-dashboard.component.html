@@ -15,6 +15,7 @@
         <p>Completed: {{completedCount}}</p>
         <p>Inprogress: {{inProgressCount}}</p>
         <p>returned: {{returnedCount}}</p>
+        <p>repaired and returned in this month {{returnedInTheSameMonth}}</p>
     </div>
   </div>
   <div fxFlex fxFlexAlign.gt-lg="center left" fxFlex.gt-sm="20%">
@@ -73,7 +74,7 @@
   <button  class="Button" routerLink="/search">Search</button>
 </div>
 
-<div class="cards-container" fxLayout="column" fxLayoutGap="20px" >
+<div id="cards-container" fxLayout="column" fxLayoutGap="20px" >
   <mat-card class="deviceCard" *ngFor="let device of devices" [class.high-priority]="isPriorityHigh(device.priority)">
     <mat-card-content fxLayout="column" fxLayoutGap="10px">
       <div fxLayout="column" fxLayoutAlign="center">

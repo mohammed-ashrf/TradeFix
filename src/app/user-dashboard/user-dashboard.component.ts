@@ -23,7 +23,7 @@ export class UserDashboardComponent implements OnInit {
     inProgress: true,
     newDevices: false,
     today: false,
-    thisMonth: true,
+    thisMonth: false,
     thisYear: false,
     specificYear: '',
     engineer: '',
@@ -40,7 +40,7 @@ export class UserDashboardComponent implements OnInit {
   inProgressCount: number = 0;
   completedCount: number = 0;
   returnedCount: number = 0;
-  deliveredCount: number = 0;
+  returnedInTheSameMonth: number = 0;
 
   constructor(
     private deviceService: DeviceService,
@@ -94,7 +94,7 @@ export class UserDashboardComponent implements OnInit {
       inProgress : true,
       newDevices: false,
       today: false,
-      thisMonth: true,
+      thisMonth: false,
       thisYear: false,
       specificYear: '',
       engineer: this.username,
@@ -109,19 +109,21 @@ export class UserDashboardComponent implements OnInit {
   countDevices() {
     const currentDate = new Date();
     const currentMonth = currentDate.getMonth();
-    this.devices.forEach((device) => {
+    this.allDevices.forEach((device) => {
       const date = new Date(device.receivingDate);
       const month = date.getMonth();
       if (month === currentMonth) {
         if (device.repaired) {
           this.completedCount++;
-        } else if (device.returned) {
-          this.returnedCount++;
-        }else if(device.delivered){
-          this.deliveredCount++;
-        } else {
-          this.inProgressCount++;
+        }else if (device.returned) {
+          this.returnedInTheSameMonth;
         }
+      }
+      if (!device.repaired) {
+        this.inProgressCount++;
+      }
+      if (device.returned) {
+        this.returnedCount++;
       }
     });
   }

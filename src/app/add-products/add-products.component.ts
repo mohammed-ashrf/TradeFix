@@ -319,8 +319,8 @@ export class AddProductsComponent implements OnInit{
     if(this.isNew){
       console.log("isNew");
       let supplierProduct: SupplierProducts = {
-        id: productId,
-        name: this.product.name,
+        productId: productId,
+        productName: this.product.name,
         quantity: this.product.quantity,
         purchasePrice: 0,
         purchasedate: '',
@@ -336,8 +336,8 @@ export class AddProductsComponent implements OnInit{
       }
     }else {
       let supplierProduct: SupplierProducts = {
-        id: this.product._id,
-        name: this.product.name,
+        productId: this.product._id,
+        productName: this.product.name,
         quantity: this.product.quantity,
         purchasePrice: 0,
         purchasedate: '',

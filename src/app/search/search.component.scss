@@ -6,7 +6,7 @@
   justify-content: center;
   align-items: center;
   background-color: #f2f2f2;
-  height: 150px; 
+  height: 200px; 
   // position: fixed; 
   // top: 0;
   width: 100%;
@@ -35,6 +35,9 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    border: 1px dotted #000;
+    border-radius: 5px;
+    padding: 10px;
   }
   
   label {
@@ -108,7 +111,7 @@
 }
 
 .search-properity {
-  width: 400px;
+  width: 280px;
 }
 .table {
   width: 100%;
@@ -139,11 +142,11 @@ a:hover {
   text-decoration: none;
 }
 #table-container {
-  max-height: calc(100vh - 9.4rem - 60px); /* Adjust the height as needed */
+  max-height: calc(100vh - 9.4rem - 120px); /* Adjust the height as needed */
   overflow-y: auto;
 }
 tbody {
-  max-height: 60vh;
+  max-height: 55vh;
   overflow-y: auto;
 }
 thead {
@@ -189,11 +192,14 @@ thead {
     max-width: 400px; /* set a maximum width for the table cells */
     height: 80px; /* set the cell height for large screens */
   }
+  .Bar {
+    height: 310px; 
+  }
 }
 
 @media (max-width : 997px) {
   .Bar {
-    height: 270px;
+    height: 350px; 
   }
 
   .filtterQuerry {

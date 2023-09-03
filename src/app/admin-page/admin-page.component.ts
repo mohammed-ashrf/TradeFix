@@ -15,11 +15,11 @@ export class AdminPageComponent implements OnInit {
   filteredDevicesCount !: number;
   allFileterdDevices: Receive[] = [];
   query:Query = {
-    repaired: false,
+    repaired: true,
     paidAdmissionFees: false,
     delivered: false,
     returned: false,
-    inProgress: true,
+    inProgress: false,
     newDevices: false,
     today: false,
     thisMonth: true,

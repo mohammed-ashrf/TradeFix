@@ -13,6 +13,8 @@ import { User } from 'src/app/auth/user';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationModalComponent } from 'src/app/confirmation-modal/confirmation-modal.component';
 import { GetdateService } from 'src/app/services/getdate.service';
+import { NotificationService } from 'src/app/services/notification.service';
+import { Notification } from 'src/app/services/notification.service';
 @Component({
   selector: 'app-device-form',
   templateUrl: './device-form.component.html',
@@ -43,7 +45,9 @@ export class DeviceFormComponent implements OnInit {
     _id: '',
     cash: 0,
     owing: 0,
-    toDeliverDate: ''
+    toDeliverDate: '',
+    discount: 0,
+    total: 0
   };
   print: Receive = {
     clientName: '',
@@ -67,7 +71,9 @@ export class DeviceFormComponent implements OnInit {
     _id: '',
     cash: 0,
     owing: 0,
-    toDeliverDate: ''
+    toDeliverDate: '',
+    discount: 0,
+    total: 0
   };
   products: Product[] = [];
   submited: boolean = false;
@@ -114,6 +120,7 @@ export class DeviceFormComponent implements OnInit {
     private location: Location,
     private dialog: MatDialog,
     private dateService: GetdateService,
+    private notificationService: NotificationService,
   ) {}
 
   ngOnInit(): void {
@@ -281,6 +288,7 @@ export class DeviceFormComponent implements OnInit {
     if(item.quantity <= 0) {
       throw new Error(`Not enough stock for ${item.name}. Available stock: ${item.quantity}`);
     }else {
+      this.productPrice = this.receive.clientSelection == 'User' ? item.userSellingPrice * this.dollarPrice : item.deallerSellingPrice * this.dollarPrice;
       this.product = {
         productId: item._id,
         productName: item.name,
@@ -291,7 +299,7 @@ export class DeviceFormComponent implements OnInit {
       item.quantity -= quantity;
       this.productService.update(item._id, item);
       console.log(this.product);
-      this.receive.fees += item.userSellingPrice;
+      this.receive.fees += this.productPrice;
       this.product = { productId: '', productName: '', productPrice: 0, quantity: 0};
       this.searchTerm = '';
       this.isSearched = false;
@@ -302,7 +310,7 @@ export class DeviceFormComponent implements OnInit {
     this.receive['products'].forEach((product,index)=>{
         if(product.productId == key) {
           this.receive['products'].splice(index,1);
-          this.receive.fees -= (product.productPrice * this.dollarPrice);
+          this.receive.fees -= product.productPrice;
           this.productService.getOne(product.productId).subscribe(
             (item) => {
               item.quantity += product.quantity;
@@ -461,9 +469,25 @@ export class DeviceFormComponent implements OnInit {
       console.log(this.receive._id);
     } else {
       this.deviceService.update(this.receive._id, this.receive).subscribe(
-        () => {
+        (device) => {
           // this.submited = true;
+          if (this.user.role == "technition") {
+            const notification: Notification = {
+              _id: '',
+              title: "Device Update",
+              message: `${this.user.username} updated ${device._id}`,
+              timestamp: new Date(this.currentDate),
+              type: 'device',
+              id: `${device._id}`,
+            }
+            this.notificationService.createNotification(notification).subscribe(
+              () => {
+                console.log('Sent Notification');
+              }
+            )
+          }
           console.log("updated");
+          window.alert('device is updated');
         },
         (error) => {
           console.error('Error updating device:', JSON.stringify(error));

@@ -55,7 +55,9 @@ export class StatsComponent implements OnInit {
   allBuyers: Buyer[] = [];
 
   devices: Receive[] = [];
+  deliveredDevices: Receive[] = [];
   allDevices: Receive[] = [];
+  inAppDevices: Receive[] = [];
   query: Query = {
     repaired: false,
     paidAdmissionFees: false,
@@ -134,9 +136,23 @@ export class StatsComponent implements OnInit {
   getDevices() {
     this.deviceService.getAll().subscribe((devices) => {
       this.devices = devices;
+      this.inAppDevices = devices;
       this.allDevices = devices;
+      this.getDeliveredDevices();
       this.filterDevices();
     });
+  }
+
+  getDeliveredDevices(){
+    this.deviceService.getAllDeliveredDevices().subscribe((deliveredDevices) => {
+      this.deliveredDevices = deliveredDevices;
+      let tempDevices = deliveredDevices;
+      const length = this.allDevices.length;
+      for (let i = 0; i < length; i++) {
+        tempDevices.push(this.allDevices[i]);
+      }
+      this.allDevices = tempDevices;
+    })
   }
   calsellingMoneyTotal(buyers:Buyer[]) {
     this.sellingMoneyTotal = buyers.reduce((total, buyer) => {
