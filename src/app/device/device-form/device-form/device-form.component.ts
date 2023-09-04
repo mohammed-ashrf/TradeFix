@@ -47,7 +47,8 @@ export class DeviceFormComponent implements OnInit {
     owing: 0,
     toDeliverDate: '',
     discount: 0,
-    total: 0
+    total: 0,
+    productsMoney: 0
   };
   print: Receive = {
     clientName: '',
@@ -73,7 +74,8 @@ export class DeviceFormComponent implements OnInit {
     owing: 0,
     toDeliverDate: '',
     discount: 0,
-    total: 0
+    total: 0,
+    productsMoney: 0
   };
   products: Product[] = [];
   submited: boolean = false;
@@ -299,7 +301,7 @@ export class DeviceFormComponent implements OnInit {
       item.quantity -= quantity;
       this.productService.update(item._id, item);
       console.log(this.product);
-      this.receive.fees += this.productPrice;
+      this.receive.productsMoney += this.productPrice;
       this.product = { productId: '', productName: '', productPrice: 0, quantity: 0};
       this.searchTerm = '';
       this.isSearched = false;
@@ -310,7 +312,7 @@ export class DeviceFormComponent implements OnInit {
     this.receive['products'].forEach((product,index)=>{
         if(product.productId == key) {
           this.receive['products'].splice(index,1);
-          this.receive.fees -= product.productPrice;
+          this.receive.productsMoney -= product.productPrice;
           this.productService.getOne(product.productId).subscribe(
             (item) => {
               item.quantity += product.quantity;
@@ -367,8 +369,10 @@ export class DeviceFormComponent implements OnInit {
         const currentDate = new Date(date);
         if (currentDate >= lastDeviceDate) {
           this.currentDate = date;
-          this.date = date;
           this.today = date;
+          if(this.isNew) {
+            this.date = date;
+          }
         }else {
           window.alert("Your date is not right, fix it or connect to the internet");
         }

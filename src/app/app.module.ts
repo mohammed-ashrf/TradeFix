@@ -32,7 +32,6 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 import { SearchComponent } from './search/search.component';
 import { PrintLayoutComponent } from './print-layout/print-layout.component';
 import { AdminPageComponent } from './admin-page/admin-page.component';
-import { AdminSearchComponent } from './admin-search/admin-search.component';
 import { UserDashboardComponent } from './user-dashboard/user-dashboard.component';
 import { ProductsComponent } from './products/products.component';
 import { AddProductsComponent } from './add-products/add-products.component';
@@ -59,7 +58,6 @@ import { NotificationComponent } from './notification/notification.component';
     SearchComponent,
     PrintLayoutComponent,
     AdminPageComponent,
-    AdminSearchComponent,
     UserDashboardComponent,
     ProductsComponent,
     AddProductsComponent,

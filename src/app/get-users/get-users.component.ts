@@ -60,4 +60,12 @@ export class GetUsersComponent implements OnInit{
   search() {
       this.searchResult = this.searchUsers(this.users, this.searchTerm, this.searchProperty);
   }
+
+  deleteUser(id: string){
+    this.authService.deleteUser(id).subscribe(
+      () => {
+        this.users = this.users.filter((item: { _id: string; }) => item._id !== id);
+      }
+    );
+  }
 }

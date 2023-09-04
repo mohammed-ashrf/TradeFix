@@ -4,7 +4,6 @@ import { AuthService } from '../../auth.service';
 import { User } from '../../user';
 import { map, catchError } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
-import { adminPassword } from 'src/app/shared/information';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -59,6 +58,8 @@ export class LoginComponent implements OnInit {
             return '/devices';
           } else if (this.role === 'technition') {
             return '/userDashboard';
+          } else if (this.role === 'admin') {
+            return '/admin';
           }
         }
         return '/login';
@@ -72,33 +73,53 @@ export class LoginComponent implements OnInit {
 
   submit(): void {
     this.loginAttempted = true;
-    if (this.email == 'admin' && this.password == adminPassword) {
-      const logedUser = {
-        _id: "1",
-        username: "Admin",
-        email: "admin",
-        role: "admin"
-      };
-      localStorage.setItem("user", JSON.stringify(logedUser));
-      this.router.navigate(['/admin']);
-    } else {
-      this.authService.login(this.email, this.password).subscribe({
-        next: (data) => {
-          this.loginAttempted = false;
-          this.authService.setToken(data.token);
-          this.whichUser(data.token).subscribe((page) => {
-            this.router.navigate([page]);
-          });
-          this.email = '';
-          this.password = '';
-        },
-        error: (error) => {
-          console.error(error);
-          this.loginNotSuccessfull = true;
-          this.email = '';
-          this.password = '';
-        }
-      });
-    }
+    this.authService.login(this.email, this.password).subscribe({
+      next: (data) => {
+        this.loginAttempted = false;
+        this.authService.setToken(data.token);
+        this.whichUser(data.token).subscribe((page) => {
+          this.router.navigate([page]);
+        });
+        this.email = '';
+        this.password = '';
+      },
+      error: (error) => {
+        console.error(error);
+        this.loginNotSuccessfull = true;
+        this.email = '';
+        this.password = '';
+      }
+    });
   };
+  // submit(): void {
+  //   this.loginAttempted = true;
+  //   if (this.email == 'admin' && this.password == adminPassword) {
+  //     const logedUser = {
+  //       _id: "1",
+  //       username: "Admin",
+  //       email: "admin",
+  //       role: "admin"
+  //     };
+  //     localStorage.setItem("user", JSON.stringify(logedUser));
+  //     this.router.navigate(['/admin']);
+  //   } else {
+  //     this.authService.login(this.email, this.password).subscribe({
+  //       next: (data) => {
+  //         this.loginAttempted = false;
+  //         this.authService.setToken(data.token);
+  //         this.whichUser(data.token).subscribe((page) => {
+  //           this.router.navigate([page]);
+  //         });
+  //         this.email = '';
+  //         this.password = '';
+  //       },
+  //       error: (error) => {
+  //         console.error(error);
+  //         this.loginNotSuccessfull = true;
+  //         this.email = '';
+  //         this.password = '';
+  //       }
+  //     });
+  //   }
+  // };
 }

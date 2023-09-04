@@ -47,6 +47,9 @@
         <td>
           <a mat-button [routerLink]="['/register', user._id, 'edit']">تعديل</a>
         </td>
+        <td>
+          <a mat-button (click)="deleteUser(user._id)">حذف</a>
+        </td>
       </tr>
     </tbody>
   </table>

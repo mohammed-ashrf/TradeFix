@@ -76,7 +76,7 @@ export class InformationService {
   }
 
   deleteSupplier(id: string): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/dealers/${id}`);
+    return this.http.delete(`${this.apiUrl}/suppliers/${id}`);
   }
 
   getDealers(): Observable<Dealer[]> {

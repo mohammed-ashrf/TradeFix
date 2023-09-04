@@ -134,11 +134,11 @@ export class StatsComponent implements OnInit {
   }
 
   getDevices() {
-    this.deviceService.getAll().subscribe((devices) => {
+    this.deviceService.getAll().subscribe(async(devices) => {
       this.devices = devices;
       this.inAppDevices = devices;
       this.allDevices = devices;
-      this.getDeliveredDevices();
+      await this.getDeliveredDevices();
       this.filterDevices();
     });
   }
@@ -185,14 +185,19 @@ export class StatsComponent implements OnInit {
 
   calRepairMoneyTotal(devices: Receive[]) {
     this.ReapirMoneyTotal = devices.reduce((total, device) => {
-      return total + device.fees
+      return total + device.total;
     }, 0);
   }
+  // calProductsMoneyInRepair(devices: Receive[]) {
+  //   this.ProductsMoneyInRepair =  devices.reduce((total, device) => {
+  //     return total + device.products.reduce((subtotal, product) => {
+  //       return subtotal + product.productPrice;
+  //     },0);
+  //   }, 0);
+  // }
   calProductsMoneyInRepair(devices: Receive[]) {
     this.ProductsMoneyInRepair =  devices.reduce((total, device) => {
-      return total + device.products.reduce((subtotal, product) => {
-        return subtotal + product.productPrice;
-      },0);
+      return total + device.productsMoney;
     }, 0);
   }
   calPurchaseProductsMoneyInRepair(devices: Receive[]) {

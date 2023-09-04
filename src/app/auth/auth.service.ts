@@ -74,7 +74,7 @@ export class AuthService {
 
 
   getUserById(id: string) {
-    return this.http.get<any>(`${this.apiUrl}/user/${id}`, {
+    return this.http.get<User>(`${this.apiUrl}/user/${id}`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem('token')}`
       }
@@ -96,5 +96,12 @@ export class AuthService {
   logout(): void {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
+  }
+
+  updateUserById(id: string, user: User): Observable<User> {
+    return this.http.put<User>(`${this.apiUrl}/${id}`, user);
+  }
+  deleteUser(id: string): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/user/${id}`);
   }
 }

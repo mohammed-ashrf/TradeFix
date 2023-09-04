@@ -77,8 +77,12 @@
     </div>
     <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="10px" dir="rtl">
       <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
-        <label for="fees">الحساب:</label>
+        <label for="fees">حساب الصيانة:</label>
         <input type="number" id="fees" name="fees" [(ngModel)]="receive.fees" required [disabled]="!sameEng">
+      </div>
+      <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
+        <label for="fees">حساب المنتجات:</label>
+        <input type="number" id="productsMoney" name="productsMoney" [(ngModel)]="receive.productsMoney" required [disabled]="!sameEng">
       </div>
       <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
         <label for="fees">خصم:</label>
@@ -88,7 +92,7 @@
     <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="10px" dir="rtl">
       <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
         <label for="fees">الإجمالي:</label>
-        <input type="number" id="total" name="total" [(ngModel)]="receive.total" required [disabled]="disabled">
+        <input type="number" id="total" name="total" value="{{(receive.fees + receive.productsMoney) - receive.discount}}" [(ngModel)]="receive.total" required [disabled]="disabled">
       </div>
       <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
         <label for="cash">كاش:</label>
@@ -96,7 +100,7 @@
       </div>
       <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
         <label for="owing">آجل:</label>
-        <input type="number" id="owing" name="owing" [(ngModel)]="receive.owing" required [disabled]="disabled">
+        <input type="number" id="owing" name="owing" value="{{receive.total - receive.cash}}" [(ngModel)]="receive.owing" required [disabled]="disabled">
       </div>
     </div>
     <div fxLayout="row" fxLayoutAlign="space-around center" fxLayoutGap="10px" dir="rtl">

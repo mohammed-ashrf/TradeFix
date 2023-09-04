@@ -33,7 +33,14 @@ export class AdminPageComponent implements OnInit {
   users:any;
   page: number = 0;
   itemToload: number = 0;
-  constructor(private deviceService: DeviceService, private router: Router, private authService: AuthService) {}
+  currentUser: string | null;
+  user: any;
+  constructor(private deviceService: DeviceService, private router: Router, private authService: AuthService) {
+    this.currentUser = localStorage.getItem('user');
+      if (this.currentUser) {
+        this.user = JSON.parse(this.currentUser);
+      }
+  }
 
   ngOnInit(): void {
     localStorage.setItem("location", "admin");
@@ -136,8 +143,10 @@ export class AdminPageComponent implements OnInit {
   onDelete(id: string): void {
     if (confirm('Are you sure you want to delete this device?')) {
       this.deviceService.delete(id).subscribe(() => {
-        this.devices = this.devices.filter((device) => device._id !== id);
-        this.DevicesCount = this.devices.length;
+        this.allFileterdDevices = this.allFileterdDevices.filter((device) => device._id !== id);
+        this.loadDevices();
+        this.DevicesCount -= 1;
+        this.filteredDevicesCount -= 1;
       });
     }
   }

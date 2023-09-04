@@ -46,5 +46,3 @@ export interface DollarPrice {
     date: any,
     _id: string,
 }
-
-export const adminPassword = "alert('admin007')";

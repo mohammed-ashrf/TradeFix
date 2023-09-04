@@ -8,6 +8,7 @@ export interface Receive {
   repair: string;
   products: product[];
   notes: string;
+  productsMoney: number;
   fees: number;
   discount: number;
   total: number;

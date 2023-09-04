@@ -46,10 +46,12 @@ export class DeviceListComponent implements OnInit {
     this.token = localStorage.getItem('token');
     localStorage.setItem("location", "devices");
     this.currentUser = localStorage.getItem('user'); 
-    this.user = JSON.parse(this.currentUser);
-    this.getAllDevices();
-    this.getUsers()
-    this.loadOnScroll();
+    if (this.currentUser) {
+      this.user = JSON.parse(this.currentUser);
+      this.getAllDevices();
+      this.getUsers()
+      this.loadOnScroll();
+    }
   }
 
   getUsers() {

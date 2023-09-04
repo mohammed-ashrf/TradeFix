@@ -169,7 +169,7 @@
       </span>
       <div class="tabs">
         <a mat-button dir="rtl" routerLinkActive='active' routerLink="/admin" *ngIf="user.role == 'admin'">{{user.username}}</a>
-        <a mat-button dir="rtl" routerLinkActive='active' routerLink="/devices" *ngIf="user.role == 'receiver'">{{user.username}}</a>
+        <a mat-button dir="rtl" routerLink="/devices" *ngIf="user.role == 'receiver'">{{user.username}}</a>
         <a mat-button dir="rtl" routerLinkActive='active' routerLink="/devices/new" *ngIf="user.role == 'receiver' || user.role == 'admin'">إستلام</a>
         <a mat-button dir="rtl" routerLinkActive='active' routerLink="/search" *ngIf="user.role == 'receiver' || user.role == 'admin'">بحث</a>
         <a mat-button dir="rtl" routerLinkActive='active' routerLink="/products" *ngIf="user.role == 'receiver' || user.role == 'admin'">المنتجات</a>
