@@ -1,9 +1,19 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, catchError, throwError } from 'rxjs';
 
 import { environment } from 'src/environments/environment';
-import { Section, ProductSection,Supplier,Dealer, DollarPrice, SupplierProducts } from '../shared/information';  
+import { Section, ProductSection,Supplier,Dealer, DollarPrice, SupplierProducts } from '../shared/information';
+export interface SupplierProductAdding {
+  productId: string,
+  productName: string,
+  quantity: number,
+  purchasePrice: number,
+  purchasedate: string,
+  whatIsPaid: number,
+  oweing: number,
+  _id: string
+}
 @Injectable({
   providedIn: 'root'
 })
@@ -66,13 +76,33 @@ export class InformationService {
   updateSupplier(id: string, supplier: Supplier): Observable<Supplier> {
     return this.http.put<Supplier>(`${this.apiUrl}/suppliers/${id}`, supplier);
   }
-  updateSupplierProducts(id: string, productId: string, product: SupplierProducts): Observable<Supplier> {
-    const requestBody = {
-      productId: productId,
-      product: product
-    };
-  
-    return this.http.put<Supplier>(`${this.apiUrl}/supplierProducts/${id}`, requestBody);
+  updateSupplierProducts(id: string, product: SupplierProductAdding): Observable<Supplier> {
+    console.log("updating supplier products");
+    
+    return this.http.put<Supplier>(`${this.apiUrl}/suppliers/${id}/products`, { product }).pipe(
+      catchError((error: any) => {
+        console.error('Failed to update supplier products:', error);
+        return throwError('Something went wrong. Please try again.'); // Modify the error message as needed
+      })
+    );
+  }
+  updateSupplierCash(id: string, cash: number) {
+    return this.http.put(`${this.apiUrl}-addcash/${id}`, {cash}).pipe(
+      catchError((error: any) => {
+        console.error('Failed to update supplier products:', error);
+        return throwError('Something went wrong. Please try again.'); // Modify the error message as needed
+      })
+    );
+  }
+  deleteSupplierProduct(supplierId: string, productId: string, informationId: string): Observable<any> {
+    console.log("updating supplier products");
+    
+    return this.http.delete(`${this.apiUrl}/suppliers/${supplierId}/products/${productId}/informations/${informationId}`).pipe(
+      catchError((error: any) => {
+        console.error('Failed to delete supplier products informations:', error);
+        return throwError('Something went wrong. Please try again.'); // Modify the error message as needed
+      })
+    );
   }
 
   deleteSupplier(id: string): Observable<any> {

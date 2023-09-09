@@ -35,7 +35,9 @@ export class AddInformationsComponent implements OnInit {
     products: [],
     _id: '',
     whatsappNumber: '',
-    address: ''
+    address: '',
+    cash: 0,
+    owing: 0
   }
 
 
@@ -83,6 +85,12 @@ export class AddInformationsComponent implements OnInit {
         this.informationService.getOneSupplier(id).subscribe((supplier) => {
           this.isSupplier = true;
           this.supplier = supplier;
+          if(isNaN(this.supplier.cash)) {
+            this.supplier.cash = 0;
+          }
+          if (isNaN(this.supplier.owing)){
+            this.supplier.owing = 0;
+          }
         });
       }else if(route === 'product-sections') {
         this.informationService.getOneProductSection(id).subscribe((productSection) => {

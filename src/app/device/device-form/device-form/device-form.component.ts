@@ -154,6 +154,9 @@ export class DeviceFormComponent implements OnInit {
       if (this.isDevicesRoute) {
         this.deviceService.getOne(id).subscribe((device) => {
           this.receive = device;
+          if (isNaN(this.receive.productsMoney)) {
+            this.receive.productsMoney = 0;
+          }
           this.recieptId = device._id.slice(-7);
           this.date = device.receivingDate;
           if(device.clientSelection === 'Dealer'){
@@ -285,7 +288,7 @@ export class DeviceFormComponent implements OnInit {
     this.receive.telnum = item.phone;
     this.isDealersSearched = false;
   }
-// this need to be fixed
+
   onSelect(item: Product, quantity:number) {
     if(item.quantity <= 0) {
       throw new Error(`Not enough stock for ${item.name}. Available stock: ${item.quantity}`);
@@ -294,6 +297,7 @@ export class DeviceFormComponent implements OnInit {
       this.product = {
         productId: item._id,
         productName: item.name,
+        purchasePrice: (item.suppliers[item.suppliers.length -1].purchasePrice * this.dollarPrice),
         productPrice: this.productPrice,
         quantity: quantity,        
       }
@@ -302,7 +306,7 @@ export class DeviceFormComponent implements OnInit {
       this.productService.update(item._id, item);
       console.log(this.product);
       this.receive.productsMoney += this.productPrice;
-      this.product = { productId: '', productName: '', productPrice: 0, quantity: 0};
+      this.product = { productId: '', productName: '', purchasePrice: 0,productPrice: 0, quantity: 0};
       this.searchTerm = '';
       this.isSearched = false;
     }
@@ -447,14 +451,14 @@ export class DeviceFormComponent implements OnInit {
     );
   }
   submit(form : NgForm): void {
+    this.receive.total = (this.receive.fees + this.receive.productsMoney) - this.receive.discount;
+    this.receive.owing = this.receive.total - this.receive.cash;
     if (this.isNew) {
       this.receive.receivingDate = this.currentDate;
       this.updating = false;
       this.deviceService.create(this.receive).subscribe(
         (data) => {
           this.print = data;
-          console.log(data._id);
-          console.log(data);
           this.edited = true;
           this.recieptId = data._id.slice(-12);
           window.alert(`Success saving device ${data._id}. You can print now.`);
@@ -464,6 +468,33 @@ export class DeviceFormComponent implements OnInit {
           if (this.notBack){
             form.resetForm();
           }
+          this.receive = {
+            clientName: '',
+            telnum: '',
+            deviceType: '',
+            section: '',
+            clientSelection: 'User',
+            complain: '',
+            repair: '',
+            notes: '',
+            fees: 0,
+            finished: false,
+            repaired: false,
+            paidAdmissionFees: false,
+            delivered: false,
+            returned: false,
+            engineer: '',
+            priority: '',
+            receivingDate: '',
+            products: [],
+            _id: '',
+            cash: 0,
+            owing: 0,
+            toDeliverDate: '',
+            discount: 0,
+            total: 0,
+            productsMoney: 0
+          };
         },
         (error) => {
           console.error('Error creating device:', error);

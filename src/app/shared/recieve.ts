@@ -28,6 +28,7 @@ export interface Receive {
 export interface product {
   productId: string,
   productName: string,
+  purchasePrice: number,
   productPrice: number,
   quantity: number,
 }

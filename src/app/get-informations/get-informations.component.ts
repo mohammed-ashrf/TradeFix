@@ -31,6 +31,7 @@ export class GetInformationsComponent implements OnInit{
   total: number = 0;
   selectedSupplierId: string = '';
   searchProperty: string = 'name';
+  cashToAdd: number = 0;
   constructor(private informationService: InformationService,
     private location: Location){}
   
@@ -84,31 +85,43 @@ export class GetInformationsComponent implements OnInit{
     }
   }
 
-  calSuppliersMoney(){
-    this.suppliersMoneyTotal = this.suppliers.reduce((total, supplier) => {
-      return total + supplier.products.reduce((subTotal, product)=> {
-        return subTotal + (product.purchasePrice * product.quantity);
-      },0);
-    },0);
-    this.suppliersMoneyPaid = this.suppliers.reduce((total, supplier) => {
-      return total + supplier.products.reduce((subTotal, product)=> {
-        return subTotal + product.whatIsPaid
-      },0);
-    },0);
-    this.suppliersMonayOwing = this.suppliersMoneyTotal - this.suppliersMoneyPaid;
-  }
+  // calSuppliersMoney(){
+  //   this.suppliersMoneyTotal = this.suppliers.reduce((total, supplier) => {
+  //     return total + supplier.products.reduce((subTotal, product)=> {
+  //       return subTotal + (product.purchasePrice * product.quantity);
+  //     },0);
+  //   },0);
+  //   this.suppliersMoneyPaid = this.suppliers.reduce((total, supplier) => {
+  //     return total + supplier.products.reduce((subTotal, product)=> {
+  //       return subTotal + product.whatIsPaid
+  //     },0);
+  //   },0);
+  //   this.suppliersMonayOwing = this.suppliersMoneyTotal - this.suppliersMoneyPaid;
+  // }
 
-  calSupplierMoney(supplier : Supplier, supplierId: string) {
-    this.paid = supplier.products.reduce((total,product) => {
-      return total + product.whatIsPaid;
-    },0);
+  // calSupplierMoney(supplier : Supplier, supplierId: string) {
+  //   this.paid = supplier.products.reduce((total,product) => {
+  //     return total + product.whatIsPaid;
+  //   },0);
 
-    this.owing = supplier.products.reduce((total,product) => {
-      return total + product.oweing;
-    },0);
-    console.log(supplier.products);
+  //   this.owing = supplier.products.reduce((total,product) => {
+  //     return total + product.oweing;
+  //   },0);
+  //   console.log(supplier.products);
+  //   
+  // }
+
+  onshowInput(supplierId: string){
     this.showData = true;
     this.selectedSupplierId = supplierId;
+  }
+
+  addSupplierCash(supplierId: string) {
+    this.informationService.updateSupplierCash(supplierId, this.cashToAdd).subscribe(
+      (res) => {
+        console.log(res);
+      }
+    )
   }
 
   searchInformations(informations: any[], userInput: any, searchProperty:string) {

@@ -1,0 +1,48 @@
+<app-toolbar></app-toolbar>
+<div class="container" dir="rtl">
+    <h2>المصروفات</h2>
+
+    <!-- Date range filter -->
+    <div class="filter" fxLayout="row" fxLayoutAlign="space-around center">
+        <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="10px">
+            <label>من:</label>
+            <input type="date" [(ngModel)]="startDate">
+        </div>
+        <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="10px">
+            <label>إلي:</label>
+            <input type="date" [(ngModel)]="endDate">
+        </div>
+        <button (click)="filterExpenses()">تحديث</button>
+    </div>
+    <div class="section-divider"></div>
+    <!-- Display expenses -->
+
+    <ul class="expenses-list">
+        <li *ngFor="let expense of expenses">
+            <span class="expense-category">{{ expense.name }}</span>
+            <ul class="expense-Items">
+                <li *ngFor="let expenseDetail of expense.expenses" class="expense-item">
+                    كاش: {{ expenseDetail.amount }}, التاريخ: {{ expenseDetail.date | date: 'medium' }}
+                </li>
+            </ul>
+            <div class="section-divider"></div>
+        </li>
+    </ul>
+    <!-- Add new expense -->
+    <h3>إضافة مصروفات</h3>
+    <form #expensesForm="ngForm"  (submit)="addExpense()" fxLayout="row" fxLayoutAlign="space-between center">
+        <div fxLayout="row" fxLayoutAlign="space-between center">
+            <label>إسم الخانة:</label>
+            <input type="text" name="expenseName" [(ngModel)]="newExpense.name" (keyup)="searchExpenses()" required>
+        </div>
+        <div fxLayout="row" fxLayoutAlign="space-between center">
+            <input type="number" name="expenseAmount" [(ngModel)]="newExpense.amount" required>
+        </div>
+        <button type="submit">إضافة</button>
+    </form>
+    <ul *ngIf="isExpensesSearched && newExpense.name !== ''" class="search-list">
+        <li *ngFor="let expense of expensesSearchReasult" (click)="onSelectExpense(expense)">
+          {{ expense.name }}
+        </li>
+    </ul>
+</div>

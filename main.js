@@ -3,7 +3,7 @@ const path = require('path');
 const fs = require('fs');
 
 function createWindow() {
-  const iconPath = path.join(__dirname, 'dist/repair-app-new/assets/icons/win/repairing.ico');
+  const iconPath = path.join(__dirname, 'dist/TradeFix/assets/icons/win/repairing.ico');
   const iconDataUrl = `data:image/png;base64,${fs.readFileSync(iconPath).toString('base64')}`;
 
   const win = new BrowserWindow({
@@ -16,7 +16,7 @@ function createWindow() {
     }
   });
 
-  win.loadFile(path.join(__dirname, 'dist/repair-app-new/index.html'));
+  win.loadFile(path.join(__dirname, 'dist/TradeFix/index.html'));
 }
 
 app.whenReady().then(() => {

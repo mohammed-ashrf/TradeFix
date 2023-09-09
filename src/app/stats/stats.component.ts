@@ -139,7 +139,6 @@ export class StatsComponent implements OnInit {
       this.inAppDevices = devices;
       this.allDevices = devices;
       await this.getDeliveredDevices();
-      this.filterDevices();
     });
   }
 
@@ -152,6 +151,8 @@ export class StatsComponent implements OnInit {
         tempDevices.push(this.allDevices[i]);
       }
       this.allDevices = tempDevices;
+      console.log(this.allDevices.length);
+      this.filterDevices();
     })
   }
   calsellingMoneyTotal(buyers:Buyer[]) {
@@ -177,7 +178,7 @@ export class StatsComponent implements OnInit {
   calSellingMoneyProfites(buyers: Buyer[]) {
     this.sellingMoneyProfites = this.sellingMoneyTotal - buyers.reduce((total, buyer) => {
       return total + buyer.carts.reduce((subtotal, cart) => {
-        this.calProductBuyingMoney(cart)
+        this.calProductBuyingMoney(cart);
         return subtotal + this.ProductBuyingMoney;
       }, 0);
     }, 0);
@@ -188,13 +189,7 @@ export class StatsComponent implements OnInit {
       return total + device.total;
     }, 0);
   }
-  // calProductsMoneyInRepair(devices: Receive[]) {
-  //   this.ProductsMoneyInRepair =  devices.reduce((total, device) => {
-  //     return total + device.products.reduce((subtotal, product) => {
-  //       return subtotal + product.productPrice;
-  //     },0);
-  //   }, 0);
-  // }
+
   calProductsMoneyInRepair(devices: Receive[]) {
     this.ProductsMoneyInRepair =  devices.reduce((total, device) => {
       return total + device.productsMoney;
@@ -203,14 +198,7 @@ export class StatsComponent implements OnInit {
   calPurchaseProductsMoneyInRepair(devices: Receive[]) {
     this.PurchaseProductsMoneyInRepair = devices.reduce((total, device) => {
       return total + device.products.reduce((subtotal, product) => {
-        let sum = 0;
-        this.productsService.getOne(product.productId).subscribe(
-          (originalProduct) => {
-            console.log(originalProduct);
-            sum = subtotal + originalProduct.suppliers[originalProduct.suppliers.length - 1].purchasePrice;
-          }
-        )
-        return sum;
+        return subtotal + (product.purchasePrice * product.quantity);
       },0)
     }, 0);
     console.log(this.PurchaseProductsMoneyInRepair);

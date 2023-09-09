@@ -19,7 +19,8 @@ export interface ProductSupplier {
     purchasePrice: number,
     purchasedate: string,
     whatIsPaid: number,
-    oweing: number
+    oweing: number,
+    informationId: string
 }
 
 // export interface Buyer {

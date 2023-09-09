@@ -46,6 +46,7 @@ import { AlertModalComponent } from './alert-modal/alert-modal.component';
 import { ToolbarComponent } from './toolbar/toolbar.component';
 import { StatsComponent } from './stats/stats.component';
 import { NotificationComponent } from './notification/notification.component';
+import { ExpensesComponent } from './expenses/expenses.component';
 
 
 @NgModule({
@@ -72,6 +73,7 @@ import { NotificationComponent } from './notification/notification.component';
     ToolbarComponent,
     StatsComponent,
     NotificationComponent,
+    ExpensesComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,5 +1,5 @@
 {
-  "name": "repair-app-new",
+  "name": "TradeFix",
   "version": "0.0.0",
   "main": "main.js",
   "scripts": {
@@ -13,8 +13,8 @@
     "electron-build": "ng build --base-href ./ && electron .",
     "electron": "electron .",
     "package-mac": "electron-packager . — overwrite — platform=darwin — arch=x64 — icon=assets/icons/mac/icon.icns — prune=true — out=release-builds",
-    "package-win": "electron-packager . Al-Ahram-B1 — overwrite — asar=true — platform=win32 — arch=ia32 — icon=repair-appNew/src/assets/icons/win/repairing.ico — prune=true — out=release-builds — version-string.CompanyName=Mohammed_Younis — version-string.FileDescription=Mohammed_Younis — version-string.ProductName=\"Al-Ahram\"",
-    "package-linux": "electron-packager . Al-Ahram-setup — overwrite — asar=true — platform=linux — arch=x64 — icon=src/assets/icons/png/repairing.png — prune=true — out=release-builds"
+    "package-win": "electron-packager . TradeFix-B2 — overwrite — asar=true — platform=win32 — arch=ia32 — icon=repair-appNew/src/assets/icons/win/repairing.ico — prune=true — out=release-builds — version-string.CompanyName=Mohammed_Younis — version-string.FileDescription=Mohammed_Younis — version-string.ProductName=\"TradeFix\"",
+    "package-linux": "electron-packager . TradeFix-setup — overwrite — asar=true — platform=linux — arch=x64 — icon=src/assets/icons/png/repairing.png — prune=true — out=release-builds"
   },
   "private": true,
   "dependencies": {

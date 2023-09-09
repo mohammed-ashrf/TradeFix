@@ -11,14 +11,20 @@ export interface ProductSection {
     _id: string,
 }
 
-export interface SupplierProducts {
-    productId: string,
-    productName: string,
+
+export interface SupplierProductsInformaitons {
     quantity: number,
     purchasePrice: number,
     purchasedate: string,
     whatIsPaid: number,
     oweing: number,
+    _id: string,
+}
+export interface SupplierProducts {
+    productId: string,
+    productName: string,
+    infromations: SupplierProductsInformaitons[],
+    _id: string,
 }
 
 export interface Supplier {
@@ -27,6 +33,8 @@ export interface Supplier {
     address: string,
     phone: string,
     notes: string,
+    cash: number,
+    owing: number,
     products: SupplierProducts[],
     _id: string,
 }
