@@ -1,0 +1,38 @@
+<app-toolbar></app-toolbar>
+<div class="losses-container" fxLayout="column" fxLayoutAlign="space-around center" dir="rtl">
+  <h2>إضافة خسائر</h2>
+
+  <form (ngSubmit)="createLoss()" class="loss-form" fxLayout="column">
+    <div class="form-group" fxLayout="row" fxLayoutAlign="space-between center">
+      <input type="text" id="name" placeholder="الاسم" required [(ngModel)]="newLoss.name" name="name">
+    </div>
+    <div class="form-group" fxLayout="row" fxLayoutAlign="space-between center">
+      <textarea id="description" required placeholder="الوصف" [(ngModel)]="newLoss.description" name="description"></textarea>
+    </div>
+    <div class="form-group" fxLayout="row" fxLayoutAlign="space-between center">
+      <input type="number" id="amount" required [(ngModel)]="newLoss.amount" name="amount">
+    </div>
+    <button type="submit">إضافة</button>
+  </form>
+  <h2>الخسائر</h2>
+  <div class="filter" fxLayout="row" fxLayoutAlign="space-around center">
+    <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="10px">
+        <label>من:</label>
+        <input type="date" [(ngModel)]="startDate">
+    </div>
+    <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="10px">
+        <label>إلي:</label>
+        <input type="date" [(ngModel)]="endDate">
+    </div>
+    <button (click)="filterLosses()">تحديث</button>
+  </div>
+  <div class="losses-list">
+    <div *ngFor="let loss of losses" class="loss-item" fxLayout="row" fxLayoutAlign="space-between center">
+      <p>{{ loss.name }}</p>
+      <p>{{ loss.description }}</p>
+      <p>الكمية: {{ loss.amount }}</p>
+      <p>الشخص: {{ loss.who }}</p>
+      <p> {{loss.createdAt | date: 'medium'}}</p>
+    </div>
+  </div>
+</div>

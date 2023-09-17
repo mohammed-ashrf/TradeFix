@@ -88,14 +88,14 @@
       </tbody>
     </table>
     <div class="total-price" fxlayout="column" dir="rtl">
-      <p>قيمة الفاتورة: {{ totalPrice }}</p>
+      <p>قيمة الفاتورة: {{ currentCart.totalPrice }}</p>
       <!-- <p>خصم : {{currentCart.discount}}</p> -->
-      <p>إجمالي: {{total}}</p>
-      <p>المدفوع: {{paid}}</p>
-      <P> اﻵجل: {{owing}}</P>
+      <p>إجمالي: {{ currentCart.total}}</p>
+      <p>المدفوع: {{currentCart.paid}}</p>
+      <P> اﻵجل: {{currentCart.owing}}</P>
     </div>
     <button mat-button (click)="updateCartInformation()" style="margin-bottom: 10px;">تحديث المعلومات</button>
-    <app-print-layout [cart]="currentCart" [products]="currentCart.products" [dollarPrice]="dollarPrice"></app-print-layout>
+    <app-print-layout [cart]="currentCart" [products]="currentCart.products" [dollarPrice]="dollarPrice" [userType]="userType"></app-print-layout>
     <button mat-button style="margin-bottom: 10px;" ngxPrint printSectionId="invoice" [printStyle]="{
       p: {'line-height': '75%', 'font-weight': 'bold', 'font-size': '11px'},
       svg: {'width': '100px', 'height': '100px'},

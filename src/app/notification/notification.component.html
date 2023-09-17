@@ -7,7 +7,10 @@
   
     <div class="notification-list" id="productNotifications" *ngIf="showingProductNotifications" fxLayout="column">
       <h2>Product Notifications</h2>
-      <div class="notification" *ngFor="let notification of productNotifications">
+      <div class="notification" *ngFor="let notification of productNotifications; let i = index">
+        <button mat-icon-button class="delete-icon" (click)="deleteNotification(notification._id, i)">
+          <mat-icon>X</mat-icon>
+        </button>
         <h3>{{ notification.title }}</h3>
         <p>{{ notification.message }}</p>
         <small>{{ notification.timestamp | date }}</small>
@@ -17,7 +20,10 @@
   
     <div class="notification-list" id="repairNotifications" *ngIf="showingRepairNotifications" fxLayout="column">
       <h2>Repair Notifications</h2>
-      <div class="notification" *ngFor="let notification of repairNotifications">
+      <div class="notification" *ngFor="let notification of repairNotifications; let i = index">
+        <button mat-icon-button class="delete-icon" (click)="deleteNotification(notification._id, i)">
+          <mat-icon>X</mat-icon>
+        </button>
         <h3>{{ notification.title }}</h3>
         <p>{{ notification.message }}</p>
         <small>{{ notification.timestamp | date }}</small>

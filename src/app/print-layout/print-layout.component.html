@@ -671,8 +671,12 @@
                   <td>{{item.product.name}}</td>
                   <td>{{item.product.description}}</td>
                   <td>{{item.quantity}}</td>
-                  <td>{{item.product.userSellingPrice * dollarPrice}}</td>
-                  <td>{{item.totalPrice * dollarPrice}}</td>
+                  <td *ngIf="userType === 'user'">{{ (item.product.userSellingPrice * dollarPrice) }} L.E</td>
+                  <td *ngIf="userType === 'dealer' && item.quantity >= 0 && item.quantity < 3">{{ (item.product.deallerSellingPrice * dollarPrice) }} L.E</td>
+                  <td *ngIf="userType === 'dealer' && item.quantity >= 3">{{ (item.product.deallerSellingPriceAll * dollarPrice) }} L.E</td>
+                  <td *ngIf="userType === 'user'">{{ (item.product.userSellingPrice * dollarPrice) * item.quantity}} L.E</td>
+                  <td *ngIf="userType === 'dealer' && item.quantity >= 0 && item.quantity < 3">{{ (item.product.deallerSellingPrice * dollarPrice) * item.quantity }} L.E</td>
+                  <td *ngIf="userType === 'dealer' && item.quantity >= 3">{{ (item.product.deallerSellingPriceAll * dollarPrice) * item.quantity }} L.E</td>
                 </tr>
               </table>
         </div>
@@ -683,7 +687,7 @@
                 <table class="payment">
                     <tr>
                       <td>TOTAL INVOICE</td>
-                      <td>{{cart.totalPrice * dollarPrice}}</td>
+                      <td>{{cart.totalPrice}}</td>
                     </tr>
                     <tr>
                       <td>DISCOUNT</td>
@@ -691,7 +695,7 @@
                     </tr>
                     <tr>
                       <td>TOTAL</td>
-                      <td>{{cart.total * dollarPrice}}</td>
+                      <td>{{cart.total}}</td>
                     </tr>
                     <tr>
                       <td>PAID</td>

@@ -1,0 +1,203 @@
+/* Global styles */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  
+  body {
+    font-family: Arial, sans-serif;
+  }
+  
+  .container {
+    max-width: 100%;
+    margin: 20px auto;
+    margin-top: 60px;
+    padding: 20px;
+  }
+  
+  h3 {
+    font-size: 16px;
+    font-weight: bold;
+    padding: 10px;
+    border: 1px dotted #000;
+    border-radius: 5px;
+  }
+  
+  h4 {
+    font-size: 14px;
+    font-weight: bold;
+    padding: 10px;
+    color: #000;
+  }
+  
+  button {
+    background-color: #4caf50;
+    color: #ffffff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  
+  button:hover {
+    background-color: #45a049;
+  }
+  
+  label {
+    font-weight: bold;
+    margin-right: 10px;
+  }
+  
+  input[type="number"],
+  select {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100px;
+  }
+  
+  ul {
+    list-style: none;
+    padding-left: 0;
+    margin-top: 10px;
+  }
+  
+  li {
+    margin-bottom: 5px;
+  }
+  
+  /* Safe specific styles */
+  .app-toolbar {
+    background-color: #2196f3;
+    color: #ffffff;
+    text-align: center;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+  }
+  
+  .add-deduct-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .add-deduct-section h3 {
+    margin-bottom: 0;
+  }
+  
+  .add-deduct-section label,
+  .add-deduct-section input,
+  .add-deduct-section select {
+    margin-bottom: 10px;
+  }
+  
+  .transaction-history {
+    margin-top: 20px;
+  }
+
+  .transactions {
+    width: 100%;
+  }
+  
+  /* Additional styles for a safe-like feel */
+  .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+  
+  .container > div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .container h2,
+  .container h3 {
+    text-align: center;
+  }
+  
+  .container button {
+    background-color: #2196f3;
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+  }
+  
+  .container button:hover {
+    background-color: #0d8de3;
+  }
+  
+  .container form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .container label {
+    font-weight: bold;
+    margin-right: 0;
+  }
+  
+  .container input[type="number"],
+  .container select {
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    width: 150px;
+    background-color: #f5f5f5;
+  }
+  
+  .container ul {
+    width: 100%;
+    padding: 10px;
+    background-color: #f5f5f5;
+    border-radius: 4px;
+    max-height: 60vh;
+    overflow-y: auto;
+  }
+  
+  .container li {
+    padding: 5px;
+    width: 80%;
+    margin: 10px auto;
+    text-align: center;
+    background-color: #ffffff;
+    border-radius: 4px;
+  }
+  
+  /* Media queries for responsive layout */
+  @media (max-width: 600px) {
+    .container {
+      padding: 10px;
+    }
+  
+    .container > div {
+      gap: 5px;
+    }
+  
+    .container h2,
+    .container h3 {
+      font-size: 16px;
+    }
+  
+    .container button {
+      padding: 8px 16px;
+    }
+  
+    .container input[type="number"],
+    .container select {
+      padding: 8px;
+      width: 100px;
+    }
+  }

@@ -25,7 +25,7 @@ export class SellComponent implements OnInit {
   total: number = 0;
   owing: number=0;
   pastOwing:number =0;
-  dollarPrice: any = 1; // default value, can be changed according to currency conversion rate
+  dollarPrice: any = 1;
   cart:any;
   cartId: number = 1;
   products!: CartItem[];
@@ -53,6 +53,7 @@ export class SellComponent implements OnInit {
     this.getdollarPrice();
     this.getProducts();
     if(this.currentCart){
+      console.log(this.currentCart);
       this.paid = this.currentCart.paid;
       this.discount = this.currentCart.discount;
       this.buyerName = this.currentCart.buyerName;

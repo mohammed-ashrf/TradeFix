@@ -15,6 +15,8 @@ import { ConfirmationModalComponent } from 'src/app/confirmation-modal/confirmat
 import { GetdateService } from 'src/app/services/getdate.service';
 import { NotificationService } from 'src/app/services/notification.service';
 import { Notification } from 'src/app/services/notification.service';
+import { SafeService } from 'src/app/services/safe.service';
+
 @Component({
   selector: 'app-device-form',
   templateUrl: './device-form.component.html',
@@ -48,7 +50,8 @@ export class DeviceFormComponent implements OnInit {
     toDeliverDate: '',
     discount: 0,
     total: 0,
-    productsMoney: 0
+    productsMoney: 0,
+    repairDate: ''
   };
   print: Receive = {
     clientName: '',
@@ -75,13 +78,14 @@ export class DeviceFormComponent implements OnInit {
     toDeliverDate: '',
     discount: 0,
     total: 0,
-    productsMoney: 0
+    productsMoney: 0,
+    repairDate: ''
   };
   products: Product[] = [];
   submited: boolean = false;
   updating: boolean = false;
   isNew = true;
-
+  initialCash: number = 0;
     
   edited:boolean = false;
   recieptId:any;
@@ -92,7 +96,6 @@ export class DeviceFormComponent implements OnInit {
   sections: Section[] = [];
   dealers: Dealer[] = [];
   users:any;
-  currentUser: any;
   user!: User;
   id:any;
   token:any;
@@ -123,16 +126,17 @@ export class DeviceFormComponent implements OnInit {
     private dialog: MatDialog,
     private dateService: GetdateService,
     private notificationService: NotificationService,
+    private SafeService: SafeService,
   ) {}
 
   ngOnInit(): void {
     this.receive.products = [];
     this.token = localStorage.getItem('token');
     this.preLocation = localStorage.getItem('location');
-    this.currentUser = localStorage.getItem('user');
-    if (this.currentUser) {
+    const currentUser = localStorage.getItem('user');
+    if (currentUser) {
       console.log("current user");
-      this.user = JSON.parse(this.currentUser);
+      this.user = JSON.parse(currentUser);
       if (this.user.role == 'receiver') {
         this.sameEng = true;
       }else if (this.user.role == 'admin') {
@@ -159,6 +163,7 @@ export class DeviceFormComponent implements OnInit {
           }
           this.recieptId = device._id.slice(-7);
           this.date = device.receivingDate;
+          this.initialCash = this.receive.cash;
           if(device.clientSelection === 'Dealer'){
             this.selectedDealer.name = device.clientName;
           }
@@ -177,8 +182,12 @@ export class DeviceFormComponent implements OnInit {
       }else {
         this.deviceService.getOneDeliveredDevice(id).subscribe((device) => {
           this.receive = device;
+          if (isNaN(this.receive.productsMoney)) {
+            this.receive.productsMoney = 0;
+          }
           this.recieptId = device._id.slice(-7);
           this.date = device.receivingDate;
+          this.initialCash = this.receive.cash;
           if(device.clientSelection === 'Dealer'){
             this.selectedDealer.name = device.clientName;
           }
@@ -215,6 +224,23 @@ export class DeviceFormComponent implements OnInit {
       }
     );
   }
+
+
+  addMoneyToSafe(amount: number) {
+    this.SafeService.addMoney(amount, this.today, 'repair',  `${this.user.username}, (${this.user._id})`).subscribe(
+      (res) => {
+        console.log('add money to safe');
+      }
+    )
+  };
+
+  deductMoneyFromSafe(amount: number) {
+    this.SafeService.deductMoney(amount, this.today, 'repair',  `${this.user.username}, (${this.user._id})`).subscribe(
+      (res) => {
+        console.log('deduct money from safe');
+      }
+    )
+  };
 
 
   getInformations() {
@@ -405,8 +431,10 @@ export class DeviceFormComponent implements OnInit {
       this.disabled = true;
       if (this.receive.repaired) {
         this.repairdone = true;
+        this.receive.repairDate = this.today;
       }
     }
+
   }
 
   moveToDelivered(deviceId: string): void {
@@ -428,8 +456,13 @@ export class DeviceFormComponent implements OnInit {
   updateDeliveredDevice(deviceId: string, updates: any): void {
     this.deviceService.updateDeliveredDevice(deviceId, updates).subscribe(
       (updatedDevice) => {
-        // Success: Delivered device updated
-        console.log(updatedDevice);
+        if (updatedDevice.cash > this.initialCash) {
+          let cash = updatedDevice.cash - this.initialCash;
+          this.addMoneyToSafe(cash);
+        }else if (this.initialCash > updatedDevice.cash) {
+          let cash = this.initialCash - updatedDevice.cash;
+          this.deductMoneyFromSafe(cash);
+        };
       },
       (error) => {
         // Error handling
@@ -461,10 +494,14 @@ export class DeviceFormComponent implements OnInit {
           this.print = data;
           this.edited = true;
           this.recieptId = data._id.slice(-12);
+          if (data.cash !== 0){
+            this.addMoneyToSafe(data.cash);
+          }
           window.alert(`Success saving device ${data._id}. You can print now.`);
           navigator.clipboard.writeText(data._id);
           this.copyToClipboard();
           this.submited = true;
+          this.isNew = false;
           if (this.notBack){
             form.resetForm();
           }
@@ -493,7 +530,8 @@ export class DeviceFormComponent implements OnInit {
             toDeliverDate: '',
             discount: 0,
             total: 0,
-            productsMoney: 0
+            productsMoney: 0,
+            repairDate: ''
           };
         },
         (error) => {
@@ -506,6 +544,13 @@ export class DeviceFormComponent implements OnInit {
       this.deviceService.update(this.receive._id, this.receive).subscribe(
         (device) => {
           // this.submited = true;
+          if (device.cash > this.initialCash) {
+            let cash = device.cash - this.initialCash;
+            this.addMoneyToSafe(cash);
+          }else if (this.initialCash > device.cash) {
+            let cash = this.initialCash - device.cash;
+            this.deductMoneyFromSafe(cash);
+          };
           if (this.user.role == "technition") {
             const notification: Notification = {
               _id: '',

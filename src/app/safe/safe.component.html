@@ -1,0 +1,56 @@
+<app-toolbar></app-toolbar>
+<div class="container" fxLayout="column" fxLayoutAlign="space-between center">
+
+    <div class="stats" fxLayout="row" fxLayoutAlign="space-between center">
+        <h3>cash Balance: {{ balance }}</h3>
+        <h3>Today Balance: {{ todayBalance }}</h3>
+        <h3>products Balance: {{ productsBalance }}</h3>
+        <h3>products After Selling Balance: {{ productsAfterSellingBalance }}</h3>
+        <h3>initial Balance: {{ initialBalance }}</h3>
+        <h3>Total Losses: {{ totalLossesMoney }}</h3>
+        <button (click)="getSafeBalance()">Refresh Balance</button>
+    </div>
+
+    <div fxLayout="column" fxLayoutAlign="space-between center">
+        <h4>Add or Deduct Money</h4>
+        <form (ngSubmit)="addMoney()" #addMoneyForm="ngForm" fxLayout="row" fxLayoutAlign="space-between center">
+            <label for="amount">Amount:</label>
+            <input type="number" id="amount" name="amount" [(ngModel)]="addAmount" required>
+
+            <label for="amount">FromWhere:</label>
+            <select name="fromWhere" id="fromWhere" [(ngModel)]="addFromWhere">
+                <option value="repair">repair</option>
+                <option value="sell">sell</option>
+                <option value="worker'sBuyings">worker's Buyings</option>
+                <option value="buyingProducts">buying Products</option>
+                <option value="repairProducts">repair's Products</option>
+                <option value="other">other</option>
+            </select>
+            <button type="submit">Add Money</button>
+        </form>
+    
+        <form (ngSubmit)="deductMoney()" #deductMoneyForm="ngForm" fxLayout="row" fxLayoutAlign="space-between center">
+            <label for="amount">Amount:</label>
+            <input type="number" id="amount" name="amount" [(ngModel)]="deductAmount" required>
+            <label for="amount">FromWhere:</label>
+            <select name="fromWhere" id="fromWhere" [(ngModel)]="deductFromWhere">
+                <option value="repair">repair</option>
+                <option value="sell">sell</option>
+                <option value="worker'sBuyings">worker's Buyings</option>
+                <option value="buyingProducts">buying Products</option>
+                <option value="repairProducts">repair's Products</option>
+                <option value="other">other</option>
+            </select>
+            <button type="submit">Deduct Money</button>
+        </form>
+    </div>
+    
+    <div class="transactions" fxLayout="column" fxLayoutAlign="space-between center">
+        <h4>Transaction History</h4>
+        <ul>
+            <li *ngFor="let transaction of transactions">
+            Amount: {{ transaction.amount }}, Type: {{ transaction.type }}, From Where: {{transaction.fromWhere}}, Which User: {{ transaction.whichUser }},Date: {{ transaction.date | date: 'medium' }}
+            </li>
+        </ul>
+    </div>
+</div>

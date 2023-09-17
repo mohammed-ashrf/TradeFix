@@ -12,7 +12,6 @@ import { Location } from '@angular/common';
 export class SoldCartsComponent implements OnInit {
 
   buyers: Buyer[] = [];
-  moneyEarned: number = 0;
   allBuyers: Buyer[] = [];
   productSections: ProductSection[] = [];
   selectedTimePeriod: string = 'today';
@@ -117,11 +116,6 @@ export class SoldCartsComponent implements OnInit {
     };
     const buyers = this.cartService.filterSoldCarts(this.allBuyers, filterCriteria);
     this.buyers = buyers;
-    this.moneyEarned = buyers.reduce((total, buyer) => {
-      return total + buyer.carts.reduce((subtotal, cart) => {
-        return subtotal + cart.paid;
-      }, 0);
-    }, 0);
   }
 
   resetFilter():void {

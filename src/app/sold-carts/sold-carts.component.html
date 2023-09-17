@@ -91,25 +91,6 @@
           </tr>
         </ng-container>
       </tbody>
-      <tbody *ngIf="!isSearched">
-        <ng-container class="buyer" *ngFor="let buyer of buyers">
-          <tr *ngFor="let cart of buyer.carts">
-            <td>{{ buyer.buyerName }}</td>
-            <td>{{ buyer.phoneNumber }}</td>
-            <td>{{ cart.totalPrice }}</td>
-            <td>{{ cart.discount }}</td>
-            <td>{{ cart.total }}</td>
-            <td>{{ cart.paid }}</td>
-            <td>{{ cart.owing }}</td>
-          </tr>
-        </ng-container>
-      </tbody>
-      <tfoot>
-        <tr>
-          <th colspan="5">إجمالي الدخل</th>
-          <td>{{ moneyEarned }}</td>
-        </tr>
-      </tfoot>
     </table>
   </div>
   

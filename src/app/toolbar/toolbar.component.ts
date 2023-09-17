@@ -9,13 +9,12 @@ import { User } from '../auth/user';
 })
 export class ToolbarComponent {
 
-  currentUser: any;
   user!: User;
   constructor(private authService: AuthService,
     private router: Router){
-      this.currentUser = localStorage.getItem('user');
-      if (this.currentUser) {
-        this.user = JSON.parse(this.currentUser);
+      const currentUser = localStorage.getItem('user');
+      if (currentUser) {
+        this.user = JSON.parse(currentUser);
       }
     }
   logout(){

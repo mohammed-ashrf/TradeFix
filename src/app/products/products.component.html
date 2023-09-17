@@ -80,16 +80,15 @@
             <td dir="rtl">{{ (product.deallerSellingPriceAll * dollarPrice) }}</td>
             <td dir="rtl">{{ product.quantity }}</td>   
             <td dir="rtl">{{ product.status }}</td>
-            <td><a mat-button (click)="addToCart(product)">إضافة للفاتورة</a></td>
+            <td *ngIf="product.quantity > 0"><a mat-button (click)="addToCart(product)">إضافة للفاتورة</a></td>
             <td *ngIf="isAdmin">
               <a mat-button [routerLink]="['/addProduct', product._id, 'edit']">تحديث</a>
+            </td>
+            <td *ngIf="isAdmin && product.quantity > 0">
+              <a mat-button (click)="addLoss(product)">خسارة</a>
             </td>
           </tr>
         </tbody>
     </table>
   </div>
-  
-  <!-- <div id="spinner" *ngIf="!isProducts">
-    <mat-spinner></mat-spinner> <h4>Loading . . . Please Wait!</h4>
-  </div> -->
 </div>

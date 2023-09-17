@@ -21,6 +21,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './auth/login/login/login.component';
@@ -47,6 +48,8 @@ import { ToolbarComponent } from './toolbar/toolbar.component';
 import { StatsComponent } from './stats/stats.component';
 import { NotificationComponent } from './notification/notification.component';
 import { ExpensesComponent } from './expenses/expenses.component';
+import { SafeComponent } from './safe/safe.component';
+import { LossesComponent } from './losses/losses.component';
 
 
 @NgModule({
@@ -74,6 +77,8 @@ import { ExpensesComponent } from './expenses/expenses.component';
     StatsComponent,
     NotificationComponent,
     ExpensesComponent,
+    SafeComponent,
+    LossesComponent,
   ],
   imports: [
     BrowserModule,
@@ -101,6 +106,7 @@ import { ExpensesComponent } from './expenses/expenses.component';
     NgxPrintModule,
     MatIconModule,
     MatTableModule,
+    MatSnackBarModule,
     ModalModule.forRoot(),
   ],
   providers: [],

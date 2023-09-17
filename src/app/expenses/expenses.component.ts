@@ -12,6 +12,7 @@ export class ExpensesComponent implements OnInit {
   allExpenses: Expense[] = [];
   newExpense: any = {
     name: '',
+    description: '',
     amount: 0
   };
   startDate!: string ;
@@ -60,14 +61,16 @@ export class ExpensesComponent implements OnInit {
     this.expensesSearchReasult = this.search(this.expenses, this.newExpense.name);
     this.isExpensesSearched = true;
   }
+
   onSelectExpense(item: Expense) {
     this.newExpense.name = item.name;
     this.isExpensesSearched = false;
   }
+  
   addExpense() {
     const expense: Expense = {
       name: this.newExpense.name,
-      expenses: [{ amount: this.newExpense.amount, date: new Date() }]
+      expenses: [{ amount: this.newExpense.amount, description: this.newExpense.description,date: new Date() }]
     };
   
     this.expenseService.addExpense(expense).subscribe(
@@ -80,6 +83,7 @@ export class ExpensesComponent implements OnInit {
         }
         this.newExpense = {
           name: '',
+          description: '',
           amount: 0
         };
       },

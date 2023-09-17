@@ -81,7 +81,6 @@ export class AdminPageComponent implements OnInit {
 
   getAllDevices() {
     this.deviceService.getAll().subscribe(async (devices) => {
-      console.log(devices);
       this.devices = devices.reverse();
       this.allDevices = this.devices;
       await this.filterDevices();

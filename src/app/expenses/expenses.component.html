@@ -1,7 +1,28 @@
 <app-toolbar></app-toolbar>
 <div class="container" dir="rtl">
-    <h2>المصروفات</h2>
+    <!-- Add new expense -->
+    <h3>إضافة مصروفات</h3>
+    <form #expensesForm="ngForm"  (submit)="addExpense()" fxLayout="row" fxLayoutAlign="space-between center">
+        <div fxLayout="row" fxLayoutAlign="space-between center">
+            <input type="text" name="expenseName" placeholder="اسم الخانة" [(ngModel)]="newExpense.name" (keyup)="searchExpenses()" required>
+        </div>
+        <div class="description" fxLayout="row" fxLayoutAlign="space-between center">
+            <input type="text" name="expensedescription" placeholder="الوصف" [(ngModel)]="newExpense.description" required>
+        </div>
+        <div fxLayout="row" fxLayoutAlign="space-between center">
+            <input type="number" name="expenseAmount" [(ngModel)]="newExpense.amount" required>
+        </div>
+        <button type="submit">إضافة</button>
+    </form>
+    <ul *ngIf="isExpensesSearched && newExpense.name !== ''" class="search-list">
+        <li *ngFor="let expense of expensesSearchReasult" (click)="onSelectExpense(expense)">
+          {{ expense.name }}
+        </li>
+    </ul>
+    
+    <div class="section-divider"></div>
 
+    <h2>المصروفات</h2>
     <!-- Date range filter -->
     <div class="filter" fxLayout="row" fxLayoutAlign="space-around center">
         <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="10px">
@@ -22,27 +43,10 @@
             <span class="expense-category">{{ expense.name }}</span>
             <ul class="expense-Items">
                 <li *ngFor="let expenseDetail of expense.expenses" class="expense-item">
-                    كاش: {{ expenseDetail.amount }}, التاريخ: {{ expenseDetail.date | date: 'medium' }}
+                    كاش: {{ expenseDetail.amount }}, {{expenseDetail.description}},التاريخ: {{ expenseDetail.date | date: 'medium' }}
                 </li>
             </ul>
             <div class="section-divider"></div>
-        </li>
-    </ul>
-    <!-- Add new expense -->
-    <h3>إضافة مصروفات</h3>
-    <form #expensesForm="ngForm"  (submit)="addExpense()" fxLayout="row" fxLayoutAlign="space-between center">
-        <div fxLayout="row" fxLayoutAlign="space-between center">
-            <label>إسم الخانة:</label>
-            <input type="text" name="expenseName" [(ngModel)]="newExpense.name" (keyup)="searchExpenses()" required>
-        </div>
-        <div fxLayout="row" fxLayoutAlign="space-between center">
-            <input type="number" name="expenseAmount" [(ngModel)]="newExpense.amount" required>
-        </div>
-        <button type="submit">إضافة</button>
-    </form>
-    <ul *ngIf="isExpensesSearched && newExpense.name !== ''" class="search-list">
-        <li *ngFor="let expense of expensesSearchReasult" (click)="onSelectExpense(expense)">
-          {{ expense.name }}
         </li>
     </ul>
 </div>

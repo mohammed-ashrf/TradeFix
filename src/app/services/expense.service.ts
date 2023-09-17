@@ -5,7 +5,7 @@ import { environment } from 'src/environments/environment';
 
 export interface Expense {
   name: string;
-  expenses: { amount: number; date: Date }[];
+  expenses: { amount: number; description:string; date: Date }[];
 }
 @Injectable({
   providedIn: 'root'

@@ -23,6 +23,7 @@ export interface Receive {
   priority: string;
   receivingDate: string;
   toDeliverDate: string;
+  repairDate: string;
   _id: string;
 }
 export interface product {

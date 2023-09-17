@@ -37,4 +37,6 @@ export class PrintLayoutComponent {
   cart!: Cart;
   @Input()
   dollarPrice!: number;
+  @Input()
+  userType!: string;
 }

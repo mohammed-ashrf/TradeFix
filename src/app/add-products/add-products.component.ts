@@ -8,6 +8,7 @@ import { AuthService } from 'src/app/auth/auth.service';
 import { NgForm } from '@angular/forms';
 import { User } from 'src/app/auth/user';
 import { ProductSection, SupplierProducts, Supplier } from '../shared/information';
+import { SafeService } from '../services/safe.service';
 @Component({
   selector: 'app-add-products',
   templateUrl: './add-products.component.html',
@@ -84,10 +85,12 @@ export class AddProductsComponent implements OnInit{
   products!: Product[];
   searchTerm!: string;
   isSearched!: boolean;
+  balance!: number;
   constructor(
     private productsService: ProductsService,
     private informationService: InformationService,
     private authService: AuthService,
+    private safeService: SafeService,
     private router: Router,
     private route: ActivatedRoute,
     private location: Location,
@@ -96,6 +99,10 @@ export class AddProductsComponent implements OnInit{
   ngOnInit(): void {
     this.token = localStorage.getItem('token');
     this.preLocation = localStorage.getItem('location'); 
+    const currentUser = localStorage.getItem('user');
+    if (currentUser) {
+      this.user = JSON.parse(currentUser);
+    }
     const id = this.route.snapshot.paramMap.get('id');
     this.getInformations();
     if (id) {
@@ -106,7 +113,6 @@ export class AddProductsComponent implements OnInit{
         product.deallerSellingPriceAll *= this.dollarPrice;
         this.product = product;
         this.recieptId = product._id.slice(-7);
-        // this.date = product.purchasedate;
       });
     }
     this.getProducts();
@@ -119,6 +125,23 @@ export class AddProductsComponent implements OnInit{
       this.updating = true;
     }
   }
+
+  async addMoneyToSafe(amount: number) {
+    await this.safeService.addMoney(amount, this.today, 'buyingProducts', `${this.user.username}, (${this.user._id})`).subscribe(
+      (res) => {
+        console.log('add money to safe');
+      }
+    )
+  };
+
+  async deductMoneyFromSafe(amount: number) {
+    await this.safeService.deductMoney(amount, this.today, 'buyingProducts', `${this.user.username}, (${this.user._id})`).subscribe(
+      (res) => {
+        console.log('deduct money from safe');
+      }
+    )
+  };
+
   async addSupplierProduct(productId: string) {
     let supplierProduct: SupplierProductAdding = {
       productId: '',
@@ -134,20 +157,26 @@ export class AddProductsComponent implements OnInit{
       console.log("isNew");
       supplierProduct.productId = productId;
       for (let i=0; i<= this.product.suppliers.length; i++){
-        supplierProduct.purchasePrice = this.product.suppliers[i].quantity;
+        supplierProduct.quantity = this.product.suppliers[i].quantity;
         supplierProduct.purchasePrice = this.product.suppliers[i].purchasePrice;
         supplierProduct.purchasedate = this.product.suppliers[i].purchasedate;
         supplierProduct.whatIsPaid = this.product.suppliers[i].whatIsPaid;
         supplierProduct.oweing = this.product.suppliers[i].oweing;
         this.informationService.updateSupplierProducts(this.product.suppliers[i].id, supplierProduct).subscribe(
           (res) => {
-            console.log(res);
+            this.product.suppliers[i].informationId = res._id;
+            this.deductMoneyFromSafe(this.product.suppliers[i].whatIsPaid);
           }
         );        
-      }
+      };
+      this.productsService.update(productId, this.product).subscribe(
+        () => {
+          console.log('updated');
+        }
+      )
     }else {
       supplierProduct.productId = this.product._id;
-      supplierProduct.purchasePrice = this.supplier.quantity;
+      supplierProduct.quantity = this.supplier.quantity;
       supplierProduct.purchasePrice = this.supplier.purchasePrice;
       supplierProduct.purchasedate = this.supplier.purchasedate;
       supplierProduct.whatIsPaid = this.supplier.whatIsPaid;
@@ -155,10 +184,10 @@ export class AddProductsComponent implements OnInit{
       
       await this.informationService.updateSupplierProducts(this.supplier.id, supplierProduct).subscribe(
         (res) => {
-          console.log(res);
           this.supplier.informationId = res._id;
           this.product.suppliers.push(this.supplier);
           this.product.quantity += this.supplier.quantity;
+          this.deductMoneyFromSafe(this.supplier.whatIsPaid);
           this.supplier = {
             id: '',
             name: '',
@@ -173,39 +202,53 @@ export class AddProductsComponent implements OnInit{
       );
     }
   }
+  getSafeBalance(): any {
+    this.safeService.getBalance()
+      .subscribe((response: any) => {
+        this.balance = response.balance;
+        return response.balance;
+      });
+  }
 
   async addSupplier(){
-    this.supplier.purchasedate = this.date;
-    this.supplier.id = this.selectedSupplierId;
-    if(!this.isNew){
-      await this.addSupplierProduct(this.product._id);
-      this.product.userSellingPrice = this.product.userSellingPrice / this.dollarPrice;
-      this.product.deallerSellingPrice = this.product.deallerSellingPrice / this.dollarPrice;
-      this.product.deallerSellingPriceAll = this.product.deallerSellingPriceAll / this.dollarPrice;
-      this.productsService.update(this.product._id, this.product).subscribe(
-        () => {
-          this.product.userSellingPrice *= this.dollarPrice;
-          this.product.deallerSellingPrice *= this.dollarPrice;
-          this.product.deallerSellingPriceAll *= this.dollarPrice;
-        }
-      )
+    const cash = await this.getSafeBalance();
+    if(this.supplier.whatIsPaid > cash) {
+      window.alert("not enough Cash in the safe");
     }else {
-      this.product.quantity += this.supplier.quantity;
-      this.supplier = {
-        id: '',
-        name: '',
-        quantity: 0,
-        purchasePrice: 0,
-        purchasedate: '',
-        whatIsPaid: 0,
-        oweing: 0,
-        informationId: '',
-      };
+      this.supplier.purchasedate = this.date;
+      this.supplier.id = this.selectedSupplierId;
+      if(!this.isNew){
+        await this.addSupplierProduct(this.product._id);
+        this.product.userSellingPrice = this.product.userSellingPrice / this.dollarPrice;
+        this.product.deallerSellingPrice = this.product.deallerSellingPrice / this.dollarPrice;
+        this.product.deallerSellingPriceAll = this.product.deallerSellingPriceAll / this.dollarPrice;
+        this.productsService.update(this.product._id, this.product).subscribe(
+          () => {
+            this.product.userSellingPrice *= this.dollarPrice;
+            this.product.deallerSellingPrice *= this.dollarPrice;
+            this.product.deallerSellingPriceAll *= this.dollarPrice;
+          }
+        )
+      }else {
+        this.product.suppliers.push(this.supplier);
+        this.product.quantity += this.supplier.quantity;
+        this.supplier = {
+          id: '',
+          name: '',
+          quantity: 0,
+          purchasePrice: 0,
+          purchasedate: '',
+          whatIsPaid: 0,
+          oweing: 0,
+          informationId: '',
+        };
+      }
     }
   }
   deleteSupplierProduct(supplierIndex:number,productId: string) {
     this.informationService.deleteSupplierProduct(this.product.suppliers[supplierIndex].id, productId, this.product.suppliers[supplierIndex].informationId).subscribe(
       (res) => {
+        this.addMoneyToSafe(this.product.suppliers[supplierIndex].whatIsPaid);
         console.log(res);
       }
     );
@@ -392,14 +435,13 @@ export class AddProductsComponent implements OnInit{
       this.productsService.create(this.product).subscribe(
         async (data) => {
           this.print = data;
-          console.log(data._id);
-          console.log(data);
           this.edited = true;
           this.recieptId = data._id.slice(-12);
           await this.addSupplierProduct(data._id);
           window.alert(`Success saving product ${data._id}. You can print now.`);
           // navigator.clipboard.writeText(data._id);
           this.submited = true;
+          this.isNew = false;
           if (this.notBack){
             form.resetForm();
             this.product.suppliers = [];

@@ -100,4 +100,17 @@ export class NotificationComponent implements OnInit {
     this.showingRepairNotifications = true;
     this.loadOnScroll();
   }
+
+  deleteNotification(id:string, index: number){
+    this.notificationService.deleteNotification(id).subscribe(
+      (res) => {
+        console.log(res);
+        if (this.showingProductNotifications) {
+          this.productNotifications.splice(index, 1);
+        }else {
+          this.repairNotifications.splice(index, 1);
+        }
+      }
+    )
+  }
 }

@@ -72,7 +72,7 @@
       </div>
       <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
         <label for="toDeliverDate">معاد التسليم:</label>
-        <input type="date" id="toDeliverDate" name="toDeliverDate" [(ngModel)]="receive.toDeliverDate" placeholder="معاد التسليم" lang="ar">
+        <input type="date" id="toDeliverDate" name="toDeliverDate" [(ngModel)]="receive.toDeliverDate" placeholder="معاد التسليم" lang="ar" [disabled]="disabled">
       </div>
     </div>
     <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="10px" dir="rtl">

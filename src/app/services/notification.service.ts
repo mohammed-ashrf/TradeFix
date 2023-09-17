@@ -28,4 +28,8 @@ export class NotificationService {
   createNotification(notification: Notification): Observable<Notification> {
     return this.http.post<Notification>(this.apiUrl, notification);
   }
+
+  deleteNotification(id: string) {
+    return this.http.delete<Notification>(`${this.apiUrl}/${id}`);
+  }
 }

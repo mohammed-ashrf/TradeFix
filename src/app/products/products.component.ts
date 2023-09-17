@@ -6,6 +6,7 @@ import { User } from '../auth/user';
 import { Location } from '@angular/common';
 import { InformationService } from '../services/information.service';
 import { ProductSection } from '../shared/information';
+import { LossesService, loss } from '../services/losses.service';
 @Component({
   selector: 'app-products',
   templateUrl: './products.component.html',
@@ -48,12 +49,15 @@ export class ProductsComponent implements OnInit {
   constructor(private productsService: ProductsService,
     private cartService: CartService,    
     private location: Location,
-    private informationService: InformationService) { }
+    private informationService: InformationService,
+    private lossesService: LossesService) { }
 
   ngOnInit() {
     localStorage.setItem("location", "products");
     this.currentUser = localStorage.getItem('user');
-    this.user = JSON.parse(this.currentUser);
+    if (this.currentUser) {
+      this.user = JSON.parse(this.currentUser);
+    }
     this.getInformations();
     this.getAllProducts();
     this.carts = this.cartService.getCarts();
@@ -215,5 +219,20 @@ export class ProductsComponent implements OnInit {
       endDate: ''
     }
     this.filterProducts();
+  }
+
+  addLoss(product: Product) {
+    let loss : loss = {
+      name: `${product.name} ( ${product._id} )`,
+      description: `${product.name} with id (${product._id}) has been lost from the products with last purchase price ${product.suppliers[product.suppliers.length - 1].purchasePrice}, and purchase date ${product.suppliers[product.suppliers.length - 1].purchasedate}`,
+      amount: product.suppliers[product.suppliers.length - 1].purchasePrice,
+      who: `${this.user.username}, ( ${this.user._id} )`,
+      createdAt: new Date()
+    }
+    this.lossesService.createLoss(loss).subscribe(
+      (loss) => {
+        console.log(`loss is added ${loss.name}`);
+      }
+    )
   }
 }

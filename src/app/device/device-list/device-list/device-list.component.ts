@@ -21,7 +21,7 @@ export class DeviceListComponent implements OnInit {
     inProgress: true,
     newDevices: false,
     today: false,
-    thisMonth: true,
+    thisMonth: false,
     thisYear: false,
     specificYear: '',
     engineer: '',
@@ -88,7 +88,6 @@ export class DeviceListComponent implements OnInit {
   }
   getAllDevices() {
     this.deviceService.getAll().subscribe(async (devices) => {
-      console.log(devices);
       this.devices = devices.reverse();
       this.allDevices = this.devices;
       await this.filterDevices();
