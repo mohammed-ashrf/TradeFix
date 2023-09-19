@@ -51,6 +51,7 @@ import { ExpensesComponent } from './expenses/expenses.component';
 import { SafeComponent } from './safe/safe.component';
 import { LossesComponent } from './losses/losses.component';
 
+import { AuthService } from './auth/auth.service';
 
 @NgModule({
   declarations: [
@@ -109,7 +110,7 @@ import { LossesComponent } from './losses/losses.component';
     MatSnackBarModule,
     ModalModule.forRoot(),
   ],
-  providers: [],
+  providers: [AuthService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

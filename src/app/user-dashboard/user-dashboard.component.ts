@@ -32,7 +32,6 @@ export class UserDashboardComponent implements OnInit {
     endDate: ''
   };
   users: any;
-  currentUser: any;
   user!: User;
   id: any;
   username: any;
@@ -51,13 +50,14 @@ export class UserDashboardComponent implements OnInit {
   async ngOnInit() {
     this.token = localStorage.getItem('token');
     localStorage.setItem("location", "userDashboard");
-    this.currentUser = localStorage.getItem('user'); 
-    this.user = JSON.parse(this.currentUser);
-    this.username = this.user.username;
+    const currentUser = localStorage.getItem('user'); 
+    if (currentUser) {
+      this.user = JSON.parse(currentUser);
+      this.username = this.user.username;
+    }
     const devices = await firstValueFrom(this.deviceService.getAll());
     this.allDevices = Object.assign([], devices.reverse());
     this.filterDevices();
-    this.countDevices();
   }
 
   logout() {
@@ -84,6 +84,7 @@ export class UserDashboardComponent implements OnInit {
     };
     const devices = this.deviceService.filterDevices(this.allDevices, filterCriteria);
     this.devices = devices;
+    this.countDevices();
   }
   resetFilter():void {
     this.query = {

@@ -2,19 +2,26 @@
 <div class="container">
   <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="10px" class="header">
     <button (click)="goBack()" id="backButton" class="btn btn-primary">back</button>
-    <h2>Register</h2>
+    <h2>{{isNew? 'Register' : 'Edit User'}}</h2>
   </div>
   <form (ngSubmit)="submit()" #registerForm="ngForm" class="slide-in">
+    <div class="form-group" *ngIf="!isNew" fxLayout="row" fxLayoutAlign="space-between center">
+      <label>Change Password: </label>
+      <label class="switch">
+        <input type="checkbox" name="changePassword" (change)="togglePassword()">
+        <span class="slider round"></span>
+      </label>
+    </div>
     <div class="form-group">
       <input type="text" placeholder="Username" id="username" name="username" [(ngModel)]="username" required>
     </div>
     <div class="form-group">
       <input type="email" placeholder="Email" id="email" name="email" [(ngModel)]="email" required>
     </div>
-    <div class="form-group">
+    <div class="form-group" *ngIf="changePassword || isNew">
       <input type="password" placeholder="Password" id="password" name="password" [(ngModel)]="password" required>
     </div>
-    <div class="form-group">
+    <div class="form-group" *ngIf="changePassword || isNew">
       <input type="password" placeholder="confirm Password" id="password" name="password" [(ngModel)]="confirmPassword" required>
     </div>
     <div class="form-group">
@@ -22,6 +29,15 @@
         <mat-option class="option" dir="rtl" value="technition">Tech</mat-option>
         <mat-option class="option" dir="rtl" value="receiver">Recieve</mat-option>
       </mat-select>
+    </div>
+    <div class="form-group" *ngIf="user.role === 'admin'">
+        <div class="permission-toggle" fxLayout="row" fxLayoutAlign="space-between center" *ngFor="let permission of permissionKeys">
+          <label>{{permission}} :</label>
+          <label class="switch">
+            <input type="checkbox" [(ngModel)]="permissions[permission]" name="{{permission}}">
+            <span class="slider round"></span>
+          </label>
+        </div>
     </div>
     <button class="btn btn-primary" type="submit" [disabled]="registerForm.invalid">Register</button>
   </form>

@@ -51,15 +51,13 @@ svg.material-icons:not(:last-child) {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    margin-top: 16px;
+    margin-top: 76px;
 }
 
 .card {
     all: unset;
     border-radius: 50px;
-    // border: 1px solid #eee;
     border: 3px solid #1976d2;
-    // background-color: #fafafa;
     background-color: #000000e5;
     height: 40px;
     width: 200px;
@@ -332,12 +330,9 @@ a {
   position: relative;
   height: 100%;
 }
-.devices-container {
-  position: relative;
-  top: 25px;
-}
+
 #cards-container {
-  max-height: 70.4vh;
+  max-height: 72.4vh;
   min-height: 600px;
   overflow-y: auto;
 }

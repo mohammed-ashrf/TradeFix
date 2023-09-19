@@ -91,35 +91,4 @@ export class LoginComponent implements OnInit {
       }
     });
   };
-  // submit(): void {
-  //   this.loginAttempted = true;
-  //   if (this.email == 'admin' && this.password == adminPassword) {
-  //     const logedUser = {
-  //       _id: "1",
-  //       username: "Admin",
-  //       email: "admin",
-  //       role: "admin"
-  //     };
-  //     localStorage.setItem("user", JSON.stringify(logedUser));
-  //     this.router.navigate(['/admin']);
-  //   } else {
-  //     this.authService.login(this.email, this.password).subscribe({
-  //       next: (data) => {
-  //         this.loginAttempted = false;
-  //         this.authService.setToken(data.token);
-  //         this.whichUser(data.token).subscribe((page) => {
-  //           this.router.navigate([page]);
-  //         });
-  //         this.email = '';
-  //         this.password = '';
-  //       },
-  //       error: (error) => {
-  //         console.error(error);
-  //         this.loginNotSuccessfull = true;
-  //         this.email = '';
-  //         this.password = '';
-  //       }
-  //     });
-  //   }
-  // };
 }

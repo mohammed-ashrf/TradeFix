@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { Receive, Query } from 'src/app/shared/recieve';
 import { DeviceService } from '../../device.service';
 import { AuthService } from 'src/app/auth/auth.service';
-import { User,GUser } from 'src/app/auth/user';
+import { User } from 'src/app/auth/user';
 @Component({
   selector: 'app-device-list',
   templateUrl: './device-list.component.html',
@@ -30,24 +29,33 @@ export class DeviceListComponent implements OnInit {
     endDate: ''
   }
   users:any;
-  currentUser: any;
   user!: User;
   id:any;
   username:any;
   token:any;
   page: number = 0;
   itemToload: number = 0;
+  permissions :Record<string, boolean> = {
+    'informations': false,
+    'expenses': false,
+    'losses': false,
+    'soldCarts': false,
+  };
   constructor(private deviceService: DeviceService,
     private authService: AuthService,
-    private router: Router
     ) {}
 
   ngOnInit(): void {
     this.token = localStorage.getItem('token');
     localStorage.setItem("location", "devices");
-    this.currentUser = localStorage.getItem('user'); 
-    if (this.currentUser) {
-      this.user = JSON.parse(this.currentUser);
+    const currentUser = localStorage.getItem('user'); 
+    if (currentUser) {
+      this.user = JSON.parse(currentUser);
+      this.user.access.forEach((item: string) => {
+        if(this.authService.isLoggedIn() && this.authService.hasAccess(item)){
+          this.permissions[item] = true;
+        }
+      });
       this.getAllDevices();
       this.getUsers()
       this.loadOnScroll();

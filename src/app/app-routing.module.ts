@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { RouterModule, Routes} from '@angular/router';
+import { canActivateLoggedIn, canActivateHasAccess, CanActivateRole } from './guards/auth-guard.guard';
 
 import { LoginComponent } from './auth/login/login/login.component';
 import { RegisterComponent } from './auth/register/register/register.component';
@@ -34,7 +35,7 @@ const routes: Routes = [
   { path: 'devices-delivered/:id/edit', component: DeviceFormComponent},
   { path: 'search', component: SearchComponent},
   { path: 'print',  component: PrintLayoutComponent},
-  { path: 'admin', component: AdminPageComponent },
+  { path: 'admin', component: AdminPageComponent, canActivate: [canActivateLoggedIn, CanActivateRole] },
   { path: 'userDashboard', component: UserDashboardComponent },
   { path: 'products', component: ProductsComponent},
   { path: 'addProduct', component: AddProductsComponent},

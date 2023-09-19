@@ -4,9 +4,9 @@ export class User {
     password !: string;
     email !:string;
     role !: string;
+    access!: string[];
 }
 
 export interface GUser {
     user: object;
 }
-  

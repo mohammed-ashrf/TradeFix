@@ -41,20 +41,6 @@ export class AuthService {
     return this.http.get(`${this.apiUrl}/users`);
   }
 
-  // getUser(): Observable<User> {
-  //   return this.http.get<User>(`${this.apiUrl}/user`, this.httpOptions)
-  //     .pipe(
-  //       catchError(this.handleError<User>('getUser'))
-  //     );
-  // };
-
-  // getUser(token: string): Observable<User> {
-  //   return this.http.get<User>(`${this.apiUrl}/user`, this.getHttpOptions(token))
-  //     .pipe(
-  //       catchError(this.handleError<User>('getUser'))
-  //     );
-  // };
-
   getUser(token: string): Observable<User> {
     return this.http.get(`${this.apiUrl}/user`, this.getHttpOptions(token))
       .pipe(
@@ -99,9 +85,32 @@ export class AuthService {
   }
 
   updateUserById(id: string, user: User): Observable<User> {
-    return this.http.put<User>(`${this.apiUrl}/${id}`, user);
+    return this.http.put<User>(`${this.apiUrl}/user/${id}`, user);
   }
   deleteUser(id: string): Observable<any> {
     return this.http.delete(`${this.apiUrl}/user/${id}`);
+  }
+
+  hasAccess(route: string): boolean {
+    const user = this.getCurrentUser();
+    if (!user) {
+      return false;
+    }
+
+    const access = user.access;
+    if (!access || !access.includes(route)) {
+      return false;
+    }
+
+    return true;
+  }
+
+  getCurrentUser(): User | null {
+    const user = localStorage.getItem('user');
+    if (user) {
+      return JSON.parse(user);
+    }
+  
+    return null;
   }
 }

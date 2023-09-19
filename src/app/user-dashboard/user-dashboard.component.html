@@ -1,3 +1,4 @@
+<app-toolbar></app-toolbar>
 <div class="container jumbotron"
     fxLayout="row"
     fxLayout.sm="column" 
@@ -8,14 +9,12 @@
     fxLayoutGap="10px">
 
   <div fxFlex fxFlex.gt-sm="50%">
-    <h1>Welcome, {{username}}
-        <button class="Button" id="logout" (click)="logout()">Logout</button>
-    </h1>
-    <div>
+    <h1>Welcome, {{username}}</h1>
+    <div fxLayout="row" fxLayoutAlign="space-between center">
         <p>Completed: {{completedCount}}</p>
         <p>Inprogress: {{inProgressCount}}</p>
         <p>returned: {{returnedCount}}</p>
-        <p>repaired and returned in this month {{returnedInTheSameMonth}}</p>
+        <p>repaired and returned in this month: {{returnedInTheSameMonth}}</p>
     </div>
   </div>
   <div fxFlex fxFlexAlign.gt-lg="center left" fxFlex.gt-sm="20%">
