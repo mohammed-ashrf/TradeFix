@@ -32,9 +32,12 @@
           <mat-option class="option" *ngFor="let sec of sections" [value]="sec.name">{{ sec.name }}</mat-option>
       </mat-select>
     </div>
+    <div class="form-group" fxLayout="row" fxLayoutAlign="start center" dir="rtl">
+      <p *ngFor="let eng of receive.engineer" style="padding: 0; margin: 0; color: #333;">{{eng.name}}> </p>
+    </div>
     <div class="form-group" fxLayout="row" fxLayoutAlign="center center" dir="rtl">
-      <mat-select placeholder="الفني" id="eng" name="eng" [(ngModel)]="receive.engineer" [disabled]="disabled" required>
-          <mat-option class="option" *ngFor="let eng of users" [value]="eng.username">{{ eng.username }}</mat-option>
+      <mat-select placeholder="الفني" id="eng" name="eng" [(ngModel)]="receive.currentEngineer" [disabled]="disabled" (selectionChange)="addEng(receive.currentEngineer)" required>
+          <mat-option class="option" *ngFor="let eng of users" [value]="eng._id">{{ eng.username }}</mat-option>
       </mat-select>
     </div>
     <div class="form-group" fxLayout="row" fxLayoutAlign="center center" dir="rtl">
@@ -46,8 +49,12 @@
     <div class="form-group" fxLayout="row" fxLayoutAlign="center center" dir="rtl">
       <textarea matInput placeholder="الشكوي" lang="ar" dir="auto" id="complain" name="complain" cols="30" rows="8" [(ngModel)]="receive.complain" [disabled]="disabled" required></textarea>
     </div>
-    <div class="form-group" fxLayout="row" fxLayoutAlign="center center" dir="rtl">
-      <textarea matInput placeholder="الصيانه" lang="ar" dir="auto" id="repair" name="repair" cols="30" rows="8" [(ngModel)]="receive.repair" [disabled]="!sameEng"></textarea>
+    <div class="form-group" fxLayout="column" fxLayoutAlign="center center" style="max-height: 300px; overflow-y: auto;">
+      <textarea lang="ar" dir="auto" *ngFor="let rep of receive.repair" disabled>{{rep.value}}, {{rep.engineer}}, {{rep.date | date}}</textarea>
+    </div>
+    <div class="form-group" fxLayout="column" fxLayoutAlign="center center" dir="rtl">
+      <textarea matInput placeholder="الصيانه" lang="ar" dir="auto" id="repair" name="repair" cols="30" rows="8" [(ngModel)]="CurrentRepair" [disabled]="!sameEng"></textarea>
+      <button (click)="addRepair()" style="width: 100%; color: #fff;">إضافة</button>
     </div>
     <div class="form-group" fxLayout="row" fxLayoutAlign="space-between center" *ngFor="let product of receive.products" dir="rtl">
       <input type="text" placeholder="إسم المنتج" value="{{product.productName}}" style="margin-left: 5px;" disabled>

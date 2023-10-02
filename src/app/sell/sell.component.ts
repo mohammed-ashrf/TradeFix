@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { InformationService } from '../services/information.service';
 import { CartService, Cart, CartItem, Buyer } from '../services/cart.service';
 import { Location } from '@angular/common';
-import { Dealer } from '../shared/information';
-import { Product } from '../shared/products';
+import { Dealer, ProductSection } from '../shared/information';
+import { Product, ProductsQuery } from '../shared/products';
 import { MatDialog } from '@angular/material/dialog';
 import { CartDialogComponent } from '../cart-dialog/cart-dialog.component';
 import { ProductsService } from '../services/products.service';
@@ -35,10 +35,26 @@ export class SellComponent implements OnInit {
   cartName!: string;
   searchResult: Product[] = [];
   searchproducts: Product[] = [];
+  allSearchProducts: Product[] = [];
   searchTerm!: string;
   isSearched!: boolean;
   isDealersSearched: boolean = false;
   dealerSearchResult: Dealer[] = [];
+  productSections: ProductSection[] = [];
+  productsQuery: ProductsQuery = {
+    category: '',
+    status: '',
+    buyerType: '',
+    payType: '',
+    today: false,
+    thisWeek: false,
+    thisMonth: false,
+    thisYear: false,
+    specificYear: '',
+    sellerName: '',
+    startDate: '',
+    endDate: ''
+  };
   constructor(private cartService: CartService,
     private informationService: InformationService,
     private productsService: ProductsService,
@@ -52,6 +68,7 @@ export class SellComponent implements OnInit {
     this.currentCart = this.cartService.getCart(this.cartId);
     this.getdollarPrice();
     this.getProducts();
+    this.getProductSections()
     if(this.currentCart){
       console.log(this.currentCart);
       this.paid = this.currentCart.paid;
@@ -74,6 +91,7 @@ export class SellComponent implements OnInit {
     this.productsService.getAll().subscribe(
       (products) => {
         this.searchproducts = products;
+        this.allSearchProducts = products;
       }
     );
   }
@@ -217,6 +235,13 @@ export class SellComponent implements OnInit {
       }
     )
   }
+  getProductSections() {
+    this.informationService.getProductSections().subscribe(
+      (productSections) => {
+        this.productSections = productSections;
+      }
+    )
+  }
 
   searchProducts(products: any[], userInput: string) {
     try {
@@ -274,5 +299,43 @@ export class SellComponent implements OnInit {
         console.log(soldCart);
       }
     )
+  }
+
+  filterProducts() {
+    const filterCriteria = {
+      category: this.productsQuery.category,
+      payType: this.productsQuery.payType,
+      buyerType: this.productsQuery.buyerType,
+      sellerName: this.productsQuery.sellerName,
+      status: this.productsQuery.status,
+      today: this.productsQuery.today,
+      thisWeek: this.productsQuery.thisWeek,
+      thisMonth: this.productsQuery.thisMonth,
+      thisYear: this.productsQuery.thisYear,
+      specificYear: this.productsQuery.specificYear,
+      startDate: this.productsQuery.startDate,
+      endDate: this.productsQuery.endDate
+    };
+    const base = {
+      category: '',
+      payType: '',
+      buyerType: '',
+      sellerName: '',
+      today: false,
+      thisMonth: false,
+      thisYear: false,
+      thisWeek: false,
+      specificYear: '',
+      status: '',
+      startDate: '',
+      endDate: ''
+    };
+    if (filterCriteria === base) {
+      this.searchproducts = this.allSearchProducts;
+    }else {
+      const products = this.productsService.filterProducts(this.allSearchProducts, filterCriteria);
+      this.searchproducts = products;
+      this.searchResult = products;
+    }
   }
 }

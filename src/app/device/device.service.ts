@@ -29,8 +29,12 @@ export class DeviceService {
       const now = new Date();
       const oneWeekAgo = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 7);
       const deviceReceivingDate = new Date(device.receivingDate);
+      let haveEngineer = false;
   
-      // Check if the device's receiving date is within the specified date range
+      if (Array.isArray(device.engineer)) {
+        haveEngineer = device.engineer.some(eng => eng === query.engineer);
+      }
+  
       const isWithinDateRange =
         (!query.startDate || deviceReceivingDate >= new Date(query.startDate)) &&
         (!query.endDate || deviceReceivingDate <= new Date(query.endDate));
@@ -42,7 +46,7 @@ export class DeviceService {
         (!query.delivered || device.delivered === query.delivered) &&
         (!query.returned || device.returned === query.returned) &&
         (!query.inProgress || device.repaired === false) &&
-        (!query.engineer || device.engineer === query.engineer) &&
+        (!query.engineer || haveEngineer) &&
         (!query.priority || device.priority === query.priority) &&
         (!query.newDevices || deviceReceivingDate >= oneWeekAgo) &&
         (!query.today || deviceReceivingDate.toDateString() === new Date().toDateString()) &&

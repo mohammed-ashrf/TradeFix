@@ -69,4 +69,13 @@ export class SafeComponent implements OnInit {
         this.getTransactionHistory();
       });
   }
+
+  resetTodayMoney() {
+    this.safeService.restTodayMoney().subscribe(
+      () => {
+        console.log("reseted");
+      }
+    );
+    this.getSafeBalance();
+  }
 }

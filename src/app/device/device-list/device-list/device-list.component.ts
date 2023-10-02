@@ -154,5 +154,4 @@ export class DeviceListComponent implements OnInit {
   isPriorityHigh(priority: string): boolean {
     return priority === 'high';
   }
-
 }

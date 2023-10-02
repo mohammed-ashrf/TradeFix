@@ -54,10 +54,11 @@ export class UserDashboardComponent implements OnInit {
     if (currentUser) {
       this.user = JSON.parse(currentUser);
       this.username = this.user.username;
+      const devices = await firstValueFrom(this.deviceService.getAll());
+      this.allDevices = Object.assign([], devices.reverse());
+      this.filterDevices();
+      this.countDevices;
     }
-    const devices = await firstValueFrom(this.deviceService.getAll());
-    this.allDevices = Object.assign([], devices.reverse());
-    this.filterDevices();
   }
 
   logout() {
@@ -72,7 +73,7 @@ export class UserDashboardComponent implements OnInit {
       delivered: this.query.delivered,
       returned: this.query.returned,
       inProgress: this.query.inProgress,
-      engineer: this.username,
+      engineer: this.user._id,
       priority: this.query.priority,
       newDevices: this.query.newDevices,
       today: this.query.today,
@@ -84,7 +85,6 @@ export class UserDashboardComponent implements OnInit {
     };
     const devices = this.deviceService.filterDevices(this.allDevices, filterCriteria);
     this.devices = devices;
-    this.countDevices();
   }
   resetFilter():void {
     this.query = {
@@ -98,7 +98,7 @@ export class UserDashboardComponent implements OnInit {
       thisMonth: false,
       thisYear: false,
       specificYear: '',
-      engineer: this.username,
+      engineer: this.user._id,
       priority: '',
       startDate: '',
       endDate: ''
@@ -113,19 +113,23 @@ export class UserDashboardComponent implements OnInit {
     this.allDevices.forEach((device) => {
       const date = new Date(device.receivingDate);
       const month = date.getMonth();
-      if (month === currentMonth) {
-        if (device.repaired) {
-          this.completedCount++;
-        }else if (device.returned) {
-          this.returnedInTheSameMonth;
+      device.engineer.forEach((eng)=> {
+        if(eng === this.user._id){
+          if (month === currentMonth) {
+            if (device.repaired) {
+              this.completedCount++;
+            }else if (device.returned) {
+              this.returnedInTheSameMonth++;
+            }
+          }
+          if (!device.repaired) {
+            this.inProgressCount++;
+          }
+          if (device.returned) {
+            this.returnedCount++;
+          }
         }
-      }
-      if (!device.repaired) {
-        this.inProgressCount++;
-      }
-      if (device.returned) {
-        this.returnedCount++;
-      }
+      });
     });
   }
 

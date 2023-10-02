@@ -26,6 +26,15 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     this.getUsers();
+    const currentUser = localStorage.getItem('user'); 
+    if (currentUser) {
+      const token = this.authService.getToken();
+      if (token !== '') {
+        this.whichUser(token).subscribe((page) => {
+          this.router.navigate([page]);
+        });
+      }
+    }
   }
 
   toggleShowPassword() {

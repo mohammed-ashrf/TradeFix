@@ -5,7 +5,7 @@ export interface Receive {
   section: string;
   clientSelection: string;
   complain: string;
-  repair: string;
+  repair: Repair[];
   products: product[];
   notes: string;
   productsMoney: number;
@@ -19,20 +19,27 @@ export interface Receive {
   paidAdmissionFees: boolean;
   delivered: boolean;
   returned: boolean;
-  engineer: string;
+  engineer: any[];
   priority: string;
   receivingDate: string;
   toDeliverDate: string;
   repairDate: string;
   _id: string;
-}
+  reciever: string;
+  currentEngineer: string;
+};
 export interface product {
   productId: string,
   productName: string,
   purchasePrice: number,
   productPrice: number,
   quantity: number,
-}
+};
+export interface Repair {
+  value: string,
+  engineer: string,
+  date: Date,
+};
 export interface Query {
     repaired: boolean,
     paidAdmissionFees: boolean,
@@ -48,7 +55,7 @@ export interface Query {
     priority: string,
     startDate: string,
     endDate: string
-}
+};
 
 export const ClientSelection = ['User','Dealer'];
 export const DeviceType = ['dell','acer','Asus','Mac','Lenovo','LG','Panasonic','samsong','Toshiba','Razer'];

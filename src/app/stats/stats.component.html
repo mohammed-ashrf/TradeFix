@@ -54,7 +54,7 @@
                 </div>
                 <div class="query" dir="rtl">
                   <mat-select placeholder="الموظف" id="eng" name="eng" [(ngModel)]="query.engineer" (selectionChange)="filterDevices()" required>
-                      <mat-option class="option" *ngFor="let eng of users" [value]="eng.username">{{ eng.username }}</mat-option>
+                      <mat-option class="option" *ngFor="let eng of users" [value]="eng._id">{{ eng.username }}</mat-option>
                   </mat-select>
                 </div>
                 <div class="query" dir="rtl">

@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, isDevMode } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { HttpClientModule } from '@angular/common/http';
@@ -52,6 +52,8 @@ import { SafeComponent } from './safe/safe.component';
 import { LossesComponent } from './losses/losses.component';
 
 import { AuthService } from './auth/auth.service';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { DisableRightClickDirective } from './disable-right-click.directive';
 
 @NgModule({
   declarations: [
@@ -80,6 +82,7 @@ import { AuthService } from './auth/auth.service';
     ExpensesComponent,
     SafeComponent,
     LossesComponent,
+    DisableRightClickDirective,
   ],
   imports: [
     BrowserModule,
@@ -109,6 +112,12 @@ import { AuthService } from './auth/auth.service';
     MatTableModule,
     MatSnackBarModule,
     ModalModule.forRoot(),
+    ServiceWorkerModule.register('ngsw-worker.js', {
+      enabled: !isDevMode(),
+      // Register the ServiceWorker as soon as the application is stable
+      // or after 30 seconds (whichever comes first).
+      registrationStrategy: 'registerWhenStable:30000'
+    }),
   ],
   providers: [AuthService],
   bootstrap: [AppComponent]

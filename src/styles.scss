@@ -8,6 +8,7 @@ body {
   font-family: 'Open Sans', sans-serif;
   margin: 0;
   padding: 0;
+  -webkit-overflow-scrolling: touch;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -47,6 +48,24 @@ a {
     }
   }
 }
+
+::-webkit-scrollbar {
+  width: 0px;
+  height: 0px;
+  background-color: #1976d2;
+  cursor: pointer;
+}
+::-webkit-scrollbar-track {
+  background-color: transparent;
+  overflow: hidden;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #666;
+  border: 1px solid #aaa;
+  border-radius: 5px;
+}
+
 
 @media print {
   app-root > * { display: none; }

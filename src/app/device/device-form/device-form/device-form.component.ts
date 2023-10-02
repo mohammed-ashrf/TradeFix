@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Receive,ClientSelection,DeviceType, product } from 'src/app/shared/recieve';
+import { Receive,ClientSelection,DeviceType, product, Repair } from 'src/app/shared/recieve';
 import { Section,Dealer } from 'src/app/shared/information';
 import { Product } from 'src/app/shared/products';
 import { ProductsService } from 'src/app/services/products.service';
@@ -32,7 +32,7 @@ export class DeviceFormComponent implements OnInit {
     section: '',
     clientSelection: 'User',
     complain: '',
-    repair: '',
+    repair: [],
     notes: '',
     fees: 0,
     finished: false,
@@ -40,7 +40,7 @@ export class DeviceFormComponent implements OnInit {
     paidAdmissionFees: false,
     delivered: false,
     returned: false,
-    engineer: '',
+    engineer: [],
     priority: '',
     receivingDate: '',
     products: [],
@@ -51,7 +51,9 @@ export class DeviceFormComponent implements OnInit {
     discount: 0,
     total: 0,
     productsMoney: 0,
-    repairDate: ''
+    repairDate: '',
+    reciever: '',
+    currentEngineer: ''
   };
   print: Receive = {
     clientName: '',
@@ -60,7 +62,7 @@ export class DeviceFormComponent implements OnInit {
     section: '',
     clientSelection: '',
     complain: '',
-    repair: '',
+    repair: [],
     products: [],
     notes: '',
     fees: 0,
@@ -69,7 +71,7 @@ export class DeviceFormComponent implements OnInit {
     paidAdmissionFees: false,
     delivered: false,
     returned: false,
-    engineer: '',
+    engineer: [],
     priority: 'normal',
     receivingDate: '',
     _id: '',
@@ -79,7 +81,9 @@ export class DeviceFormComponent implements OnInit {
     discount: 0,
     total: 0,
     productsMoney: 0,
-    repairDate: ''
+    repairDate: '',
+    reciever: '',
+    currentEngineer: ''
   };
   products: Product[] = [];
   submited: boolean = false;
@@ -115,6 +119,7 @@ export class DeviceFormComponent implements OnInit {
   currentDate!: string;
   isDealersSearched: boolean = false;
   dealerSearchResult: Dealer[] = [];
+  CurrentRepair: string = '';
   constructor(
     private deviceService: DeviceService,
     private productService: ProductsService,
@@ -166,18 +171,27 @@ export class DeviceFormComponent implements OnInit {
           this.initialCash = this.receive.cash;
           if(device.clientSelection === 'Dealer'){
             this.selectedDealer.name = device.clientName;
-          }
+          };
           if (this.user.role == 'technition') {
-            console.log(this.user.username);
-            console.log(this.receive.engineer);
             this.disabled = true;
             if (this.receive.repaired) {
               this.repairdone = true;
             }
-            if (this.user.username == this.receive.engineer){
+            if (this.user.username == this.receive.currentEngineer){
               this.sameEng = true;
             }
           }
+          for(let i=0; i< device.engineer.length; i++) {
+            this.authService.getUserById(device.engineer[i].toString()).subscribe(
+              (user) => {
+                let eng = {
+                  name: user.username,
+                  _id: user._id,
+                }
+                this.receive.engineer[i] = eng;
+              }
+            )
+          };
         });
       }else {
         this.deviceService.getOneDeliveredDevice(id).subscribe((device) => {
@@ -198,13 +212,23 @@ export class DeviceFormComponent implements OnInit {
             if (this.receive.repaired) {
               this.repairdone = true;
             }
-            if (this.user.username == this.receive.engineer){
+            if (this.user.username == this.receive.currentEngineer){
               this.sameEng = true;
             }
           }
+          for(let i=0; i< device.engineer.length; i++) {
+            this.authService.getUserById(device.engineer[i].toString()).subscribe(
+              (user) => {
+                let eng = {
+                  name: user.username,
+                  _id: user._id,
+                }
+                this.receive.engineer[i] = eng;
+              }
+            )
+          };
         });
       }
-      
     }
 
     this.getInformations();
@@ -220,7 +244,6 @@ export class DeviceFormComponent implements OnInit {
     this.productService.getAll().subscribe(
       (products) => {
         this.products = products;
-        console.log(this.products);
       }
     );
   }
@@ -351,7 +374,29 @@ export class DeviceFormComponent implements OnInit {
           )
         }
     });
-  } 
+  }
+
+  addRepair(){
+    let repair: Repair = {
+      value: this.CurrentRepair,
+      engineer: `${this.user.username}`,
+      date: new Date(),
+    }
+    this.receive.repair.push(repair);
+    this.CurrentRepair = '';
+  }
+
+  addEng(id: string){
+    this.authService.getUserById(id).subscribe(
+      (eng) => {
+        let engineer = {
+          name: eng.username,
+          _id: eng._id
+        }
+        this.receive.engineer.push(engineer);
+      }
+    )
+  }
 
 
   goBack(deviceForm: NgForm): void {
@@ -489,6 +534,7 @@ export class DeviceFormComponent implements OnInit {
     if (this.isNew) {
       this.receive.receivingDate = this.currentDate;
       this.updating = false;
+      this.receive.reciever = this.user.username;
       this.deviceService.create(this.receive).subscribe(
         (data) => {
           this.print = data;
@@ -512,7 +558,7 @@ export class DeviceFormComponent implements OnInit {
             section: '',
             clientSelection: 'User',
             complain: '',
-            repair: '',
+            repair: [],
             notes: '',
             fees: 0,
             finished: false,
@@ -520,7 +566,7 @@ export class DeviceFormComponent implements OnInit {
             paidAdmissionFees: false,
             delivered: false,
             returned: false,
-            engineer: '',
+            engineer: [],
             priority: '',
             receivingDate: '',
             products: [],
@@ -531,7 +577,9 @@ export class DeviceFormComponent implements OnInit {
             discount: 0,
             total: 0,
             productsMoney: 0,
-            repairDate: ''
+            repairDate: '',
+            reciever: '',
+            currentEngineer: '',
           };
         },
         (error) => {

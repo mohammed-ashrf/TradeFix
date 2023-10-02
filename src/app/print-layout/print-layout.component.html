@@ -416,7 +416,7 @@
             <p dir="rtl">القسم: {{ section }}</p>
         </div>
         <div fxLayout="row" fxLayoutAlign="space-between center" dir="rtl">
-            <p dir="rtl">الوصف : {{ repair }}</p>
+            <p dir="rtl" *ngFor="let rep of repair">الوصف : {{ rep.value }}</p>
         </div>
         <hr>
         <div fxLayout="row" fxLayoutAlign="space-between center" dir="rtl">

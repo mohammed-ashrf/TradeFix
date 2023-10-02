@@ -54,12 +54,15 @@
   <div class="cart-items" *ngIf="products">
     <h3>Items in Cart</h3>
     <div class="search-group">
+      <mat-select placeholder="فئة المنتج" id="category" name="category" fxLayoutAlign="center center" [(ngModel)]="productsQuery.category" (selectionChange)="filterProducts()" dir="rtl" style="margin-bottom: 10px;">
+        <mat-option class="option" *ngFor="let sec of productSections" [value]="sec.name">{{ sec.name }}</mat-option>
+      </mat-select>
       <div class="searchProduct-Input" fxLayout="row" fxLayoutAlign="center center">
         <input type="text" id="searchProduct" placeholder="البحث عن منتج" name="searchProduct" [(ngModel)]="searchTerm" (keyup)="onSearch()" dir="rtl">
       </div>
       <ul *ngIf="isSearched && searchTerm !== ''">
         <li *ngFor="let product of searchResult" (click)="onSelect(product)">
-          {{ product.name }} - {{product.status}}
+          {{ product.name }} - {{product.status}} - {{product.quantity}} - {{product.category}}
         </li>
       </ul>
     </div>

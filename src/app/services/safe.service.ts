@@ -31,4 +31,8 @@ export class SafeService {
   getTransactions() {
     return this.http.get(`${this.apiUrl}/transactions`);
   }
+
+  restTodayMoney() {
+    return this.http.get(`${this.apiUrl}/resetTodayMoney`);
+  }
 }
