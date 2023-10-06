@@ -47,7 +47,10 @@
         <form (ngSubmit)="submintSupplier(supplierForm)" #supplierForm="ngForm" dir="rtl" class="form">
             <div fxLayout="row" fxLayoutAlign="space-between center" dir="rtl">
                 <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
-                    <input type="text" id="supplierName" placeholder="إسم الشركة" name="supplierName" [(ngModel)]="supplier.name" required>
+                    <input type="text" id="supplierName" placeholder="اسم الشركة" name="supplierName" [(ngModel)]="supplier.name" required>
+                </div>
+                <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
+                    <input type="text" id="OwnerName" placeholder="اسم صاحب الشركة أو المحل" name="OwnerName" [(ngModel)]="supplier.owner" required>
                 </div>
                 <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
                     <input type="text" id="supplierphone" placeholder="رقم التليفون" name="supplierphone" [(ngModel)]="supplier.phone" required>
@@ -70,7 +73,10 @@
         <form (ngSubmit)="submintDealer(dealersForm)" #dealersForm="ngForm" dir="rtl" class="form">
             <div fxLayout="row" fxLayoutAlign="space-between center" dir="rtl">
                 <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
-                    <input type="text" id="dealerName" placeholder="إسم الديلر" name="dealerName" [(ngModel)]="dealer.name" required>
+                    <input type="text" id="dealerName" placeholder="اسم الديلر" name="dealerName" [(ngModel)]="dealer.name" required>
+                </div>
+                <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
+                    <input type="text" id="owner" placeholder="اسم صاحب الشركة أو المحل" name="owner" [(ngModel)]="dealer.owner" required>
                 </div>
                 <div class="form-group" fxLayout="row" fxLayoutAlign="center center">
                     <input type="text" id="dealerPhone" placeholder="رقم التليفون" name="dealerPhone" [(ngModel)]="dealer.phone" required>

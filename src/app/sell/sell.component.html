@@ -78,14 +78,10 @@
       </thead>
       <tbody>
         <tr *ngFor="let item of products">
-          <td>{{ item.product.name }}</td>
+          <td>{{ item.product.nameOfProduct }}</td>
           <td><input type="number" [(ngModel)]="item.quantity" (ngModelChange)="updateCartItemQuantity(item)"></td>
-          <td *ngIf="userType === 'user'">{{ (item.product.userSellingPrice * dollarPrice) }} L.E</td>
-          <td *ngIf="userType === 'dealer' && item.quantity >= 0 && item.quantity < 3">{{ (item.product.deallerSellingPrice * dollarPrice) }} L.E</td>
-          <td *ngIf="userType === 'dealer' && item.quantity >= 3">{{ (item.product.deallerSellingPriceAll * dollarPrice) }} L.E</td>
-          <td *ngIf="userType === 'user'">{{ (item.product.userSellingPrice * dollarPrice) * item.quantity}} L.E</td>
-          <td *ngIf="userType === 'dealer' && item.quantity >= 0 && item.quantity < 3">{{ (item.product.deallerSellingPrice * dollarPrice) * item.quantity }} L.E</td>
-          <td *ngIf="userType === 'dealer' && item.quantity >= 3">{{ (item.product.deallerSellingPriceAll * dollarPrice) * item.quantity }} L.E</td>
+          <td>{{ (item.product.price * dollarPrice) }} L.E</td>
+          <td>{{ (item.product.price * dollarPrice) * item.quantity }} L.E</td>
           <td><button (click)="deleteCartItem(item)">حذف</button></td>
         </tr>
       </tbody>

@@ -6,7 +6,6 @@ import { InformationService } from '../services/information.service';
 import { Location } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { AlertModalComponent } from '../alert-modal/alert-modal.component';
-import Swal from 'sweetalert2';
 @Component({
   selector: 'app-add-informations',
   templateUrl: './add-informations.component.html',
@@ -37,7 +36,8 @@ export class AddInformationsComponent implements OnInit {
     whatsappNumber: '',
     address: '',
     cash: 0,
-    owing: 0
+    owing: 0,
+    owner: ''
   }
 
 
@@ -48,7 +48,8 @@ export class AddInformationsComponent implements OnInit {
     notes: '',
     _id: '',
     whatsappNumber: '',
-    address: ''
+    address: '',
+    owner: ''
   }
  
   dollarPrice: DollarPrice = {
@@ -133,25 +134,21 @@ export class AddInformationsComponent implements OnInit {
       this.informationService.addSection(this.section).subscribe(
         (section) => {
           let message = `Success saving section ${section.name}.`;
-          Swal.fire(message);
+          window.alert(message);
           form.resetForm();
         },(error) => {
           console.error('Error creating section:', error);
-          Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: `'Error creating section:' ${JSON.stringify(error)}`,
-          })
+          window.alert(error);
         }
       )
     }else {
       this.informationService.updateSection(this.section._id, this.section).subscribe(
         () => {
           let message = `Section Updated`;
-          Swal.fire(message);
+          window.alert(message);
         }, (error) => {
           console.error('Error updating section:', JSON.stringify(error));
-          Swal.fire(`Error updating section: ${JSON.stringify(error)}. Please try again later.`);
+          window.alert(`Error updating section: ${JSON.stringify(error)}. Please try again later.`);
         }
       )
     }
@@ -162,21 +159,21 @@ export class AddInformationsComponent implements OnInit {
       this.informationService.addProductSection(this.productSection).subscribe(
         (productSection) => {
           let message = `Success saving Product Section ${productSection.name}.`;
-          Swal.fire(message);
+          window.alert(message);
           form.resetForm();
         },(error) => {
           console.error('Error creating Product Section:', error);
-          Swal.fire('Error creating Product Section. Please try again later.');
+          window.alert('Error creating Product Section. Please try again later.');
         }
       )
     }else {
       this.informationService.updateProductSection(this.productSection._id, this.productSection).subscribe(
         () => {
           let message = `Product Section Updated`;
-          Swal.fire(message);
+          window.alert(message);
         }, (error) => {
           console.error('Error updating Product Section:', JSON.stringify(error));
-          Swal.fire(`Error updating Product Section: ${JSON.stringify(error)}. Please try again later.`);
+          window.alert(`Error updating Product Section: ${JSON.stringify(error)}. Please try again later.`);
         }
       )
     }
@@ -188,11 +185,11 @@ export class AddInformationsComponent implements OnInit {
       this.informationService.addSupplier(this.supplier).subscribe(
         (supplier) => {
           let message = `Success saving supplier ${supplier.name}.`;
-          Swal.fire(message);
+          window.alert(message);
           form.resetForm();
         },(error) => {
           console.error('Error creating supplier:', error);
-          Swal.fire('Error creating supplier. Please try again later.');        }
+          window.alert('Error creating supplier. Please try again later.');        }
       )
     }else {
       this.informationService.updateSupplier(this.supplier._id, this.supplier).subscribe(
@@ -200,7 +197,7 @@ export class AddInformationsComponent implements OnInit {
           window.alert('Supplier Updated');
         }, (error) => {
           console.error('Error updating supplier:', JSON.stringify(error));
-          Swal.fire(`Error updating supplier: ${JSON.stringify(error)}. Please try again later.`);
+          window.alert(`Error updating supplier: ${JSON.stringify(error)}. Please try again later.`);
         }
       )
     }
@@ -211,20 +208,20 @@ export class AddInformationsComponent implements OnInit {
       this.informationService.addDealer(this.dealer).subscribe(
         async (dealer) => {
           let message = `Success saving dealer ${dealer.name}.`;
-          await Swal.fire(message);
+          await window.alert(message);
           form.resetForm();
         },(error) => {
           console.error('Error creating dealer:', error);
-          Swal.fire('Error creating dealer. Please try again later.');        }
+          window.alert('Error creating dealer. Please try again later.');        }
       )
     }else {
       this.informationService.updateDealer(this.dealer._id, this.dealer).subscribe(
         async () => {
           let message = 'Dealer Updated';
-         await Swal.fire(message);
+         await window.alert(message);
         }, (error) => {
           console.error('Error updating dealer:', JSON.stringify(error));
-          Swal.fire(`Error updating dealer: ${JSON.stringify(error)}. Please try again later.`);
+          window.alert(`Error updating dealer: ${JSON.stringify(error)}. Please try again later.`);
         }
       )
     }
@@ -235,21 +232,21 @@ export class AddInformationsComponent implements OnInit {
       this.informationService.addDollarPrice(this.dollarPrice).subscribe(
         (dollarPrice) => {
           let message = `Success saving dollar price ${dollarPrice.price}`
-          Swal.fire(message);
+          window.alert(message);
           form.resetForm();
         },(error) => {
           console.error('Error creating dollar price:', error);
-          Swal.fire('Error creating dollar price. Please try again later.'); 
+          window.alert('Error creating dollar price. Please try again later.'); 
         }
       )
     }else {
       this.informationService.updateDollatPrice(this.dollarPrice._id, this.dollarPrice).subscribe(
         () => {
           let message = 'dollar price updated';
-          Swal.fire(message);
+          window.alert(message);
         }, (error) => {
           console.error('Error creating dollar price:', error);
-          Swal.fire('Error creating dollar price. Please try again later.');
+          window.alert('Error creating dollar price. Please try again later.');
         }
       )
     }

@@ -50,10 +50,12 @@ import { NotificationComponent } from './notification/notification.component';
 import { ExpensesComponent } from './expenses/expenses.component';
 import { SafeComponent } from './safe/safe.component';
 import { LossesComponent } from './losses/losses.component';
+import { SpotlightOverlayComponent } from './spotlight-overlay/spotlight-overlay.component';
 
 import { AuthService } from './auth/auth.service';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { DisableRightClickDirective } from './disable-right-click.directive';
+import { DocumentEditorModule } from "@onlyoffice/document-editor-angular";
 
 @NgModule({
   declarations: [
@@ -83,6 +85,7 @@ import { DisableRightClickDirective } from './disable-right-click.directive';
     SafeComponent,
     LossesComponent,
     DisableRightClickDirective,
+    SpotlightOverlayComponent,
   ],
   imports: [
     BrowserModule,
@@ -111,6 +114,7 @@ import { DisableRightClickDirective } from './disable-right-click.directive';
     MatIconModule,
     MatTableModule,
     MatSnackBarModule,
+    DocumentEditorModule,
     ModalModule.forRoot(),
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: !isDevMode(),

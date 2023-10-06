@@ -29,6 +29,7 @@ export interface SupplierProducts {
 
 export interface Supplier {
     name: string,
+    owner: string,
     whatsappNumber: string,
     address: string,
     phone: string,
@@ -41,6 +42,7 @@ export interface Supplier {
 
 export interface Dealer {
     name: string,
+    owner: string,
     whatsappNumber: string,
     address: string,
     email: string,

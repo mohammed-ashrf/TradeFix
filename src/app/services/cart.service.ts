@@ -5,7 +5,16 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 export interface CartItem {
-  product: Product;
+  product: {
+    id: string,
+    nameOfProduct: string,
+    price: number,
+    category: string,
+    status: string,
+    description: string,
+    purchasePrice: number,
+    informationId: string,
+  }
   quantity: number;
   totalPrice: number;
 }
@@ -74,7 +83,7 @@ export class CartService {
 
   addProduct(cartIndex: number, product: Product, quantity: number, buyerType: string) {
     const cart = this.carts[cartIndex - 1];
-    const existingCartItem = cart.products.find(item => item.product._id === product._id);
+    const existingCartItem = cart.products.find(item => item.product.id === product._id);
     let price = product.userSellingPrice;
 
     // Apply pricing rules based on buyer type and quantity
@@ -89,19 +98,28 @@ export class CartService {
 
     if (existingCartItem) {
       const newQuantity = existingCartItem.quantity + quantity;
-      if (newQuantity > existingCartItem.product.quantity) {
-        throw new Error(`Not enough stock for ${existingCartItem.product.name}. Available stock: ${existingCartItem.product.quantity}`);
+      if (newQuantity > product.quantity) {
+        throw new Error(`Not enough stock for ${existingCartItem.product.nameOfProduct}. Available stock: ${product.quantity}`);
       }
       existingCartItem.quantity = newQuantity;
       existingCartItem.totalPrice += price * quantity;
-      existingCartItem.product.quantity -= quantity; // update the current quantity of the product
-      existingCartItem.product.quantitySold += quantity; // update the quantity sold of the product
+      product.quantity -= quantity; // update the current quantity of the product
+      product.quantitySold += quantity; // update the quantity sold of the product
     } else {
       if (quantity > product.quantity) {
         throw new Error(`Not enough stock for ${product.name}. Available stock: ${product.quantity}`);
       }
       const newCartItem: CartItem = {
-        product,
+        product: {
+          id: product._id,
+          nameOfProduct: product.name,
+          price: price,
+          category: product.category,
+          status: product.status,
+          description: product.description,
+          purchasePrice: product.suppliers[product.suppliers.length - 1].purchasePrice,
+          informationId: product.suppliers[product.suppliers.length - 1].informationId,
+        },
         quantity,
         totalPrice: price * quantity
       };
@@ -124,28 +142,35 @@ export class CartService {
     const cartItem = cart.products[productIndex];
     const oldQuantity = cartItem.quantity;
     const oldTotalPrice = cartItem.totalPrice;
-    let price = cartItem.product.userSellingPrice;
-
-    // Apply pricing rules based on buyer type and quantity
-    if (buyerType === 'dealer') {
-      price = cartItem.product.deallerSellingPrice;
-      if (quantity >= 3) {
-        price = cartItem.product.deallerSellingPrice;
+    let price: number;
+    this.productsService.getOne(cartItem.product.id).subscribe(
+      (product) => {
+        price = product.userSellingPrice;
+        // Apply pricing rules based on buyer type and quantity
+        if (buyerType === 'dealer') {
+          price = product.deallerSellingPrice;
+          if (quantity >= 3) {
+            price = product.deallerSellingPrice;
+          }
+        } else if (buyerType === 'user') {
+          price = product.userSellingPrice;
+        }
+        cartItem.product.price = price;
+        cartItem.quantity = quantity;
+        cartItem.totalPrice = price * quantity;
+        cart.totalPrice += cartItem.totalPrice - oldTotalPrice;
+        cart.total = (cart.totalPrice - cart.discount) + cart.pastOwing;
+        cart.owing = cart.total - cart.paid;
+        product.quantity -= quantity - oldQuantity; // update the current quantity of the product
+        product.quantitySold += quantity - oldQuantity; // update the quantity sold of the product
+        this.productsService.update(product._id, product).subscribe(
+          () => {
+            console.log("updated");
+          }
+        );
+        this.saveCartsToLocalStorage();
       }
-    } else if (buyerType === 'user') {
-      price = cartItem.product.userSellingPrice;
-    }
-
-    cartItem.quantity = quantity;
-    cartItem.totalPrice = price * quantity;
-    cart.totalPrice += cartItem.totalPrice - oldTotalPrice;
-    cart.total = (cart.totalPrice - cart.discount) + cart.pastOwing;
-    cart.owing = cart.total - cart.paid;
-    const product = cartItem.product;
-    product.quantity -= quantity - oldQuantity; // update the current quantity of the product
-    product.quantitySold += quantity - oldQuantity; // update the quantity sold of the product
-    this.productsService.update(product._id, product);
-    this.saveCartsToLocalStorage();
+    );
   }
 
   updateCart(cartIndex: number, cart: Cart) {
@@ -160,10 +185,14 @@ export class CartService {
     cart.total = (cart.totalPrice - cart.discount) + cart.pastOwing;
     cart.owing = cart.total - cart.paid;
     const product = deletedProduct.product;
-    product.quantity += deletedProduct.quantity;
-    product.quantitySold -= deletedProduct.quantity; // subtract the sold quantity from the quantity sold of the product
-    this.productsService.update(product._id, product);
-    this.saveCartsToLocalStorage();
+    this.productsService.getOne(product.id).subscribe(
+      (prod) => {
+        prod.quantity += deletedProduct.quantity;
+        prod.quantitySold -= deletedProduct.quantity; // subtract the sold quantity from the quantity sold of the product
+        this.productsService.update(prod._id, prod);
+        this.saveCartsToLocalStorage();
+      }
+    )
   }
 
   deleteCart(cartIndex: number) {
@@ -207,7 +236,6 @@ export class CartService {
 
   saveCartsToLocalStorage() {
     localStorage.setItem('carts', JSON.stringify(this.carts));
-    console.log(this.carts);
   }
 
   loadCartsFromLocalStorage() {

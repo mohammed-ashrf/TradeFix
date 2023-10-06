@@ -108,6 +108,7 @@ export class SellComponent implements OnInit {
           this.currentCart = cart;
         }
         this.getTotalPrice();
+        location.reload();
       }
     });
   }
@@ -171,6 +172,7 @@ export class SellComponent implements OnInit {
 
   deleteCart() {
     this.cartService.deleteCart(this.currentCart.id);
+    location.reload();
   }
 
   updateCartInformation() {
@@ -211,14 +213,7 @@ export class SellComponent implements OnInit {
     let total = 0;
     for (const item of this.currentCart.products) {
       // let price = this.userType === 'user' ? item.product.userSellingPrice : item.quantity >= 3 ? item.product.deallerSellingPriceAll : item.product.deallerSellingPrice;
-      let price = item.product.userSellingPrice;
-      if (this.userType === 'dealer') {
-        if (item.quantity >= 3) {
-          price = item.product.deallerSellingPriceAll;
-        } else {
-          price = item.product.deallerSellingPrice;
-        }
-      }
+      let price = item.product.price;
       total += price * item.quantity;
     }
     this.totalPrice = total * this.dollarPrice;
@@ -293,10 +288,10 @@ export class SellComponent implements OnInit {
 
   async sellCart(){
     this.updateCartInformation();
-    const cart = this.cartService.getCart(this.cartId);
+    const cart = this.currentCart;
     await this.cartService.sellCart(cart).subscribe(
-      (soldCart) => {
-        console.log(soldCart);
+      () => {
+        this.deleteCart();
       }
     )
   }

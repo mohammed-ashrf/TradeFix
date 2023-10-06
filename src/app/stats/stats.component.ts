@@ -170,9 +170,7 @@ export class StatsComponent implements OnInit {
   }
   calProductBuyingMoney(cart: Cart){
     this.ProductBuyingMoney = cart.products.reduce((subtotal2, product) =>{
-      return subtotal2 + (product.quantity * product.product.suppliers.reduce((subtotal3, supplier)=> {
-        return subtotal3 + supplier.purchasePrice;
-      },0)) ;
+      return subtotal2 + (product.quantity * product.product.purchasePrice);
     }, 0);
   }
   calSellingMoneyProfites(buyers: Buyer[]) {
