@@ -1,5 +1,8 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { SpotlightServiceService } from '../spotlight-service.service';
+import { Router } from '@angular/router';
+import { DeviceService } from '../device/device.service';
+import { Receive } from '../shared/recieve';
 @Component({
   selector: 'app-spotlight-overlay',
   templateUrl: './spotlight-overlay.component.html',
@@ -13,7 +16,8 @@ export class SpotlightOverlayComponent implements OnInit {
   blockInteraction = false; // Added property to block interaction
   showSuggestions = false;
   suggestions: string[] = []; // Array to hold the suggestions
-  constructor(private spotlightService: SpotlightServiceService) {}
+  devices: Receive[] = [];
+  constructor(private spotlightService: SpotlightServiceService, private router: Router, private deviceService: DeviceService) {}
   ngOnInit() {
     this.spotlightService.spotlight$.subscribe(show => {
       this.showSpotlight = show;
@@ -25,6 +29,7 @@ export class SpotlightOverlayComponent implements OnInit {
         }
       }
     });
+    this.getCurrentDevices();
   }
   @HostListener('document:keydown', ['$event'])
   handleKeyDown(event: KeyboardEvent) {
@@ -51,13 +56,42 @@ export class SpotlightOverlayComponent implements OnInit {
     this.spotlightService.hideSpotlight();
   }
 
+  searchDevice(devices:  any[], userInput: any, searchProperty: string) {
+    try {
+      if (typeof userInput !== 'string') {
+        console.log('User input must be a string');
+        throw new Error('User input must be a string');
+      }
+      userInput = userInput.toLowerCase();
+      return devices.filter(device => {
+        if (device.hasOwnProperty(searchProperty) && device[searchProperty]?.toString().toLowerCase().includes(userInput)) {
+          return true;
+        }
+        return false;
+      });
+    } catch (error) {
+      console.error(error);
+      return [];
+    }
+  }
+
+  getCurrentDevices(){
+    this.deviceService.getAll().subscribe(
+      (devices) => {
+        this.devices = devices;
+      }
+    )
+  }
+
   processInput() {
     // Generate suggestions based on the search term
+    this.suggestions = [];
     this.generateSuggestions();
 
     // Show the suggestions if there are any
     this.showSuggestions = this.suggestions.length > 0;
   }
+  
 
   generateSuggestions() {
     // Get the search type
@@ -69,8 +103,8 @@ export class SpotlightOverlayComponent implements OnInit {
     // Generate suggestions based on the search term
     switch (type) {
       case 'device':
-        this.suggestions = ['laptop', 'phone', 'tablet', 'watch', 'speaker'].filter(suggestion => suggestion.includes(searchTermWithoutType));
-        console.log("suggestions:"+ this.suggestions);
+        let results = this.searchDevice(this.devices, searchTermWithoutType, '_id');
+        this.suggestions.push (JSON.stringify(results));
         break;
       case 'product':
         this.suggestions = ['book', 'shirt', 'shoes', 'groceries', 'furniture'].filter(suggestion => suggestion.includes(searchTermWithoutType));
@@ -92,14 +126,20 @@ export class SpotlightOverlayComponent implements OnInit {
         this.suggestions = [`Made by Mohammed Younis. ${shortUrl}`];
         window.open(`${url}`,'_blank');
         break;
+      case 'details':
+        this.router.navigate(['/companyDetails']);
+        this.showSpotlight = false;
+        this.hideSpotlight();
+        break;  
       default:
-        this.suggestions = [];
+        let nameResults = this.searchDevice(this.devices, searchTermWithoutType, 'clientName');
+        this.suggestions.push (JSON.stringify(nameResults));
     }
   }
   
   // Get the search type from the search term
   getSearchType() {
-    const types = ['device', 'product', 'google', 'cal', 'dev', 'eng' , 'mohammed younis', 'about'];
+    const types = ['device', 'product', 'google', 'cal', 'dev', 'eng' , 'mohammed younis', 'about', 'details'];
 
     for (const type of types) {
       if (this.searchTerm.includes(type)) {

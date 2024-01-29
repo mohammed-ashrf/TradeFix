@@ -56,6 +56,7 @@ import { AuthService } from './auth/auth.service';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { DisableRightClickDirective } from './disable-right-click.directive';
 import { DocumentEditorModule } from "@onlyoffice/document-editor-angular";
+import { CompanyDetailsComponent } from './company-details/company-details.component';
 
 @NgModule({
   declarations: [
@@ -86,6 +87,7 @@ import { DocumentEditorModule } from "@onlyoffice/document-editor-angular";
     LossesComponent,
     DisableRightClickDirective,
     SpotlightOverlayComponent,
+    CompanyDetailsComponent,
   ],
   imports: [
     BrowserModule,

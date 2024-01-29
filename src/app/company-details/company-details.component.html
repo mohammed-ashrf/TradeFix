@@ -1,0 +1,13 @@
+<form (ngSubmit)="onSubmit()">
+    <input type="text" name="name" [(ngModel)]="name" placeholder="Company Name">
+    <input type="text" name="phoneNumber" [(ngModel)]="phoneNumber" placeholder="Phone Number">
+    <!-- Add other company fields -->
+  
+    <input type="file" (change)="onPhotoSelect($event)">
+  
+    <textarea name="description" [(ngModel)]="description" placeholder="Description"></textarea>
+    <input type="text" name="tags" [(ngModel)]="tags" placeholder="Tags">
+    <!-- Add other metadata fields -->
+  
+    <button type="submit">Create Company</button>
+</form>

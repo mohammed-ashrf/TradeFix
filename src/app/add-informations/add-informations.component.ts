@@ -196,8 +196,8 @@ export class AddInformationsComponent implements OnInit {
         () => {
           window.alert('Supplier Updated');
         }, (error) => {
-          console.error('Error updating supplier:', JSON.stringify(error));
-          window.alert(`Error updating supplier: ${JSON.stringify(error)}. Please try again later.`);
+          console.error('Error updating supplier:', JSON.stringify(error.message));
+          window.alert(`Error updating supplier: ${JSON.stringify(error.message)}. Please try again later.`);
         }
       )
     }

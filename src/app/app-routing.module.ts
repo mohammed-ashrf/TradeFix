@@ -22,6 +22,7 @@ import { NotificationComponent } from './notification/notification.component';
 import { ExpensesComponent } from './expenses/expenses.component';
 import { SafeComponent } from './safe/safe.component';
 import { LossesComponent } from './losses/losses.component';
+import { CompanyDetailsComponent } from './company-details/company-details.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -50,7 +51,8 @@ const routes: Routes = [
   { path: 'notifications', component: NotificationComponent},
   { path: 'expenses', component: ExpensesComponent},
   { path: 'safe', component:SafeComponent},
-  { path: 'losses', component:LossesComponent}
+  { path: 'losses', component:LossesComponent},
+  { path: 'companyDetails', component:CompanyDetailsComponent},
 ];
 
 @NgModule({

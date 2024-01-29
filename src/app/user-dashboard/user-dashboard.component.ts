@@ -57,7 +57,7 @@ export class UserDashboardComponent implements OnInit {
       const devices = await firstValueFrom(this.deviceService.getAll());
       this.allDevices = Object.assign([], devices.reverse());
       this.filterDevices();
-      this.countDevices;
+      this.countDevices();
     }
   }
 
@@ -113,23 +113,25 @@ export class UserDashboardComponent implements OnInit {
     this.allDevices.forEach((device) => {
       const date = new Date(device.receivingDate);
       const month = date.getMonth();
-      device.engineer.forEach((eng)=> {
-        if(eng === this.user._id){
-          if (month === currentMonth) {
-            if (device.repaired) {
-              this.completedCount++;
-            }else if (device.returned) {
-              this.returnedInTheSameMonth++;
+      if (Array.isArray(device.engineer)) {
+        device.engineer.forEach((eng)=> {
+          if(eng === this.user._id){
+            if (month === currentMonth) {
+              if (device.repaired) {
+                this.completedCount++;
+              }else if (device.returned) {
+                this.returnedInTheSameMonth++;
+              }
+            }
+            if (!device.repaired) {
+              this.inProgressCount++;
+            }
+            if (device.returned) {
+              this.returnedCount++;
             }
           }
-          if (!device.repaired) {
-            this.inProgressCount++;
-          }
-          if (device.returned) {
-            this.returnedCount++;
-          }
-        }
-      });
+        });
+      }
     });
   }
 

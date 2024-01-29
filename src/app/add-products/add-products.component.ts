@@ -111,6 +111,9 @@ export class AddProductsComponent implements OnInit{
         product.userSellingPrice *= this.dollarPrice;
         product.deallerSellingPrice *= this.dollarPrice;
         product.deallerSellingPriceAll *= this.dollarPrice;
+        Math.floor(product.userSellingPrice);
+        Math.floor(product.deallerSellingPrice);
+        Math.floor(product.deallerSellingPriceAll);
         this.product = product;
         this.recieptId = product._id.slice(-7);
       });
@@ -222,11 +225,17 @@ export class AddProductsComponent implements OnInit{
         this.product.userSellingPrice = this.product.userSellingPrice / this.dollarPrice;
         this.product.deallerSellingPrice = this.product.deallerSellingPrice / this.dollarPrice;
         this.product.deallerSellingPriceAll = this.product.deallerSellingPriceAll / this.dollarPrice;
+        Math.floor(this.product.userSellingPrice);
+        Math.floor(this.product.deallerSellingPrice);
+        Math.floor(this.product.deallerSellingPriceAll);
         this.productsService.update(this.product._id, this.product).subscribe(
           () => {
             this.product.userSellingPrice *= this.dollarPrice;
             this.product.deallerSellingPrice *= this.dollarPrice;
             this.product.deallerSellingPriceAll *= this.dollarPrice;
+            Math.floor(this.product.userSellingPrice);
+            Math.floor(this.product.deallerSellingPrice);
+            Math.floor(this.product.deallerSellingPriceAll);
           }
         )
       }else {
@@ -260,11 +269,17 @@ export class AddProductsComponent implements OnInit{
       this.product.userSellingPrice = this.product.userSellingPrice / this.dollarPrice;
       this.product.deallerSellingPrice = this.product.deallerSellingPrice / this.dollarPrice;
       this.product.deallerSellingPriceAll = this.product.deallerSellingPriceAll / this.dollarPrice;
+      Math.floor(this.product.userSellingPrice);
+      Math.floor(this.product.deallerSellingPrice);
+      Math.floor(this.product.deallerSellingPriceAll);
       this.productsService.update(this.product._id, this.product).subscribe(
         () => {
           this.product.userSellingPrice *= this.dollarPrice;
           this.product.deallerSellingPrice *= this.dollarPrice;
           this.product.deallerSellingPriceAll *= this.dollarPrice;
+          Math.floor(this.product.userSellingPrice);
+          Math.floor(this.product.deallerSellingPrice);
+          Math.floor(this.product.deallerSellingPriceAll);
         }
       )
     }
@@ -361,6 +376,9 @@ export class AddProductsComponent implements OnInit{
     item.userSellingPrice *= this.dollarPrice;
     item.deallerSellingPrice *= this.dollarPrice;
     item.deallerSellingPriceAll *= this.dollarPrice;
+    Math.floor(item.userSellingPrice);
+    Math.floor(item.deallerSellingPrice);
+    Math.floor(item.deallerSellingPriceAll);
     this.product = item;
     this.searchTerm = '';
     this.isSearched = false;
@@ -429,6 +447,9 @@ export class AddProductsComponent implements OnInit{
     this.product.userSellingPrice = this.product.userSellingPrice / this.dollarPrice;
     this.product.deallerSellingPrice = this.product.deallerSellingPrice / this.dollarPrice;
     this.product.deallerSellingPriceAll = this.product.deallerSellingPriceAll / this.dollarPrice;
+    Math.floor(this.product.userSellingPrice);
+    Math.floor(this.product.deallerSellingPrice);
+    Math.floor(this.product.deallerSellingPriceAll);
     if (this.isNew) {
       // this.product.purchasedate = this.getDate();
       this.updating = false;

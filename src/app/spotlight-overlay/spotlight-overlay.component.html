@@ -2,7 +2,9 @@
   <div class="spotlight-container" fxLayout="column">
     <input class="spotlight-input" id="spotlight-input" type="text" [(ngModel)]="searchTerm" (keydown.enter)="processInput()" (keydown.arrowDown)="nextTarget()" (keydown.arrowUp)="previousTarget()" placeholder="Search..." autofocus autocomplete="additional-name">
       <div class="suggestions" *ngIf="searchTerm && showSuggestions">
-        <div *ngFor="let suggestion of suggestions" (click)="selectSuggestion(suggestion)">{{ suggestion }}</div>
+        <div class="suggestion" *ngFor="let suggestion of suggestions" (click)="selectSuggestion(suggestion)" fxLayout="column">
+          <span>{{ suggestion }}</span>
+        </div>
       </div>
   </div>
 </div>

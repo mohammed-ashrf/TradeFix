@@ -44,6 +44,7 @@ $spotlightBorderRadius: 10px; // Adjust the border radius as desired
 
     .suggestions {
       width: 50%;
+      height: auto;
       min-width: 300px;
       max-width: 600px;
       padding: 10px;
@@ -52,6 +53,17 @@ $spotlightBorderRadius: 10px; // Adjust the border radius as desired
       background-color: #222;
       color: white;
       text-align: center;
+
+      .suggestion {
+        display: flex;
+        flex-wrap: wrap;
+        text-align: justify;
+
+        .span {
+          width: 95%;
+          max-width: 600px;
+        }
+      }
     }
   }
   

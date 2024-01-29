@@ -30,7 +30,7 @@
   "dataGroups": [
     {
       "name": "backend",
-      "urls": ["http://localhost:8080/**", "http://192.168.1.24:8080/**"],
+      "urls": ["http://192.168.1.24:8080/**"],
       "cacheConfig": {
         "strategy": "freshness",
         "maxSize": 20,

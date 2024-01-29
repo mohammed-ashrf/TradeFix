@@ -142,11 +142,9 @@ export class DeviceFormComponent implements OnInit {
     if (currentUser) {
       console.log("current user");
       this.user = JSON.parse(currentUser);
-      if (this.user.role == 'receiver') {
+      if (this.user.role == 'receiver' || 'admin') {
         this.sameEng = true;
-      }else if (this.user.role == 'admin') {
-        this.sameEng = true;
-      };
+      }
     }    
     this.route.url.subscribe((routes) => {
       // Get the current route
@@ -177,7 +175,7 @@ export class DeviceFormComponent implements OnInit {
             if (this.receive.repaired) {
               this.repairdone = true;
             }
-            if (this.user.username == this.receive.currentEngineer){
+            if (this.user._id == this.receive.currentEngineer){
               this.sameEng = true;
             }
           }
@@ -212,7 +210,7 @@ export class DeviceFormComponent implements OnInit {
             if (this.receive.repaired) {
               this.repairdone = true;
             }
-            if (this.user.username == this.receive.currentEngineer){
+            if (this.user._id == this.receive.currentEngineer){
               this.sameEng = true;
             }
           }
@@ -476,7 +474,17 @@ export class DeviceFormComponent implements OnInit {
       this.disabled = true;
       if (this.receive.repaired) {
         this.repairdone = true;
+        if(this.today){
+          this.receive.repairDate = this.today;
+        }else {
+          this.receive.repairDate = new Date().toString();
+        }
+      }
+    }else {
+      if(this.today){
         this.receive.repairDate = this.today;
+      }else {
+        this.receive.repairDate = new Date().toString();
       }
     }
 
@@ -508,6 +516,7 @@ export class DeviceFormComponent implements OnInit {
           let cash = this.initialCash - updatedDevice.cash;
           this.deductMoneyFromSafe(cash);
         };
+        console.log(updatedDevice);
       },
       (error) => {
         // Error handling
@@ -520,6 +529,7 @@ export class DeviceFormComponent implements OnInit {
     this.deviceService.returnDeviceToDevices(deviceId).subscribe(
       () => {
         // Success: Device returned to devices
+        this.router.navigate(['/devices', deviceId , 'edit']);
         console.log('returned');
       },
       (error) => {

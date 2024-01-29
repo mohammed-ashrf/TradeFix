@@ -7,6 +7,7 @@ import { Product, ProductsQuery } from '../shared/products';
 import { MatDialog } from '@angular/material/dialog';
 import { CartDialogComponent } from '../cart-dialog/cart-dialog.component';
 import { ProductsService } from '../services/products.service';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-sell',
   templateUrl: './sell.component.html',
@@ -59,7 +60,8 @@ export class SellComponent implements OnInit {
     private informationService: InformationService,
     private productsService: ProductsService,
     private location: Location,
-    private dialog: MatDialog) { }
+    private dialog: MatDialog,
+    private router: Router,) { }
 
   ngOnInit() {
     const user = localStorage.getItem('user');
@@ -108,7 +110,7 @@ export class SellComponent implements OnInit {
           this.currentCart = cart;
         }
         this.getTotalPrice();
-        location.reload();
+        this.router.navigate(['/sell']);
       }
     });
   }
@@ -172,7 +174,7 @@ export class SellComponent implements OnInit {
 
   deleteCart() {
     this.cartService.deleteCart(this.currentCart.id);
-    location.reload();
+    this.router.navigate(['/sell']);
   }
 
   updateCartInformation() {
