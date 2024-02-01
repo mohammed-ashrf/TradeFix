@@ -16,4 +16,4 @@ To get started with the TradeFix web application, follow these steps:
 
 1. Clone this repository:
    ```bash
-   git clone https://github.com/your-username/TradeFix.git
+   git clone https://github.com/mohammed-ashrf/TradeFix.git
