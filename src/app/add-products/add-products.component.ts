@@ -129,23 +129,23 @@ export class AddProductsComponent implements OnInit{
     }
   }
 
-  async addMoneyToSafe(amount: number) {
-    await this.safeService.addMoney(amount, this.today, 'buyingProducts', `${this.user.username}, (${this.user._id})`).subscribe(
+  addMoneyToSafe(amount: number) {
+    this.safeService.addMoney(amount, this.today, 'buyingProducts', `${this.user.username}, (${this.user._id})`).subscribe(
       (res) => {
         console.log('add money to safe');
       }
     )
   };
 
-  async deductMoneyFromSafe(amount: number) {
-    await this.safeService.deductMoney(amount, this.today, 'buyingProducts', `${this.user.username}, (${this.user._id})`).subscribe(
+  deductMoneyFromSafe(amount: number) {
+    this.safeService.deductMoney(amount, this.today, 'buyingProducts', `${this.user.username}, (${this.user._id})`).subscribe(
       (res) => {
         console.log('deduct money from safe');
       }
     )
   };
 
-  async addSupplierProduct(productId: string) {
+  addSupplierProduct(productId: string) {
     let supplierProduct: SupplierProductAdding = {
       productId: '',
       productName: this.product.name,
@@ -168,6 +168,12 @@ export class AddProductsComponent implements OnInit{
         this.informationService.updateSupplierProducts(this.product.suppliers[i].id, supplierProduct).subscribe(
           (res) => {
             this.product.suppliers[i].informationId = res._id;
+            this.productsService.update(productId, this.product).subscribe(
+              (res) => {
+                console.log("informationId Added");
+              }
+            )
+            console.log(this.product.suppliers[i].informationId);
             this.deductMoneyFromSafe(this.product.suppliers[i].whatIsPaid);
           }
         );        
@@ -185,7 +191,7 @@ export class AddProductsComponent implements OnInit{
       supplierProduct.whatIsPaid = this.supplier.whatIsPaid;
       supplierProduct.oweing = this.supplier.oweing;
       
-      await this.informationService.updateSupplierProducts(this.supplier.id, supplierProduct).subscribe(
+      this.informationService.updateSupplierProducts(this.supplier.id, supplierProduct).subscribe(
         (res) => {
           this.supplier.informationId = res._id;
           this.product.suppliers.push(this.supplier);
@@ -213,15 +219,15 @@ export class AddProductsComponent implements OnInit{
       });
   }
 
-  async addSupplier(){
-    const cash = await this.getSafeBalance();
+  addSupplier(){
+    const cash = this.getSafeBalance();
     if(this.supplier.whatIsPaid > cash) {
       window.alert("not enough Cash in the safe");
     }else {
       this.supplier.purchasedate = this.date;
       this.supplier.id = this.selectedSupplierId;
       if(!this.isNew){
-        await this.addSupplierProduct(this.product._id);
+        this.addSupplierProduct(this.product._id);
         this.product.userSellingPrice = this.product.userSellingPrice / this.dollarPrice;
         this.product.deallerSellingPrice = this.product.deallerSellingPrice / this.dollarPrice;
         this.product.deallerSellingPriceAll = this.product.deallerSellingPriceAll / this.dollarPrice;
@@ -262,10 +268,10 @@ export class AddProductsComponent implements OnInit{
       }
     );
   }
-  async deleteSupplier(index: number) {
+  deleteSupplier(index: number) {
     this.product.quantity -= this.product.suppliers[index].quantity;
     if(!this.isNew) {
-      await this.deleteSupplierProduct(index, this.product._id);
+      this.deleteSupplierProduct(index, this.product._id);
       this.product.userSellingPrice = this.product.userSellingPrice / this.dollarPrice;
       this.product.deallerSellingPrice = this.product.deallerSellingPrice / this.dollarPrice;
       this.product.deallerSellingPriceAll = this.product.deallerSellingPriceAll / this.dollarPrice;
@@ -455,15 +461,17 @@ export class AddProductsComponent implements OnInit{
       this.updating = false;
       this.productsService.create(this.product).subscribe(
         async (data) => {
+          this.product =  data;
           this.print = data;
           this.edited = true;
           this.recieptId = data._id.slice(-12);
           await this.addSupplierProduct(data._id);
+          this.isNew = false;
           window.alert(`Success saving product ${data._id}. You can print now.`);
           // navigator.clipboard.writeText(data._id);
           this.submited = true;
-          this.isNew = false;
           if (this.notBack){
+            this.isNew = true;
             form.resetForm();
             this.product.suppliers = [];
           }
@@ -473,13 +481,14 @@ export class AddProductsComponent implements OnInit{
           window.alert(`Error creating product. ${JSON.stringify(error)}`);
         }
       );
-      console.log(this.product._id);
     } else {
       this.productsService.update(this.product._id, this.product).subscribe(
         () => {
           // this.submited = true;
           if (this.notBack){
-           this.location.back();
+            this.isNew = true;
+            form.resetForm();
+            this.product.suppliers = [];
           }
         },
         (error) => {
