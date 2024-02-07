@@ -159,7 +159,7 @@ export class AddProductsComponent implements OnInit{
     if(this.isNew){
       console.log("isNew");
       supplierProduct.productId = productId;
-      for (let i=0; i<= this.product.suppliers.length; i++){
+      for (let i=0; i < this.product.suppliers.length; i++){
         supplierProduct.quantity = this.product.suppliers[i].quantity;
         supplierProduct.purchasePrice = this.product.suppliers[i].purchasePrice;
         supplierProduct.purchasedate = this.product.suppliers[i].purchasedate;
@@ -168,21 +168,35 @@ export class AddProductsComponent implements OnInit{
         this.informationService.updateSupplierProducts(this.product.suppliers[i].id, supplierProduct).subscribe(
           (res) => {
             this.product.suppliers[i].informationId = res._id;
-            this.productsService.update(productId, this.product).subscribe(
-              (res) => {
-                console.log("informationId Added");
-              }
-            )
-            console.log(this.product.suppliers[i].informationId);
             this.deductMoneyFromSafe(this.product.suppliers[i].whatIsPaid);
+            this.productsService.update(productId, this.product).subscribe(
+              () => {
+                console.log("informationId Added");
+                if (i === this.product.suppliers.length-1) {
+                  if (this.notBack){
+                    this.isNew = true;
+                    this.product = {
+                      name: '',
+                      description: '',
+                      deallerSellingPrice: 0,
+                      deallerSellingPriceAll: 0,
+                      userSellingPrice: 0,
+                      category: '',
+                      status: '',
+                      quantity: 0,
+                      sellingdate: '',
+                      _id: '',
+                      suppliers: [],
+                      quantitySold: 0,
+                    };
+                  }
+                }
+              }
+            );
           }
-        );        
+        );
       };
-      this.productsService.update(productId, this.product).subscribe(
-        () => {
-          console.log('updated');
-        }
-      )
+     
     }else {
       supplierProduct.productId = this.product._id;
       supplierProduct.quantity = this.supplier.quantity;
@@ -264,7 +278,6 @@ export class AddProductsComponent implements OnInit{
     this.informationService.deleteSupplierProduct(this.product.suppliers[supplierIndex].id, productId, this.product.suppliers[supplierIndex].informationId).subscribe(
       (res) => {
         this.addMoneyToSafe(this.product.suppliers[supplierIndex].whatIsPaid);
-        console.log(res);
       }
     );
   }
@@ -312,13 +325,11 @@ export class AddProductsComponent implements OnInit{
       (dollar) => {
         let index = 'price';
         this.dollarPrice = dollar[index as keyof typeof dollar];
-        console.log(this.dollarPrice);
       }
     )
   }
 
   getSelectedSupplierId(supplier: Supplier){
-    console.log(supplier._id);
     this.selectedSupplierId = supplier._id;
     this.supplier.id = supplier._id;
   }
@@ -362,7 +373,7 @@ export class AddProductsComponent implements OnInit{
       }
       userInput = userInput.toLowerCase();
       return products.filter(product => {
-        return product.name.toLowerCase().includes(userInput);
+        return product?.name?.toLowerCase().includes(userInput);
       });
     } catch (error) {
       console.error(error);
@@ -374,8 +385,8 @@ export class AddProductsComponent implements OnInit{
   }
 
   onSearch() {
-      this.searchResult = this.searchProducts(this.products, this.searchTerm);
-      this.isSearched = true;
+    this.searchResult = this.searchProducts(this.products, this.searchTerm);
+    this.isSearched = true;
   }
 
   onSelect(item: Product) {
@@ -460,21 +471,16 @@ export class AddProductsComponent implements OnInit{
       // this.product.purchasedate = this.getDate();
       this.updating = false;
       this.productsService.create(this.product).subscribe(
-        async (data) => {
-          this.product =  data;
+        (data) => {
+          this.product = data;
           this.print = data;
           this.edited = true;
           this.recieptId = data._id.slice(-12);
-          await this.addSupplierProduct(data._id);
+          this.addSupplierProduct(data._id);
           this.isNew = false;
           window.alert(`Success saving product ${data._id}. You can print now.`);
           // navigator.clipboard.writeText(data._id);
           this.submited = true;
-          if (this.notBack){
-            this.isNew = true;
-            form.resetForm();
-            this.product.suppliers = [];
-          }
         },
         (error) => {
           console.error('Error creating product:', error);
@@ -483,8 +489,9 @@ export class AddProductsComponent implements OnInit{
       );
     } else {
       this.productsService.update(this.product._id, this.product).subscribe(
-        () => {
+        (data) => {
           // this.submited = true;
+          window.alert(`Success Updating product ${data._id}.`);
           if (this.notBack){
             this.isNew = true;
             form.resetForm();

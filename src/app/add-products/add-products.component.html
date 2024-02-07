@@ -8,7 +8,7 @@
       <div class="searchProduct-Input" fxLayout="row" fxLayoutAlign="center center">
         <input type="text" id="searchProduct" placeholder="البحث عن منتج موجود" name="searchProduct" [(ngModel)]="searchTerm" (keyup)="onSearch()" dir="rtl" autofocus>
       </div>
-      <ul *ngIf="isSearched">
+      <ul *ngIf="isSearched && searchTerm !== ''">
         <li *ngFor="let product of searchResult" (click)="onSelect(product)">
           {{ product.name }} - ({{product.category}})
         </li>
