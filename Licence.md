@@ -1,4 +1,4 @@
-TradeFix © 2023 by [Mohammed Younis] https://mohammedyounis.vercel.app
+TradeFix © 2023 by Mohammed Younis is licensed under Attribution-NonCommercial-NoDerivatives 4.0 International 
 
 This work is licensed under [the Attribution-NonCommercial-NoDerivatives 4.0 International license] http://creativecommons.org/licenses/by-nc-nd/4.0/?ref=chooser-v1.
 
