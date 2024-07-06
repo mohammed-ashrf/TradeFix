@@ -6,7 +6,7 @@ Welcome to the TradeFix frontend repository! This repository contains the fronte
 
 You will find the backend code in a separate repository. Please visit the following link:
 
-[TradeFix_Backend Repository](https://github.com/mohammed-ashrf/TradeFix_Backend)
+[TradeFix_Backend Repository](https://github.com/mohammed-ashrf/TradeFix_Backend/tree/src)
 
 Feel free to explore the backend repository for more details about the server-side implementation.
 
